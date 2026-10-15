@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "items": [
+    {
+      "id": "neon-city",
+      "title": "Ville néon",
+      "description": "Une ville nocturne, ses fenêtres et ses lumières.",
+      "type": "pixel",
+      "version": 1,
+      "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/packs/neon-city-1.json",
+      "size": 24809,
+      "sha256": "32233d4995c6b23d8992e60a59ff5a3c270172a849be22f35f185a814e0f3d29",
+      "minFirmware": "4.1.0"
+    },
+    {
+      "id": "cosmic-flight",
+      "title": "Voyage cosmique",
+      "description": "Un petit vaisseau traverse un ciel étoilé.",
+      "type": "pixel",
+      "version": 1,
+      "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/packs/cosmic-flight-1.json",
+      "size": 24817,
+      "sha256": "5a94d69937bb1463e017e639f2e0e6d9b1475345d76cc03e589562d1d0bfec1f",
+      "minFirmware": "4.1.0"
+    },
+    {
+      "id": "rain-window",
+      "title": "Pluie à la fenêtre",
+      "description": "Des gouttes lumineuses pour une ambiance calme.",
+      "type": "pixel",
+      "version": 1,
+      "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/packs/rain-window-1.json",
+      "size": 24820,
+      "sha256": "4c7df49ab4b6cf79d4c181b62d1a35f555980f6ba12cc8f05286f40a3dd7b06d",
+      "minFirmware": "4.1.0"
+    },
+    {
+      "id": "campfire",
+      "title": "Feu de camp",
+      "description": "Un feu pixelisé sous les étoiles.",
+      "type": "pixel",
+      "version": 1,
+      "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/packs/campfire-1.json",
+      "size": 24808,
+      "sha256": "15fa5aff84c73fa1cf9e032cc22d5c35bc3088f2f7d423fce752507b5d594e08",
+      "minFirmware": "4.1.0"
+    },
+    {
+      "id": "pixel-cat",
+      "title": "Chat pixel",
+      "description": "Un compagnon rétro qui cligne des yeux.",
+      "type": "pixel",
+      "version": 1,
+      "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/packs/pixel-cat-1.json",
+      "size": 24808,
+      "sha256": "a2278c8852385e1aa36ea0f6ddab33a0a3de95e9af59717986852453df522ef9",
+      "minFirmware": "4.1.0"
+    },
+    {
+      "id": "arcade-orbit",
+      "title": "Orbite arcade",
+      "description": "Une scène spatiale inspirée des jeux rétro.",
+      "type": "pixel",
+      "version": 1,
+      "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/packs/arcade-orbit-1.json",
+      "size": 24814,
+      "sha256": "8f63093ee28050e2e814d62316983fc8c73e14e4f8dcccb9911ad070fac40d9b",
+      "minFirmware": "4.1.0"
+    },
+    {
+      "id": "welcome",
+      "title": "Bienvenue",
+      "description": "Un message lumineux pour accueillir vos invités.",
+      "type": "message",
+      "version": 1,
+      "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/packs/welcome-1.json",
+      "size": 110,
+      "sha256": "ca75885b41bc31330823ab77cd5ffafef0ea8a7b6e0cb8b8f96e973886182d29",
+      "minFirmware": "4.1.0"
+    },
+    {
+      "id": "focus-25",
+      "title": "Focus 25 minutes",
+      "description": "Un minuteur prêt pour une session de concentration.",
+      "type": "timer",
+      "version": 1,
+      "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/packs/focus-25-1.json",
+      "size": 94,
+      "sha256": "0df71ace86dc4926768bde4a48d910ecc3123b47f84728817788bbc2af67f63b",
+      "minFirmware": "4.1.0"
+    }
+  ]
+}
