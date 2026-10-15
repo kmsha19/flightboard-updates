@@ -1,7 +1,7 @@
 {
-  "version": "4.1.0",
+  "version": "4.1.1",
   "root": "src/FlightBoard_V1_4",
-  "firmwareSha256": "78d3a97fc1de29b9273f287e7360c9b4ecfe0637e88629761a6dbfe66b464a9e",
+  "firmwareSha256": "37e4e87e9905bbaa6dbe3847556728f06f823920a99b59325d08fea0a9e226d0",
   "files": [
     {
       "path": "AirlineLogos.h",
@@ -56,17 +56,17 @@
     {
       "path": "FlightBoardUpdate.h",
       "size": 13566,
-      "sha256": "2b8272b550f67be98d67cf2f2085472164a4744e16a7482cf248ae9491525e79"
+      "sha256": "d2d9446da1664271786e6df5addfb387dd7c29d316526afb35fd5c577e6f363c"
     },
     {
       "path": "FlightBoardWeb.h",
-      "size": 182098,
-      "sha256": "05b14a020af67411b90970999527b4e2b5265abf84c8482b1c02dd3872bb6eb9"
+      "size": 182690,
+      "sha256": "a81cfdf9fdd25626a1f6f15268d8bcf802f0af31bb252c8e23bf258a77536a5b"
     },
     {
       "path": "FlightBoardWebGzip.h",
       "size": 393,
-      "sha256": "76f900d4f567c621eb93e02402352431acd2e7c7f62ac51f5efa12a15799710d"
+      "sha256": "f33cfb50299a8f6101f5770c953490f3060e69d8ccecfa9d28ae28b1f9ad59f0"
     },
     {
       "path": "FlightBoardWiFi.h",
@@ -76,12 +76,12 @@
     {
       "path": "FlightBoard_V1_4.ino",
       "size": 43629,
-      "sha256": "ca4c9296283eb8551cfa681f0f6f111ed2c56d2e3a3e2cfc6d9258b42a757e73"
+      "sha256": "9e6bf8c65c0d2afd38a1dffd8040a8b07ca456def680e2db2cbb5c4fccc7f32e"
     },
     {
       "path": "ZcsBootstrap.h",
-      "size": 21924,
-      "sha256": "e2f6b5b35a78014a91d266bd2b8cc25030961b94c8f2cf25193b1ff2f896412c"
+      "size": 21918,
+      "sha256": "7741c5f61af8f8d37865701141bfe1a694487f13ce3ab603a59a868b8ff19370"
     },
     {
       "path": "ZcsContentApi.h",
@@ -595,18 +595,18 @@
     },
     {
       "path": "assets/zcs-web.bin",
-      "size": 44147,
-      "sha256": "cec04ba7523b9bdc40bce03699e8b089ded7c3cffceb9ad86f62f854d5bfb5e7"
+      "size": 44289,
+      "sha256": "d5669c3a7523001f31f27d75e79a50f1f37ce5754c66b3b52fd6cac644b31deb"
     },
     {
       "path": "assets/zcs-web.json",
       "size": 431,
-      "sha256": "f2259cd59839471f394d4429b84762433178a147c081742e644df036bbf87003"
+      "sha256": "1330e819742db25f5e834d34f64ad932c23f5d73de51d480f6c198cc2727ed91"
     },
     {
       "path": "build_assets.py",
       "size": 19552,
-      "sha256": "8fb3568bd349a1c1ba366e6da08142be7843bf4bb8c2609c21d8a29ca7211dc0"
+      "sha256": "9af44f9aad87d19b59cc0c195c9e9b74a611ce2462b532ae09baec71e0862aa4"
     },
     {
       "path": "package-lock.json",

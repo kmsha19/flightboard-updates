@@ -1,4 +1,4 @@
-# ZCS CONTRÔLE · V4.1.0
+# ZCS CONTRÔLE · V4.1.1
 
 **by Christ_Kmusic** — une bibliothèque de contenus pour votre panneau LED, pilotée depuis une tablette ou un téléphone.
 
@@ -17,6 +17,7 @@ La V4 repense entièrement l’interface : navigation latérale, espace clair, a
 - **Minuteur** : compte à rebours, démarrer, mettre en pause, reprendre et réinitialiser. Après un redémarrage, il reprend en pause depuis le dernier état enregistré.
 - **Scores** : choix du match par compétition et date — Ligue 1, Premier League et Ligue des champions. Le panneau suit le match via ESPN toutes les minutes.
 - **Store** : huit contenus initiaux : Ville néon, Voyage cosmique, Pluie à la fenêtre, Feu de camp, Chat pixel, Orbite arcade, Bienvenue et Focus 25 minutes. Un téléchargement ajoute le contenu à la bibliothèque sans modifier l’affichage en cours. Jusqu’à 14 contenus installés ; un contenu actif doit être quitté avant sa suppression.
+- **Horloge par défaut** : animation au choix dans Réglages → Horloge et nuit, mémorisée après redémarrage et utilisée également sans vol.
 - **Réglages** : luminosités de jour et de nuit immédiates et mémorisées, horaires de nuit, fuseau horaire, lieu, Wi-Fi et mise à jour depuis la tablette.
 
 Après sa première installation, l’interface fonctionne depuis la mémoire du panneau, sans police ou bibliothèque distante. Le téléchargement de nouveaux contenus et des logos haute définition nécessite Internet sur la tablette. Les animations, messages et contenus déjà installés restent disponibles hors ligne. Elle est adaptée notamment aux tablettes **800 × 1340** et **1340 × 800**. L’animation de l’aperçu respecte la préférence de réduction des mouvements du navigateur.
@@ -40,10 +41,10 @@ Sur une carte déjà configurée et compatible : ouvrir **http://flightboard.loc
 
 Les réglages, le Wi-Fi, les lieux favoris et la cadence radar restent en mémoire. La mise à jour ne change pas les partitions. Le téléchargement passe par HTTPS, puis sa taille et son SHA-256 sont vérifiés avant l’installation sur la partition inactive.
 
-- [Programme V4.1.0](releases/ZCS-Control-4.1.0-Waveshare-K716.ino.bin)
-- [Empreinte SHA-256](releases/ZCS-Control-4.1.0-Waveshare-K716.ino.bin.sha256)
-- [Interface V4.1.0 pour installation hors ligne](store/zcs-web-4.1.0.bin)
-- [Empreinte et provenance de l’interface](store/zcs-web-4.1.0.json)
+- [Programme V4.1.1](releases/ZCS-Control-4.1.1-Waveshare-K716.ino.bin)
+- [Empreinte SHA-256](releases/ZCS-Control-4.1.1-Waveshare-K716.ino.bin.sha256)
+- [Interface V4.1.1 pour installation hors ligne](store/zcs-web-4.1.1.bin)
+- [Empreinte et provenance de l’interface](store/zcs-web-4.1.1.json)
 - [Catalogue du Store](store/catalog.json)
 - [Manifeste de mise à jour](latest.json)
 - [Sources complètes](src/FlightBoard_V1_4)
@@ -55,7 +56,7 @@ Le fichier `.ino.bin` est l’application OTA. Ne pas envoyer un bootloader ou u
 
 ## Compiler les sources
 
-Le dossier du sketch conserve le nom `FlightBoard_V1_4` pour la compatibilité Arduino ; la version du programme est bien **4.1.0**.
+Le dossier du sketch conserve le nom `FlightBoard_V1_4` pour la compatibilité Arduino ; la version du programme est bien **4.1.1**.
 
 Dépendances utilisées : cœur **ESP32 3.3.12**, **ArduinoJson 7.4.3**. Le pilote HUB75 Waveshare est embarqué et épinglé sous `assets/vendor/waveshare-hub75`. Les fichiers générés sont inclus : Node et Python ne sont nécessaires que pour régénérer les ressources après une modification.
 

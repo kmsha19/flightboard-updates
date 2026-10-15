@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
 #include <pgmspace.h>
-// ZCS CONTRÔLE V4.1.0 — interface locale, aucun service ou asset externe.
+// ZCS CONTRÔLE V4.1.1 — interface locale, aucun service ou asset externe.
 const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
 <!doctype html>
 <html lang="fr">
@@ -9,7 +9,7 @@ const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#182622">
-<title>ZCS CONTRÔLE · V4.1.0</title>
+<title>ZCS CONTRÔLE · V4.1.1</title>
 <style>
 :root{color-scheme:light;--bg:#f5f5f0;--card:#fff;--raised:#eef2ed;--line:#dfe4dd;--text:#202c29;--muted:#69766f;--accent:#19786a;--ink:#fff;--amber:#98661d;--error:#b24943;--green:#19786a;--rail:#182622}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{font-size:14px;line-height:1.5}button,input,select,textarea{font:inherit}button,summary,select{touch-action:manipulation}button,summary{cursor:pointer}button{color:inherit}button:disabled,input:disabled,select:disabled{cursor:default;opacity:.45}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #5cae96;outline-offset:3px}[hidden]{display:none!important}h1,h2,p{margin:0}a{color:var(--accent)}svg{flex:none}button{transition:background .16s,border-color .16s,box-shadow .16s}
@@ -39,7 +39,7 @@ const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
     <button class="navButton" type="button" data-nav="clock" aria-label="Horloge" title="Horloge"><svg class="navIcon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg><span>Horloge</span></button>
     <button class="navButton" type="button" data-nav="animation" aria-label="Animations" title="Animations"><svg class="navIcon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.6 6.4L21 12l-6.4 2.6L12 21l-2.6-6.4L3 12l6.4-2.6ZM20 2v4m-2-2h4"/></svg><span>Animations</span></button>
   </nav>
-  <div class="sidebarFoot"><div class="deviceMark"><svg viewBox="0 0 28 28" aria-hidden="true"><rect x="2" y="5" width="24" height="16" rx="3"/><path d="M10 25h8m-4-4v4M7 10h2m4 0h2m4 0h2M7 15h2m4 0h2m4 0h2"/></svg><span>Votre panneau<small>128 × 64 pixels</small></span></div><span class="version">V4.1.0</span></div>
+  <div class="sidebarFoot"><div class="deviceMark"><svg viewBox="0 0 28 28" aria-hidden="true"><rect x="2" y="5" width="24" height="16" rx="3"/><path d="M10 25h8m-4-4v4M7 10h2m4 0h2m4 0h2M7 15h2m4 0h2m4 0h2"/></svg><span>Votre panneau<small>128 × 64 pixels</small></span></div><span class="version">V4.1.1</span></div>
 </aside>
 <div class="app">
 <header class="top">
@@ -112,7 +112,7 @@ const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
   </section>
 </main>
 </div>
-<footer class="bottom"><span class="statusLine" id="message" role="status" aria-live="polite">Votre panneau. Votre univers.</span><span class="source" id="sourceLabel">by Christ_Kmusic · V4.1.0</span></footer>
+<footer class="bottom"><span class="statusLine" id="message" role="status" aria-live="polite">Votre panneau. Votre univers.</span><span class="source" id="sourceLabel">by Christ_Kmusic · V4.1.1</span></footer>
 </div>
 <dialog class="dialog" id="filtersDialog" aria-labelledby="filtersTitle"><div class="dialogHead"><h2 class="dialogTitle" id="filtersTitle">Filtres aviation</h2><button class="btn quiet" id="filtersCloseBtn" type="button">Fermer</button></div><p class="dialogIntro">Filtres mémorisés pour le radar et le panneau.</p><form id="filtersForm"><label class="check"><input type="checkbox" id="filterLogo">Compagnies avec un logo uniquement</label><label class="field">Compagnie<select id="filterAirline"><option value="">Toutes les compagnies</option></select></label><div class="formGrid"><label class="field">Type d’appareil<input id="filterType" maxlength="4" pattern="[A-Za-z0-9]{2,4}" placeholder="Tous · ex. A320" autocapitalize="characters" autocomplete="off"></label><label class="field">Altitude maximale<select id="filterAltitude"><option value="0">Sans limite</option><option value="5000">5 000 ft</option><option value="10000">10 000 ft</option><option value="20000">20 000 ft</option><option value="30000">30 000 ft</option><option value="40000">40 000 ft</option><option value="60000">60 000 ft</option></select></label></div><p class="smallPrint">Les vols sans cette donnée sont exclus du filtre.</p><p class="dialogFeedback" id="filtersFeedback" role="status" aria-live="polite"></p><div class="dialogActions"><button class="btn" id="filtersResetBtn" type="button">Tout afficher</button><button class="btn primary" id="filtersApplyBtn" type="submit">Appliquer les filtres</button></div></form></dialog>
 <dialog class="dialog" id="settingsDialog" aria-labelledby="settingsTitle">
@@ -125,6 +125,7 @@ const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
 <label class="field">Nom du lieu<input id="placeInput" maxlength="32" placeholder="Maison" required></label>
 <div class="formGrid"><label class="field">Latitude<input id="latInput" type="number" step="any" min="-90" max="90" required></label><label class="field">Longitude<input id="lonInput" type="number" step="any" min="-180" max="180" required></label><label class="field">Rayon<select id="radiusInput"><option value="5">5 km</option><option value="10">10 km</option><option value="20">20 km</option><option value="30">30 km</option><option value="50">50 km</option></select></label></div></div></details>
 <details class="section" id="nightSection"><summary>Horloge et nuit</summary><div class="sectionBody">
+<label class="field">Animation de l’horloge par défaut<select id="clockVisualInput"><option value="lava">Lave</option><option value="aurora">Aurore</option><option value="ocean">Océan</option><option value="warp">Hyperespace</option><option value="stars">Étoiles</option><option value="rain">Matrix</option><option value="plain">Minimal · fond noir</option></select></label><p class="smallPrint">Utilisée aussi en aviation quand aucun vol ne s’affiche. Ce choix est conservé après redémarrage.</p>
 <label class="field">Fuseau horaire<select id="timezoneInput"><option value="paris">Paris · Europe centrale</option><option value="london">Londres</option><option value="utc">UTC</option><option value="newyork">New York</option><option value="dubai">Dubaï</option></select></label>
 <p class="smallPrint">Heure et changements de saison automatiques.</p>
 <label class="check"><input type="checkbox" id="nightEnabled">Adapter l’affichage pendant la nuit</label>
@@ -135,7 +136,7 @@ const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
 <div class="dialogActions"><button class="btn primary" type="submit" id="saveSettingsBtn">Enregistrer les réglages</button></div>
 </form>
 <details class="section" id="favoritesSection"><summary>Lieux favoris</summary><p class="smallPrint">Enregistrez ce lieu. Un nom existant sera mis à jour.</p><div class="favoriteAdd"><label class="field">Nom du favori<input id="favoriteName" maxlength="32" placeholder="Maison"></label><button class="btn" id="favoriteSaveBtn" type="button">Ajouter aux favoris</button></div><div class="favoriteList" id="favoriteList"></div><p class="dialogFeedback" id="favoritesFeedback" role="status" aria-live="polite"></p></details>
-<details class="section" id="systemSection"><summary>Connexion et mises à jour</summary><div class="serviceButtons"><button class="btn" id="wifiBtn" type="button" aria-haspopup="dialog" aria-controls="wifiDialog">Configurer le Wi-Fi</button><button class="btn" id="openUpdateBtn" type="button" aria-haspopup="dialog" aria-controls="updateDialog">Mettre à jour le programme</button></div><p class="smallPrint">ZCS CONTRÔLE V4.1.0 · Luminosité du panneau réglable de 10 à 100 %.</p></details>
+<details class="section" id="systemSection"><summary>Connexion et mises à jour</summary><div class="serviceButtons"><button class="btn" id="wifiBtn" type="button" aria-haspopup="dialog" aria-controls="wifiDialog">Configurer le Wi-Fi</button><button class="btn" id="openUpdateBtn" type="button" aria-haspopup="dialog" aria-controls="updateDialog">Mettre à jour le programme</button></div><p class="smallPrint">ZCS CONTRÔLE V4.1.1 · Luminosité du panneau réglable de 10 à 100 %.</p></details>
 </dialog>
 <dialog class="dialog" id="updateDialog" aria-labelledby="updateTitle">
 <div class="dialogHead"><h2 class="dialogTitle" id="updateTitle">Mise à jour</h2><button class="btn quiet" id="updateCloseBtn" type="button">Fermer</button></div>
@@ -508,7 +509,7 @@ async function checkInitialWifi() {
 }
 
 const DEMO = {
-  version:'4.1.0',app:'aviation',visual:'lava',filters:{logoOnly:false,airline:'',type:'',maxAltitudeFt:0},totalCount:3,wifiConnected:true,radarOk:true,radiusKm:30,homeLat:46.324,homeLon:-.459,place:'Niort',ageSeconds:0,
+  version:'4.1.1',app:'aviation',visual:'lava',filters:{logoOnly:false,airline:'',type:'',maxAltitudeFt:0},totalCount:3,wifiConnected:true,radarOk:true,radiusKm:30,homeLat:46.324,homeLon:-.459,place:'Niort',ageSeconds:0,
   display:{mode:'auto',brightness:60,effectiveBrightness:60,sleeping:false,timeSynced:true,clock:'14:32',date:'15/10/2026',nightActive:false,activeHex:'demo-afr'},
   aircraft:[
     {hex:'demo-afr',callsign:'AFR1234',airline:'AIR FRANCE',type:'A320',lat:46.376,lon:-.535,track:124,trackAvailable:true,altitudeFt:34000,altitudeAvailable:true,speedKmh:820,speedAvailable:true,distanceKm:8,route:{status:'known',source:'demo',indicative:true,origin:{code:'CDG',city:'Paris',name:'Paris-Charles de Gaulle'},destination:{code:'BER',city:'Berlin',name:'Berlin Brandenburg'}}},
@@ -1048,11 +1049,11 @@ function flushBrightness(){
 }
 function fillSettings(s){
   brightnessErrors={};el('brightnessFeedback').textContent='';el('nightBrightnessFeedback').textContent='';
-  el('placeInput').value=s.place;el('latInput').value=s.lat;el('lonInput').value=s.lon;el('cityInput').value=cityMatching(s.lat,s.lon);el('latInput').readOnly=el('cityInput').value!=='custom';el('lonInput').readOnly=el('cityInput').value!=='custom';el('radiusInput').value=String(s.radiusKm);el('brightnessInput').value=s.brightness;el('brightnessValue').textContent=s.brightness+' %';el('timezoneInput').value=s.timezone||'paris';el('nightEnabled').checked=Boolean(s.nightEnabled);el('nightStart').value=minuteString(s.nightStart??1320);el('nightEnd').value=minuteString(s.nightEnd??420);el('nightBrightness').value=s.nightBrightness??15;el('nightBrightnessValue').textContent=(s.nightBrightness??15)+' %';el('nightAction').value=s.nightAction||'dim';el('favoriteName').value=s.place;nightControls();
+  el('placeInput').value=s.place;el('latInput').value=s.lat;el('lonInput').value=s.lon;el('cityInput').value=cityMatching(s.lat,s.lon);el('latInput').readOnly=el('cityInput').value!=='custom';el('lonInput').readOnly=el('cityInput').value!=='custom';el('radiusInput').value=String(s.radiusKm);el('brightnessInput').value=s.brightness;el('brightnessValue').textContent=s.brightness+' %';el('clockVisualInput').value=s.visual||'lava';el('timezoneInput').value=s.timezone||'paris';el('nightEnabled').checked=Boolean(s.nightEnabled);el('nightStart').value=minuteString(s.nightStart??1320);el('nightEnd').value=minuteString(s.nightEnd??420);el('nightBrightness').value=s.nightBrightness??15;el('nightBrightnessValue').textContent=(s.nightBrightness??15)+' %';el('nightAction').value=s.nightAction||'dim';el('favoriteName').value=s.place;nightControls();
 }
 async function openSettings(){if(demo){notify('Revenez au direct pour modifier les réglages du Flight Board.');return;}if(uploadBusy||el('settingsDialog').open)return;const epoch=++settingsEpoch;try{await brightnessWork;const s=await requestJson('/api/settings');if(epoch!==settingsEpoch||demo)return;currentSettings=s;fillSettings(s);renderBrightnessStatus(s);el('settingsFeedback').textContent='';el('favoritesFeedback').textContent='';el('settingsDialog').showModal();loadFavorites();}catch(error){notify(error.message);}}
 async function saveSettings(event){
-  event.preventDefault();if(demo||settingsBusy||uploadBusy)return;const payload={place:el('placeInput').value.trim(),lat:Number(el('latInput').value),lon:Number(el('lonInput').value),radiusKm:Number(el('radiusInput').value),brightness:Number(el('brightnessInput').value),timezone:el('timezoneInput').value,nightEnabled:el('nightEnabled').checked,nightStart:minutes(el('nightStart').value),nightEnd:minutes(el('nightEnd').value),nightBrightness:Number(el('nightBrightness').value),nightAction:el('nightAction').value};
+  event.preventDefault();if(demo||settingsBusy||uploadBusy)return;const payload={visual:el('clockVisualInput').value,place:el('placeInput').value.trim(),lat:Number(el('latInput').value),lon:Number(el('lonInput').value),radiusKm:Number(el('radiusInput').value),brightness:Number(el('brightnessInput').value),timezone:el('timezoneInput').value,nightEnabled:el('nightEnabled').checked,nightStart:minutes(el('nightStart').value),nightEnd:minutes(el('nightEnd').value),nightBrightness:Number(el('nightBrightness').value),nightAction:el('nightAction').value};
   if(!payload.place||new TextEncoder().encode(payload.place).length>32){el('settingsFeedback').textContent='Le nom du lieu doit tenir sur 32 octets.';return;}
   if(!el('latInput').value||!el('lonInput').value||!Number.isFinite(payload.lat)||!Number.isFinite(payload.lon)||Math.abs(payload.lat)>90||Math.abs(payload.lon)>180){el('settingsFeedback').textContent='Vérifiez les coordonnées du lieu.';return;}
   if(payload.nightEnabled&&(!Number.isInteger(payload.nightStart)||!Number.isInteger(payload.nightEnd)||payload.nightStart===payload.nightEnd)){el('nightSection').open=true;el('settingsFeedback').textContent='Choisissez deux horaires différents pour le début et la fin de la nuit.';return;}

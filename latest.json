@@ -1,9 +1,9 @@
 {
   "schema": 1,
-  "version": "4.1.0",
+  "version": "4.1.1",
   "firmwareFamily": "FlightBoard.ESP32S3.Application.v2",
-  "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/releases/ZCS-Control-4.1.0-Waveshare-K716.ino.bin",
+  "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/releases/ZCS-Control-4.1.1-Waveshare-K716.ino.bin",
   "size": 1288064,
-  "sha256": "78d3a97fc1de29b9273f287e7360c9b4ecfe0637e88629761a6dbfe66b464a9e",
-  "notes": "ZCS CONTRÔLE V4.1.0 : animation Lave aux contours fluides, messages personnalisés, minuterie, scores ESPN, pixel art et Store de 8 contenus. Interface installable depuis la tablette, réglages conservés. Pour Waveshare ESP32-S3-RGB-Matrix et panneau K716 128×64, balayage 1/32."
+  "sha256": "37e4e87e9905bbaa6dbe3847556728f06f823920a99b59325d08fea0a9e226d0",
+  "notes": "Choix de l’animation de l’horloge par défaut dans Réglages → Horloge et nuit, mémorisé après redémarrage."
 }

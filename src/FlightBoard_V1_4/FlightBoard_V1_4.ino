@@ -27,7 +27,7 @@ const char* WIFI_PASSWORD = "";
 #include "FlightBoardPanel.h"
 #include "FlightBoardPanelRenderer.h"
 
-// ZCS CONTROL V4.1.0 — Waveshare ESP32-S3-RGB-Matrix + HUB75 128x64
+// ZCS CONTROL V4.1.1 — Waveshare ESP32-S3-RGB-Matrix + HUB75 128x64
 // Luminosite physique pilotee par les reglages de jour et de nuit.
 struct BoardSettings {
   double lat = 46.324, lon = -0.459;
@@ -492,7 +492,7 @@ void sendError(int status, const String& message) {
 void sendRadarState() {
   JsonDocument doc;
 
-  doc["version"] = "4.1.0";
+  doc["version"] = "4.1.1";
   doc["app"] = settings.app;
   doc["visual"] = settings.visual;
   doc["contentId"] = settings.contentId;
@@ -1168,7 +1168,7 @@ void setup() {
   Serial.begin(115200);
   delay(1500);
 
-  Serial.println("\n=== ZCS CONTROL V4.1.0 ===");
+  Serial.println("\n=== ZCS CONTROL V4.1.1 ===");
   Serial.println(
     "Radar + favoris + horaires + mise a jour tablette"
   );
