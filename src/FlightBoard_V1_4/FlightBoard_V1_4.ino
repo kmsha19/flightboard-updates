@@ -27,7 +27,7 @@ const char* WIFI_PASSWORD = "";
 #include "FlightBoardPanel.h"
 #include "FlightBoardPanelRenderer.h"
 
-// ZCS CONTROL V4.1.2 — Waveshare ESP32-S3-RGB-Matrix + HUB75 128x64
+// ZCS CONTROL V4.1.3 — Waveshare ESP32-S3-RGB-Matrix + HUB75 128x64
 // Luminosite physique pilotee par les reglages de jour et de nuit.
 struct BoardSettings {
   double lat = 46.324, lon = -0.459;
@@ -58,6 +58,7 @@ JsonDocument widgetConfig, activePack;
 std::unique_ptr<uint8_t[]> activePixels;
 size_t activePixelBytes = 0;
 bool webPackReady = false, logosPackReady = false;
+const char* webPackId = "__web";
 uint16_t activePalette[16] = {};
 String contentToken, contentUploadId, contentUploadError;
 uint32_t contentUploadLength = 0, contentUploadAt = 0;
@@ -105,7 +106,7 @@ bool validApp(const String& app) {
 bool validVisual(const String& visual) {
   return strlen(visual.c_str()) == visual.length() &&
     (visual == "lava" || visual == "stars" || visual == "rain" || visual == "plain" ||
-     visual == "aurora" || visual == "ocean" || visual == "warp");
+     visual == "aurora" || visual == "ocean" || visual == "warp" || visual == "chrono");
 }
 
 bool validAviationType(const String& type) {
@@ -306,6 +307,18 @@ void resetRadar() {
   forceScan = true;
 }
 
+// Local, uppercase date label shared by the panel renderer and /api/state,
+// e.g. "LUN 16 OCT 2026". Kept explicit and short so no locale is required.
+void formatDateLabel(char* out, size_t size, const struct tm& local) {
+  static const char* const weekdays[] = {"DIM", "LUN", "MAR", "MER", "JEU", "VEN", "SAM"};
+  static const char* const months[] = {"JAN", "FEV", "MAR", "AVR", "MAI", "JUN",
+                                       "JUL", "AOU", "SEP", "OCT", "NOV", "DEC"};
+  const int weekday = local.tm_wday >= 0 && local.tm_wday < 7 ? local.tm_wday : 0;
+  const int month = local.tm_mon >= 0 && local.tm_mon < 12 ? local.tm_mon : 0;
+  snprintf(out, size, "%s %02d %s %04d", weekdays[weekday], local.tm_mday, months[month],
+           local.tm_year + 1900);
+}
+
 bool matchesAviationFilters(const AircraftInfo& a, const BoardSettings& p) {
   const bool knownLogo = a.airline && strcmp(a.airline->id, DEFAULT_AIRLINE.id) != 0;
   return (!p.aviationLogoOnly || knownLogo) &&
@@ -411,7 +424,8 @@ void updatePanel() {
   ZcsWidgetFrame widget; makeWidgetFrame(widget); frame.widget = &widget;
   frame.visual = settings.visual == "stars" ? Visual::Stars : settings.visual == "rain" ? Visual::Rain :
     settings.visual == "plain" ? Visual::Plain : settings.visual == "aurora" ? Visual::Aurora :
-    settings.visual == "ocean" ? Visual::Ocean : settings.visual == "warp" ? Visual::Warp : Visual::Lava;
+    settings.visual == "ocean" ? Visual::Ocean : settings.visual == "warp" ? Visual::Warp :
+    settings.visual == "chrono" ? Visual::Chrono : Visual::Lava;
   PanelWeather panelWeather;
   panelWeather.available = weather.available();
   panelWeather.stale = weather.stale(nowMs);
@@ -426,16 +440,19 @@ void updatePanel() {
   time_t now = time(nullptr);
   frame.timeSynced = now >= 1704067200;
   struct tm local = {};
-  char clock[6] = "";
+  char clock[6] = "", dateLabel[24] = "";
   if (frame.timeSynced) {
     localtime_r(&now, &local);
     strftime(clock, sizeof(clock), "%H:%M", &local);
+    formatDateLabel(dateLabel, sizeof(dateLabel), local);
   }
   frame.clock = clock;
+  frame.date = dateLabel;
   const auto schedule = flightBoardDisplayState(settings.brightness, settings.nightEnabled,
     settings.nightStart, settings.nightEnd, settings.nightBrightness,
     settings.nightAction == "sleep", frame.timeSynced, local.tm_hour * 60 + local.tm_min);
   frame.sleeping = schedule.sleeping;
+  frame.nightActive = schedule.nightActive;
   panel.setBrightness(schedule.brightness);
   PanelAircraft plane;
   const int active = activeAircraftIndex();
@@ -513,7 +530,7 @@ void sendError(int status, const String& message) {
 void sendRadarState() {
   JsonDocument doc;
 
-  doc["version"] = "4.1.2";
+  doc["version"] = "4.1.3";
   doc["fonts"]["aviation"] = settings.fontAviation;
   doc["fonts"]["clock"] = settings.fontClock;
   doc["fonts"]["weather"] = settings.fontWeather;
@@ -602,13 +619,15 @@ void sendRadarState() {
   display["nightActive"] = schedule.nightActive;
   display["sleeping"] = schedule.sleeping;
   display["timeSynced"] = synced;
-  char clock[6] = "", date[11] = "";
+  char clock[6] = "", date[11] = "", dateLabel[24] = "";
   if (synced) {
     strftime(clock, sizeof(clock), "%H:%M", &local);
     strftime(date, sizeof(date), "%d/%m/%Y", &local);
+    formatDateLabel(dateLabel, sizeof(dateLabel), local);
   }
   display["clock"] = clock;
   display["date"] = date;
+  display["dateLabel"] = dateLabel;
 
   int active = activeAircraftIndex();
 
@@ -1110,6 +1129,9 @@ void startWebServer() {
   const char* contentHeaders[] = {"X-Content-Token"};
   webServer.collectHeaders(contentHeaders, 1);
   boardUpdate.begin();
+  boardUpdate.setInterfaceCheck([](const char* sha, size_t size) {
+    return installedAssetMatches("__web",sha,size) || installedAssetMatches("__web_next",sha,size);
+  }, ZCS_WEB_BINDING);
   boardUpdate.setPrepareCheck([]() { return !contentStore.busy() && !scores.pending() && boardWiFi.prepareUpdate(); });
   startContentApi();
   webServer.on("/api/widget", HTTP_POST, changeWidget);
@@ -1128,7 +1150,7 @@ void startWebServer() {
   webServer.on("/", HTTP_GET, []() {
     webServer.sendHeader("Cache-Control", "no-store");
     webServer.sendHeader("Content-Encoding", "gzip");
-    if(webPackReady)sendStoredAsset("__web","text/html; charset=utf-8");
+    if(webPackReady)sendStoredAsset(webPackId,"text/html; charset=utf-8");
     else webServer.send_P(200,"text/html; charset=utf-8",reinterpret_cast<const char*>(ZCS_BOOTSTRAP_GZIP),sizeof(ZCS_BOOTSTRAP_GZIP));
   });
 
@@ -1196,7 +1218,7 @@ void setup() {
   Serial.begin(115200);
   delay(1500);
 
-  Serial.println("\n=== ZCS CONTROL V4.1.2 ===");
+  Serial.println("\n=== ZCS CONTROL V4.1.3 ===");
   Serial.println(
     "Radar + favoris + horaires + mise a jour tablette"
   );
@@ -1257,7 +1279,10 @@ void loop() {
       radarHealthy && radarUpdatedMs && now - radarUpdatedMs <= 90000UL && active >= 0) {
     routes.request(radarPlanes[active].hex, radarPlanes[active].callsign);
   }
-  if (settings.app == "weather" && !boardUpdate.busy() && boardWiFi.allowsRadar() &&
+  // The bedside clock keeps the local weather fresh; other clock ambiances stay offline.
+  const bool wantsWeather = settings.app == "weather" ||
+    (settings.app == "clock" && settings.visual == "chrono");
+  if (wantsWeather && !boardUpdate.busy() && boardWiFi.allowsRadar() &&
       !radar.pending() && !routes.pending() && !weather.pending() && !scores.pending() && !contentStore.busy())
     weather.request(settings.lat, settings.lon);
   if (settings.app == "score" && !boardUpdate.busy() && !contentStore.busy() && boardWiFi.allowsRadar() &&

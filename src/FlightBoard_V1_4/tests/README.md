@@ -143,7 +143,7 @@ l’alpha et chaque pixel visible aux PNG sources conservés dans `assets/tablet
 
 ## V4 : bibliothèque et interface
 
-`node tests/ui/test_library.cjs` vérifie 331 assertions : 16 contenus, catégories et recherche sans accents, favoris robustes aux erreurs de stockage, activation atomique, mode hors ligne, inspection sans commande, aperçu indépendant et focus clavier conservé. `test_zcs.cjs` comporte 116 assertions, incluant le maintien du brouillon lors de réponses tardives et lors de l’inspection d’une autre ambiance de l’application active.
+`node tests/ui/test_library.cjs` vérifie 331 assertions : 20 contenus, catégories et recherche sans accents, favoris robustes aux erreurs de stockage, activation atomique, mode hors ligne, inspection sans commande, aperçu indépendant et focus clavier conservé. `test_zcs.cjs` comporte 116 assertions, incluant le maintien du brouillon lors de réponses tardives et lors de l’inspection d’une autre ambiance de l’application active.
 
 Les douze suites UI totalisent 1 956 assertions, dont 31 sur la minification déterministe. Le JavaScript lisible et le HTML exact extrait du gzip ont également été exercés dans le navigateur aux dimensions de la tablette ; aucun appel d’activation n’est produit par une simple consultation.
 

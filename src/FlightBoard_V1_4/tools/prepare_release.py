@@ -130,7 +130,9 @@ def validate_web_assets(sketch, version):
         regular_file(sketch / relative)
     payload = (sketch / required[0]).read_bytes()
     metadata = json.loads((sketch / required[1]).read_text())
-    url = f'https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/zcs-web-{version}.bin'
+    digest = hashlib.sha256(payload).hexdigest()
+    asset_id = digest if tuple(map(int,version.split('.'))) >= (4,1,3) else version
+    url = f'https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/zcs-web-{asset_id}.bin'
     source = re.search(r'R"FBPAGE\((.*?)\)FBPAGE"', (sketch / 'FlightBoardWeb.h').read_text(), re.S)
     if not source:
         raise ValueError('Missing readable web source')
@@ -141,6 +143,10 @@ def validate_web_assets(sketch, version):
                 'minifiedSha256': hashlib.sha256(gzip.decompress(payload)).hexdigest()}
     if not 0 < len(payload) <= 98304 or metadata != expected:
         raise ValueError('Web interface metadata differs from its source or content')
+    if tuple(map(int,version.split('.'))) >= (4,1,3):
+        marker = f'ZCSWEB1:{len(payload)}:{digest}:'
+        if f'ZCS_WEB_BINDING[] PROGMEM = "{marker}"' not in header:
+            raise ValueError('Missing firmware/interface binding')
     patterns = {'SIZE': r'constexpr uint32_t ZCS_WEB_SIZE = ([0-9]+);',
                 'SHA256': r'const char ZCS_WEB_SHA256\[\] PROGMEM = "([^"]+)";',
                 'URL': r'const char ZCS_WEB_URL\[\] PROGMEM = "([^"]+)";'}

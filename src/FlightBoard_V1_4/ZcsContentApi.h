@@ -109,7 +109,9 @@ void loadWidgets(){
   if(settings.app=="pixel"&&settings.contentId.isEmpty())settings.app="clock";
   if(activePack["type"]=="timer" && widgetTimer.durationSeconds()!=activePack["durationSeconds"].as<uint16_t>()) widgetTimer=ZcsTimer(activePack["durationSeconds"].as<uint16_t>());
   logosPackReady=installedAssetMatches("__logos",AIRLINE_IMAGES_SHA256,AIRLINE_IMAGES_SIZE);
-  webPackReady=installedAssetMatches("__web",ZCS_WEB_SHA256,ZCS_WEB_SIZE);
+  webPackId = "__web";
+  webPackReady=installedAssetMatches(webPackId,ZCS_WEB_SHA256,ZCS_WEB_SIZE);
+  if(!webPackReady && installedAssetMatches("__web_next",ZCS_WEB_SHA256,ZCS_WEB_SIZE)){webPackId="__web_next";webPackReady=true;}
   char token[33];snprintf(token,sizeof(token),"%08lx%08lx%08lx%08lx",(unsigned long)esp_random(),(unsigned long)esp_random(),(unsigned long)esp_random(),(unsigned long)esp_random());contentToken=token;
 }
 void changeWidget(){
@@ -142,7 +144,9 @@ void changeTimer(){
 bool contentAuthorized(){return !contentToken.isEmpty()&&webServer.header("X-Content-Token")==contentToken;}
 size_t userContentCount(){size_t count=0;for(size_t i=0;i<contentStore.count();++i)if(strncmp(contentStore.entries()[i].id,"__",2))++count;return count;}
 void sendContentList(){
-  JsonDocument doc;doc["capacity"]=14;doc["available"]=contentStore.available();doc["token"]=contentToken;
+  JsonDocument doc;doc["capacity"]=13;doc["available"]=contentStore.available();doc["token"]=contentToken;
+  auto interface=doc["interface"].to<JsonObject>();interface["ready"]=webPackReady;interface["sha256"]=ZCS_WEB_SHA256;interface["size"]=ZCS_WEB_SIZE;
+  interface["stagingId"]=webPackReady&&strcmp(webPackId,"__web")==0?"__web_next":"__web";
   auto logos=doc["logos"].to<JsonObject>(); logos["installed"]=logosPackReady;
   logos["url"]="https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/zcs-logos.bin";
   logos["size"]=AIRLINE_IMAGES_SIZE;logos["sha256"]=AIRLINE_IMAGES_SHA256;
@@ -157,7 +161,7 @@ void sendContentData(){
   for(size_t at=0;at<entry->length;at+=sizeof(buffer)){size_t count=std::min(sizeof(buffer),size_t(entry->length-at));if(!contentStore.read(id.c_str(),at,buffer,count))break;webServer.sendContent((const char*)buffer,count);}
 }
 bool validatePendingContent(ZcsContentStore&,void*){
-  if(contentUploadId=="__web")return contentUploadLength==ZCS_WEB_SIZE;
+  if(contentUploadId=="__web" || contentUploadId=="__web_next"){uint8_t magic[3];return contentUploadLength>288 && contentStore.readPending(0,magic,3) && magic[0]==0x1f&&magic[1]==0x8b&&magic[2]==8;}
   if(contentUploadId=="__logos")return contentUploadLength==AIRLINE_IMAGES_SIZE; // fixed generated lossless WebP asset bank
   JsonDocument pack;ZcsStoreReader reader{nullptr,true,0,contentUploadLength};
   if(deserializeJson(pack,reader,DeserializationOption::NestingLimit(4))||!validPack(pack,contentUploadId))return false;
@@ -173,10 +177,10 @@ void receiveContent(){
     bool sizeValid=size.length()>0&&size.length()<7;for(size_t i=0;i<size.length();++i){if(size[i]<'0'||size[i]>'9')sizeValid=false;else contentUploadLength=contentUploadLength*10+size[i]-'0';}
     if(!contentAuthorized())contentUploadError="Acces refuse.";
     else if(boardUpdate.busy()||contentStore.busy()||radar.pending()||routes.pending()||weather.pending()||scores.pending())contentUploadError="Panneau occupe. Reessayez dans quelques secondes.";
-    else if(contentUploadId.startsWith("__")&&contentUploadId!="__web"&&contentUploadId!="__logos")contentUploadError="Identifiant reserve.";
-    else if(!contentUploadId.startsWith("__")&&!contentStore.find(contentUploadId.c_str())&&userContentCount()>=14)contentUploadError="Bibliotheque pleine.";
-    else if(!sizeValid||!contentUploadLength||contentUploadLength>(contentUploadId=="__web"?98304U:49152U)||contentUploadId==settings.contentId)contentUploadError="Taille ou contenu actif invalide.";
-    else if(contentUploadId=="__web" && (webServer.arg("sha256")!=ZCS_WEB_SHA256 || contentUploadLength!=ZCS_WEB_SIZE))contentUploadError="Version interface incompatible.";
+    else if(contentUploadId.startsWith("__")&&contentUploadId!="__web"&&contentUploadId!="__web_next"&&contentUploadId!="__logos")contentUploadError="Identifiant reserve.";
+    else if(!contentUploadId.startsWith("__")&&!contentStore.find(contentUploadId.c_str())&&userContentCount()>=13)contentUploadError="Bibliotheque pleine.";
+    else if(!sizeValid||!contentUploadLength||contentUploadLength>((contentUploadId=="__web"||contentUploadId=="__web_next")?98304U:49152U)||contentUploadId==settings.contentId)contentUploadError="Taille ou contenu actif invalide.";
+    else if(webPackReady && contentUploadId==webPackId && (webServer.arg("sha256")!=ZCS_WEB_SHA256 || contentUploadLength!=ZCS_WEB_SIZE))contentUploadError="Interface active protegee. Utilise le stockage de preparation.";
     else if(contentUploadId=="__logos" && webServer.arg("sha256")!=AIRLINE_IMAGES_SHA256)contentUploadError="Version des logos incompatible.";
     else if(!contentStore.beginPut(contentUploadId.c_str(),contentUploadLength,webServer.arg("sha256").c_str()))contentUploadError=contentStore.error();
   }else if(upload.status==UPLOAD_FILE_WRITE){
@@ -192,7 +196,7 @@ void finishContent(){
     if(contentUploadError.isEmpty())contentUploadError=valid?contentStore.error():"Transfert incomplet.";
     contentStore.abort();sendError(400,contentUploadError);return;
   }
-  if(contentUploadId=="__web")webPackReady=true;
+  if((contentUploadId=="__web"||contentUploadId=="__web_next") && installedAssetMatches(contentUploadId.c_str(),ZCS_WEB_SHA256,ZCS_WEB_SIZE)){webPackId=contentUploadId=="__web"?"__web":"__web_next";webPackReady=true;}
   if(contentUploadId=="__logos")logosPackReady=true;
   sendContentList();
 }

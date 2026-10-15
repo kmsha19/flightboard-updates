@@ -22,6 +22,7 @@ static uint16_t activePalette[16]={};
 static std::unique_ptr<uint8_t[]> activePixels;
 static size_t activePixelBytes=0;
 static bool webPackReady=false,logosPackReady=false;
+static const char* webPackId="__web";
 static String contentToken,requestBody;
 static int responseStatus=0,assetReads=0;
 static constexpr char ZCS_WEB_SHA256[]="mock-web",AIRLINE_IMAGES_SHA256[]="mock-logo";

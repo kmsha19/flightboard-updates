@@ -27,4 +27,29 @@ void abort_midstream(){Fixture t;auto b=image();t.start(b.size());std::vector<ui
 void no_body(){Fixture t;t.finish();CHECK(t.s.responseCode==400);CHECK(!Update.bootActivated);CHECK(Update.begins==0);}
 void preparation_guard(){Fixture t;auto b=image();t.f.setPrepareCheck([](){return false;});t.all(b);CHECK(t.s.responseCode==503);CHECK(Update.begins==0);CHECK(!Update.bootActivated);CHECK(!t.f.busy());t.f.setPrepareCheck([](){return true;});t.all(b);CHECK(t.s.responseCode==200);CHECK(Update.bootActivated);}
 void real_image(const char*path,bool accept){Fixture t;std::ifstream in(path,std::ios::binary);CHECK(in.good());std::vector<uint8_t>b((std::istreambuf_iterator<char>(in)),{});t.all(b,1024);CHECK((t.s.responseCode==200)==accept);CHECK(Update.bootActivated==accept);}
-int main(int argc,char**argv){try{success();invalid();length_and_extension();failures_and_retry();abort_midstream();no_body();preparation_guard();if(argc>1)real_image(argv[1],true);if(argc>2)real_image(argv[2],false);if(argc>3)real_image(argv[3],false);std::cout<<"PASS OTA "<<checks<<" assertions\n";return 0;}catch(const std::exception&e){std::cerr<<"FAIL "<<e.what()<<"\n";return 1;}}
+
+static bool pairedAvailable=true;static int pairedChecks=0;
+bool pairedCheck(const char* sha,size_t size){++pairedChecks;return pairedAvailable && size==46651 && std::string(sha)==std::string(64,'a');}
+void paired_updates(){
+ const std::string sha(64,'a'),binding="ZCSWEB1:46651:"+sha+":";
+ for(size_t chunk:{1,7,31,1024}){
+  Fixture t;pairedAvailable=true;pairedChecks=0;t.f.setInterfaceCheck(pairedCheck);
+  auto b=image();memcpy(b.data()+400,binding.data(),binding.size());
+  t.s.requestHeaders["X-Interface-Size"]="46651";t.s.requestHeaders["X-Interface-Sha256"]=sha;
+  t.all(b,chunk);CHECK(t.s.responseCode==200);CHECK(Update.bootActivated);CHECK(pairedChecks==1);
+ }
+ for(int variant=0;variant<7;++variant){
+  Fixture t;pairedAvailable=true;pairedChecks=0;t.f.setInterfaceCheck(pairedCheck);
+  auto b=image();memcpy(b.data()+400,binding.data(),binding.size());
+  t.s.requestHeaders["X-Interface-Size"]="46651";t.s.requestHeaders["X-Interface-Sha256"]=sha;
+  if(variant==0)t.s.requestHeaders.erase("X-Interface-Sha256");
+  if(variant==1)t.s.requestHeaders["X-Interface-Sha256"]=std::string(64,'A');
+  if(variant==2)t.s.requestHeaders["X-Interface-Size"]="98305";
+  if(variant==3)b[420]='b'; // valid staged asset, wrong firmware binding
+  if(variant==4)pairedAvailable=false; // missing/corrupt staged interface
+  if(variant==5)t.s.requestHeaders["X-Interface-Size"]="46652";
+  if(variant==6){b[400]='X';} // legacy firmware has no binding
+  t.all(b,7);CHECK(t.s.responseCode>=400);CHECK(!Update.bootActivated);CHECK(!t.f.busy());CHECK(ESP.restarts==0);CHECK(Update.ends==0);
+ }
+}
+int main(int argc,char**argv){try{paired_updates();success();invalid();length_and_extension();failures_and_retry();abort_midstream();no_body();preparation_guard();if(argc>1)real_image(argv[1],true);if(argc>2)real_image(argv[2],false);if(argc>3)real_image(argv[3],false);std::cout<<"PASS OTA "<<checks<<" assertions\n";return 0;}catch(const std::exception&e){std::cerr<<"FAIL "<<e.what()<<"\n";return 1;}}

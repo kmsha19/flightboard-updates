@@ -161,9 +161,9 @@ def compress_ui(html):
 
 
 def build_web(html, minified, compressed):
-    version = '4.1.2'
+    version = '4.1.3'
     digest = sha256(compressed).hexdigest()
-    url = f'https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/zcs-web-{version}.bin'
+    url = f'https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/zcs-web-{digest}.bin'
     if len(compressed) > 98304:
         raise ValueError('Web content exceeds the firmware upload limit')
     (ASSETS / 'zcs-web.bin').write_bytes(compressed)
@@ -177,7 +177,8 @@ def build_web(html, minified, compressed):
         '#pragma once', '#include <Arduino.h>', '',
         f'constexpr uint32_t ZCS_WEB_SIZE = {len(compressed)};',
         f'const char ZCS_WEB_SHA256[] PROGMEM = "{digest}";',
-        f'const char ZCS_WEB_URL[] PROGMEM = "{url}";', '']))
+        f'const char ZCS_WEB_URL[] PROGMEM = "{url}";',
+        f'const char ZCS_WEB_BINDING[] PROGMEM = "ZCSWEB1:{len(compressed)}:{digest}:";', '']))
     build_bootstrap(metadata)
     print(f'Web pack: {len(compressed)} bytes')
 

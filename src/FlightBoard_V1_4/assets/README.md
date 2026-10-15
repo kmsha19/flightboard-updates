@@ -40,4 +40,4 @@ Depuis V4, `tools/minify_web.cjs` utilise **esbuild 0.28.2**, figé dans `packag
 
 La compression Zopfli produit ensuite du gzip standard et conserve exactement cette sortie de compilation ; elle ne s’exécute que sur l’ordinateur pendant la génération. `--hash-only` reste sans dépendance externe, y compris sans Node.js. Les images WebP utilisent un effort de compression de 100, toujours sans perte.
 
-Le pack web publié suit une URL versionnée (`store/zcs-web-4.1.0.bin`) : ne jamais remplacer ses octets après publication. Le firmware accepte seulement son empreinte compilée. `--bootstrap-only` régénère la page de secours depuis le manifeste web existant, avec la seule bibliothèque standard Python. Après modification du code applicatif, utiliser la génération complète.
+Le pack web publié suit une URL versionnée (`store/zcs-web-4.1.2.bin`) : ne jamais remplacer ses octets après publication. Le firmware accepte seulement son empreinte compilée. `--bootstrap-only` régénère la page de secours depuis le manifeste web existant, avec la seule bibliothèque standard Python. Après modification du code applicatif, utiliser la génération complète.

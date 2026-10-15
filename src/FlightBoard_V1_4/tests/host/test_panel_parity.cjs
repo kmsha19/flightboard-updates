@@ -124,5 +124,16 @@ try {
   const negative={...weather,code:61,temperatureC:-3.6,windKmh:100.2};
   compareWeather('negative',negative);compareWeather('stale',{...negative,stale:true});
   compareWeather('nonfinite',{...negative,stale:true,temperatureC:NaN,windKmh:NaN});
+  const chronoDisplay={...display,dateLabel:'LUN 16 OCT 2026',nightActive:false};
+  const chronoWeather={available:true,stale:false,temperatureC:19.4,windKmh:12.3,code:0,isDay:true};
+  const chronoExtra=(w=chronoWeather,fonts)=>Object.assign({app:'clock',visual:'chrono',weather:w},fonts?{fonts}:{});
+  compare('clock_chrono',plane,chronoDisplay,true,chronoExtra());
+  compare('clock_chrono_night',plane,{...chronoDisplay,nightActive:true},true,chronoExtra());
+  compare('clock_chrono_unsynced',plane,{...chronoDisplay,timeSynced:false,clock:'',dateLabel:''},true,chronoExtra());
+  compare('clock_chrono_nodate',plane,{...chronoDisplay,dateLabel:''},true,chronoExtra());
+  compare('clock_chrono_noweather',plane,chronoDisplay,true,chronoExtra({available:false}));
+  compare('clock_chrono_stale',plane,chronoDisplay,true,chronoExtra({...chronoWeather,stale:true,code:61,temperatureC:-3.6}));
+  compare('clock_chrono_code',plane,chronoDisplay,true,chronoExtra({...chronoWeather,code:45,isDay:false,temperatureC:2.5}));
+  for(const style of styles)compare('clock_chrono_font_'+style,plane,chronoDisplay,true,chronoExtra(chronoWeather,Object.fromEntries(fontApps.map(key=>[key,style]))));
   compare('zcs_sleep',plane,{...display,sleeping:true},true,{app:'weather',weather});
 } finally { fs.rmSync(tmp,{recursive:true,force:true}); }

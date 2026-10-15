@@ -36,6 +36,19 @@ class WebAssetTests(unittest.TestCase):
 
     def tearDown(self): self.temp.cleanup()
     def write(self, name, value): (self.root / name).write_bytes(value.encode() if isinstance(value,str) else value)
+    def test_content_addressed_pair(self):
+        version='4.1.3';meta=self.metadata.copy();meta['version']=version
+        meta['url']='https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/zcs-web-'+meta['sha256']+'.bin'
+        self.write('assets/zcs-web.json',json.dumps(meta))
+        header=f'constexpr uint32_t ZCS_WEB_SIZE = {meta["size"]};\nconst char ZCS_WEB_SHA256[] PROGMEM = "{meta["sha256"]}";\nconst char ZCS_WEB_URL[] PROGMEM = "{meta["url"]}";\nconst char ZCS_WEB_BINDING[] PROGMEM = "ZCSWEB1:{meta["size"]}:{meta["sha256"]}:";\n'
+        self.write('FlightBoardWebGzip.h',header)
+        template=(self.root/'assets/bootstrap.html').read_text()
+        for key,value in {'VERSION':version,'SIZE':str(meta['size']),'SHA256':meta['sha256'],'URL':meta['url']}.items():template=template.replace('__WEB_'+key+'__',value)
+        self.write('ZcsBootstrap.h','const uint8_t ZCS_BOOTSTRAP_GZIP[] = {'+','.join(f'0x{n:02X}' for n in gzip.compress(template.encode(),mtime=0))+'};')
+        release.validate_web_assets(self.root,version)
+        self.write('FlightBoardWebGzip.h',header.replace('ZCSWEB1:','WRONG:'))
+        with self.assertRaises(ValueError):release.validate_web_assets(self.root,version)
+
     def check(self): release.validate_web_assets(self.root, '4.1.0')
 
     def test_valid_complete_public_assets(self): self.check()

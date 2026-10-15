@@ -328,6 +328,42 @@ void test_animated_weather_and_clock() {
   weather.temperatureC = 12; weather.windKmh = INFINITY; CHECK(!panelAnimated(frame));
 }
 
+void test_chrono_clock() {
+  Screen screen, day, night;
+  auto frame = makeFrame();
+  frame.app = App::Clock; frame.visual = Visual::Chrono; frame.mode = Mode::Manual;
+  frame.date = "LUN 16 OCT 2026"; frame.nightActive = false;
+  PanelWeather weather;
+  weather.available = true; weather.temperatureC = 19.4; weather.windKmh = 12.3;
+  weather.code = 0; weather.isDay = true;
+  frame.weather = &weather;
+  day.draw(frame);
+  CHECK(panelScene(frame) == Scene::Idle);
+  CHECK(!panelAnimated(frame));                 // Never moves, so it can stay on all night.
+  screen.draw(frame, UINT32_MAX); CHECK(screen.pixels == day.pixels);
+  frame.nightActive = true; night.draw(frame);
+  CHECK(night.pixels != day.pixels);            // Night uses a warmer, dimmer palette.
+  frame.nightActive = false;
+  // The large time occupies the chrono centre with the shared clock glyphs.
+  Screen time; detail::centered(time.canvas(), "14:32", 64, 15, 124, 30, 0xffff);
+  size_t digits = 0;
+  for (size_t i = 0; i < time.pixels.size(); ++i)
+    if (time.pixels[i]) { ++digits; CHECK(day.pixels[i] != 0); }
+  CHECK(digits > 100);
+  // Missing date, unsynced time and missing weather degrade to explicit labels.
+  frame.date = ""; screen.draw(frame); CHECK(screen.pixels != day.pixels); frame.date = "LUN 16 OCT 2026";
+  frame.timeSynced = false; frame.clock = ""; screen.draw(frame); CHECK(screen.pixels != day.pixels);
+  frame.timeSynced = true; frame.clock = "14:32"; screen.draw(frame); CHECK(screen.pixels == day.pixels);
+  PanelWeather none; frame.weather = &none; screen.draw(frame); CHECK(screen.pixels != day.pixels);
+  frame.weather = &weather;
+  // Stale readings stay visible but change tone.
+  weather.stale = true; screen.draw(frame); CHECK(screen.pixels != day.pixels);
+  weather.stale = false;
+  // The night schedule still blanks the panel before the clock is drawn.
+  frame.sleeping = true; screen.pixels.fill(0xffff); screen.draw(frame);
+  CHECK(std::all_of(screen.pixels.begin(), screen.pixels.end(), [](uint16_t p) { return p == 0; }));
+}
+
 // Optional raw fixtures are compared by test_panel_parity.cjs with the actual
 // embedded tablet renderer. uint16 pixels are written explicitly little-endian.
 void writeFixture(const char* path, const PanelFrame& frame, uint32_t time = 0) {
@@ -338,7 +374,7 @@ void writeFixture(const char* path, const PanelFrame& frame, uint32_t time = 0) 
 }
 
 int main(int argc, char** argv) {
-  test_data_rules(); test_fonts_and_layout(); test_plane_and_routes(); test_aircraft_type_header(); test_idle(); test_lava_background(); test_zcs_scenes(); test_animated_weather_and_clock();
+  test_data_rules(); test_fonts_and_layout(); test_plane_and_routes(); test_aircraft_type_header(); test_idle(); test_lava_background(); test_zcs_scenes(); test_animated_weather_and_clock(); test_chrono_clock();
   if (argc == 2) {
     const std::string dir = argv[1];
     auto plane = makePlane(); auto frame = makeFrame(&plane);
@@ -462,6 +498,40 @@ int main(int argc, char** argv) {
     writeFixture((dir + "/weather_nonfinite.bin").c_str(), frame);
     frame.sleeping = true;
     writeFixture((dir + "/zcs_sleep.bin").c_str(), frame);
+    // Bedside clock (chrono): date, time and weather, still, day and night.
+    frame = makeFrame(&plane); frame.mode = Mode::Manual;
+    frame.app = App::Clock; frame.visual = Visual::Chrono;
+    frame.date = "LUN 16 OCT 2026"; frame.nightActive = false;
+    weather = PanelWeather();
+    weather.available = true; weather.temperatureC = 19.4; weather.windKmh = 12.3;
+    weather.code = 0; weather.isDay = true;
+    frame.weather = &weather;
+    writeFixture((dir + "/clock_chrono.bin").c_str(), frame);
+    frame.nightActive = true;
+    writeFixture((dir + "/clock_chrono_night.bin").c_str(), frame);
+    frame.nightActive = false;
+    {
+      PanelFrame off = frame; off.timeSynced = false; off.clock = ""; off.date = "";
+      writeFixture((dir + "/clock_chrono_unsynced.bin").c_str(), off);
+      PanelFrame undated = frame; undated.date = "";
+      writeFixture((dir + "/clock_chrono_nodate.bin").c_str(), undated);
+      PanelWeather none; PanelFrame without = frame; without.weather = &none;
+      writeFixture((dir + "/clock_chrono_noweather.bin").c_str(), without);
+      PanelWeather stale = weather; stale.stale = true; stale.code = 61; stale.temperatureC = -3.6;
+      PanelFrame staleFrame = frame; staleFrame.weather = &stale;
+      writeFixture((dir + "/clock_chrono_stale.bin").c_str(), staleFrame);
+      PanelWeather coded = weather; coded.code = 45; coded.isDay = false; coded.temperatureC = 2.5;
+      PanelFrame codedFrame = frame; codedFrame.weather = &coded;
+      writeFixture((dir + "/clock_chrono_code.bin").c_str(), codedFrame);
+    }
+    {
+      const Font chronoFonts[] = {Font::Classic, Font::Modern, Font::Digital, Font::Arcade, Font::Compact};
+      const char* chronoNames[] = {"classic", "modern", "digital", "arcade", "compact"};
+      for (int i = 0; i < 5; ++i) {
+        frame.clockFont = chronoFonts[i];
+        writeFixture((dir + "/clock_chrono_font_" + std::string(chronoNames[i]) + ".bin").c_str(), frame);
+      }
+    }
   }
   std::cout << "Panel renderer: " << assertions << " assertions passed\n";
 }

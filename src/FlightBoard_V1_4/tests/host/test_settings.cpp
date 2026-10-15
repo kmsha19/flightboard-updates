@@ -52,7 +52,7 @@ void test_zcs_strict_validation(){
   for(const char* app:{"aviation","clock","animation","weather","message","timer","score","pixel"}){
     auto d=validBody();d["app"]=app;BoardSettings next;CHECK(parse(d,next));CHECK(next.app==app);
   }
-  for(const char* visual:{"lava","stars","rain","plain","aurora","ocean","warp"}){
+  for(const char* visual:{"lava","stars","rain","plain","aurora","ocean","warp","chrono"}){
     auto d=validBody();d["visual"]=visual;BoardSettings next;CHECK(parse(d,next));CHECK(next.visual==visual);
   }
   for(const char* key:{"app","visual","aviationLogoOnly","aviationAirline","aviationType","aviationMaxAltitudeFt"}){

@@ -18,7 +18,7 @@ constexpr uint32_t kFrameIntervalMs = 80;  // 12.5 fps for the idle animation.
 enum class Mode : uint8_t { Auto, Manual, Clock };
 enum class App : uint8_t { Aviation, Clock, Animation, Weather, Message, Timer, Score, Pixel };
 enum class Font : uint8_t { Classic, Modern, Digital, Arcade, Compact };
-enum class Visual : uint8_t { Lava, Stars, Rain, Plain, Aurora, Ocean, Warp };
+enum class Visual : uint8_t { Lava, Stars, Rain, Plain, Aurora, Ocean, Warp, Chrono };
 enum class RouteStatus : uint8_t { NotRequested, Loading, Known, Unknown, Error, Unconfirmed };
 enum class Scene : uint8_t { Sleeping, Connecting, Idle, Unavailable, Aircraft, Animation, Weather, Widget };
 
@@ -68,6 +68,8 @@ struct PanelFrame {
   bool sleeping = false;
   bool timeSynced = false;
   const char* clock = nullptr;  // Local HH:MM, supplied by the existing scheduler.
+  const char* date = nullptr;   // Local label, e.g. "LUN 16 OCT 2026" (bedside clock).
+  bool nightActive = false;     // Follows the configured night window (bedside clock).
   bool animate = true;
   const PanelAircraft* aircraft = nullptr;  // Already selected by auto/manual mode.
   const PanelWeather* weather = nullptr;
@@ -103,6 +105,8 @@ inline bool weatherCodeValid(int code) {
 
 inline bool panelAnimated(const PanelFrame& frame) {
   const auto scene = panelScene(frame);
+  // The bedside clock is intentionally still, day and night, to stay sleep-friendly.
+  if (frame.visual == Visual::Chrono && (scene == Scene::Idle || scene == Scene::Animation)) return false;
   const auto* w = frame.weather;
   if (scene == Scene::Widget) {
     if (!frame.animate || !frame.widget) return false;
@@ -385,7 +389,10 @@ inline void ambient(const PanelCanvas& canvas, const PanelFrame& frame, uint32_t
   }
 }
 
+inline void chronoFace(const PanelCanvas& canvas, const PanelFrame& frame);
+
 inline void idle(const PanelCanvas& canvas, const PanelFrame& frame, uint32_t nowMs) {
+  if (frame.visual == Visual::Chrono) { chronoFace(canvas, frame); return; }
   ambient(canvas, frame, nowMs);
   const bool synced = frame.timeSynced && validClock(frame.clock);
   // Calm black backing keeps digits legible over the sparse retro animations.
@@ -411,6 +418,34 @@ inline const char* weatherLabel(int code, bool day) {
   if (code == 95 || code == 96 || code == 99) return "ORAGE";
   if ((code >= 61 && code <= 67) || (code >= 80 && code <= 82)) return "PLUIE";
   return "METEO";
+}
+
+// Bedside clock: full date, large time and local weather on a calm black field.
+// The palette warms and dims once the configured night window is active, and
+// the layout never moves so the panel can be kept on while sleeping.
+inline void chronoFace(const PanelCanvas& canvas, const PanelFrame& frame) {
+  const bool night = frame.nightActive;
+  const uint16_t header = night ? rgb565(96, 112, 106) : kMuted;
+  const uint16_t digits = night ? rgb565(216, 152, 88) : kWhite;
+  const uint16_t rule = night ? rgb565(44, 40, 34) : kDivider;
+  const bool synced = frame.timeSynced && validClock(frame.clock);
+  const bool dated = frame.timeSynced && frame.date && frame.date[0];
+  rectangle(canvas, 0, 0, kWidth, kHeight, 0);
+  centered(canvas, dated ? frame.date : "DATE INDISPONIBLE", 64, 2, 124, 7, header);
+  rectangle(canvas, 4, 11, 120, 1, rule);
+  centered(canvas, synced ? frame.clock : "--:--", 64, 15, 124, 30, digits);
+  rectangle(canvas, 4, 45, 120, 1, rule);
+  const auto* weather = frame.weather;
+  if (!weather || !weather->available || !isfinite(weather->temperatureC) || !isfinite(weather->windKmh)) {
+    centered(canvas, "METEO INDISPONIBLE", 64, 51, 124, 7, header);
+    return;
+  }
+  const uint16_t detail = weather->stale ? (night ? rgb565(156, 124, 64) : kAmber)
+                                         : (night ? rgb565(104, 124, 118) : kMint);
+  char line[32];
+  snprintf(line, sizeof(line), "%ld C %s", (long)floor(weather->temperatureC + .5),
+           weatherLabel(weather->code, weather->isDay));
+  centered(canvas, line, 64, 51, 124, 7, detail);
 }
 
 inline void disc(const PanelCanvas& canvas, int cx, int cy, int radius, uint16_t color) {

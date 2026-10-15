@@ -2,6 +2,7 @@
 #pragma once
 #include <Arduino.h>
 
-constexpr uint32_t ZCS_WEB_SIZE = 45382;
-const char ZCS_WEB_SHA256[] PROGMEM = "d6e5fda81e122610a6968212ad1fccd6b01a1bbdaeb2062132ebe628535cd1b9";
-const char ZCS_WEB_URL[] PROGMEM = "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/zcs-web-4.1.2.bin";
+constexpr uint32_t ZCS_WEB_SIZE = 46710;
+const char ZCS_WEB_SHA256[] PROGMEM = "f0ee66af6d843d320cea24b4727887a2dd975ba2d215ac2be96800eb8a78833c";
+const char ZCS_WEB_URL[] PROGMEM = "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/zcs-web-f0ee66af6d843d320cea24b4727887a2dd975ba2d215ac2be96800eb8a78833c.bin";
+const char ZCS_WEB_BINDING[] PROGMEM = "ZCSWEB1:46710:f0ee66af6d843d320cea24b4727887a2dd975ba2d215ac2be96800eb8a78833c:";

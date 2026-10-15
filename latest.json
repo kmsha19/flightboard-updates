@@ -1,9 +1,14 @@
 {
   "schema": 1,
-  "version": "4.1.2",
+  "version": "4.1.3",
   "firmwareFamily": "FlightBoard.ESP32S3.Application.v2",
-  "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/releases/ZCS-Control-4.1.2-Waveshare-K716.ino.bin",
-  "size": 1291136,
-  "sha256": "f0d571576c9cc7ff89c2a4752e580ee8bf24d67899503844b15d62dc3be9dd99",
-  "notes": "Cinq polices de panneau : Pixel classique, Moderne, Numérique, Arcade et Compacte. Choix mémorisé par application avec aperçu en pixels avant enregistrement."
+  "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/releases/ZCS-Control-4.1.3-Waveshare-K716.ino.bin",
+  "size": 1294496,
+  "sha256": "422c8bef42dae1567cb7f592549faa0889dc50370660692262ecb2ceb068c41b",
+  "notes": "Mise à jour complète : interface préparée et vérifiée avant activation du programme, conservation de l’interface actuelle, réouverture automatique et fichiers publics identifiés par SHA-256. Réglages conservés.",
+  "interface": {
+    "size": 46710,
+    "sha256": "f0ee66af6d843d320cea24b4727887a2dd975ba2d215ac2be96800eb8a78833c",
+    "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/zcs-web-f0ee66af6d843d320cea24b4727887a2dd975ba2d215ac2be96800eb8a78833c.bin"
+  }
 }

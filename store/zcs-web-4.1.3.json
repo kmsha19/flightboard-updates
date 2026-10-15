@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "id": "__web",
+  "version": "4.1.3",
+  "size": 46710,
+  "sha256": "f0ee66af6d843d320cea24b4727887a2dd975ba2d215ac2be96800eb8a78833c",
+  "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/zcs-web-f0ee66af6d843d320cea24b4727887a2dd975ba2d215ac2be96800eb8a78833c.bin",
+  "sourceSha256": "72420457c9cf17976b138a41ac62806b24008c71186dedaddb5ed75fe47eb283",
+  "minifiedSha256": "d7ac671dd5affc0f5459717f32ca75277d2017757d7834be44a57b9c46f22aca"
+}

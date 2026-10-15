@@ -1,7 +1,7 @@
 {
-  "version": "4.1.2",
+  "version": "4.1.3",
   "root": "src/FlightBoard_V1_4",
-  "firmwareSha256": "f0d571576c9cc7ff89c2a4752e580ee8bf24d67899503844b15d62dc3be9dd99",
+  "firmwareSha256": "422c8bef42dae1567cb7f592549faa0889dc50370660692262ecb2ceb068c41b",
   "files": [
     {
       "path": "AirlineLogos.h",
@@ -35,8 +35,8 @@
     },
     {
       "path": "FlightBoardPanelRenderer.h",
-      "size": 30217,
-      "sha256": "ee077c9d4772401ccafc320e0c553b03be97e62812bd86ff0f3fec56afcb5313"
+      "size": 32326,
+      "sha256": "69b86b01ac45aaba80a3d0ba1cf76c3c515856e4bab842e308e7e70d8469e093"
     },
     {
       "path": "FlightBoardRadar.h",
@@ -55,18 +55,18 @@
     },
     {
       "path": "FlightBoardUpdate.h",
-      "size": 13566,
-      "sha256": "3e6a86df2dc4d6bd2137a0eca0ac83d16937180a4970b5b001a35018406b9322"
+      "size": 15464,
+      "sha256": "5213d54c29c8f1abe37bda436fc66714b6fe3cc1c5aaaf2f00589dc08308b609"
     },
     {
       "path": "FlightBoardWeb.h",
-      "size": 188997,
-      "sha256": "cdca54526bd59557eba5c1ddb291a95256c7395a62f3289dafe81badae9ae5f6"
+      "size": 193982,
+      "sha256": "ea3c250872b18980f81df887be943ee45f7b786cacb6f05608ac716b47abca08"
     },
     {
       "path": "FlightBoardWebGzip.h",
-      "size": 393,
-      "sha256": "69cc357b4864bbd95dd924a5550bc772204890d4ec60329e98f00c1f03333b0f"
+      "size": 574,
+      "sha256": "7c9062a1adade184e38fb7f9c0e5a10ca9dfc6dbc89135ccf96cc93e2588acd0"
     },
     {
       "path": "FlightBoardWiFi.h",
@@ -75,18 +75,18 @@
     },
     {
       "path": "FlightBoard_V1_4.ino",
-      "size": 46216,
-      "sha256": "77274aef48a769f9cc21918c6289162180e96255c92386bbd8e37830208d517b"
+      "size": 47739,
+      "sha256": "880e0b4c1a794524b271e8379bb35aa7561aa6bb1ddcadcf9be4955c88b320d4"
     },
     {
       "path": "ZcsBootstrap.h",
-      "size": 21912,
-      "sha256": "d321e543390cfcb102513f97df1089850011c7806b1449bd962d4bb70765475b"
+      "size": 23266,
+      "sha256": "b27f4ef4615210cb12131853cfd914db1451ee16ff0cc3bc7d40f5fd8a36fb14"
     },
     {
       "path": "ZcsContentApi.h",
-      "size": 15945,
-      "sha256": "dc341419fe38db5d6d21e5c23eda66225802f6a1a487b077357869c10a60d2f4"
+      "size": 16750,
+      "sha256": "703ca6c67d7852d985e6206f2620148b5f0bcb5e907ddcac0c10b4974a01de93"
     },
     {
       "path": "ZcsContentStore.cpp",
@@ -121,7 +121,7 @@
     {
       "path": "assets/README.md",
       "size": 7060,
-      "sha256": "26adb136219a8a17f5f705299ff59481cdaeb289bd2c035b2a46c5171006eddf"
+      "sha256": "076bec362e72478705b65448afcafce6e7876c37e4a690aee3a708311930095b"
     },
     {
       "path": "assets/airlines.json",
@@ -130,8 +130,8 @@
     },
     {
       "path": "assets/bootstrap.html",
-      "size": 8506,
-      "sha256": "404092a49da3d236c8f265f53b3ed68d59d83fc9e38f6512347da9018a12aa42"
+      "size": 8934,
+      "sha256": "232d5930355d11ed813068f00f9b714a30ad23425ecb25127379e41f2cc27b36"
     },
     {
       "path": "assets/sources/ACA.png",
@@ -595,33 +595,33 @@
     },
     {
       "path": "assets/zcs-web.bin",
-      "size": 45382,
-      "sha256": "d6e5fda81e122610a6968212ad1fccd6b01a1bbdaeb2062132ebe628535cd1b9"
+      "size": 46710,
+      "sha256": "f0ee66af6d843d320cea24b4727887a2dd975ba2d215ac2be96800eb8a78833c"
     },
     {
       "path": "assets/zcs-web.json",
-      "size": 431,
-      "sha256": "ac308102d27c00077fbc4c75602d2f9c95a602098d55517424bc0d17973c57a8"
+      "size": 490,
+      "sha256": "e6fa7776d38a0d296b29d4500d64b20eff3928ca8e892dc33bddfb4618b6500f"
     },
     {
       "path": "build_assets.py",
-      "size": 19552,
-      "sha256": "4e2ffc3706be64906aa113c173a0df190f61651f893f0ed8a7f3ccf1bb165469"
+      "size": 19641,
+      "sha256": "71802631264df51abf7b870127496bc2047a90c9e1f17d2e55352c7cdc379a7d"
     },
     {
       "path": "package-lock.json",
       "size": 14530,
-      "sha256": "54eaba1dc33c8a290c7e7ab801765680d3e68d979dbcb45bcb2a800fe75a1c1d"
+      "sha256": "c6e99efe1ccb675fe9c9e5ba6a3dd26179d941f5d163794c07910dc68557b318"
     },
     {
       "path": "package.json",
       "size": 324,
-      "sha256": "24b58be4257ca15b174f3ee4dba69b0a49ca245329e84a89f08e0a7fce0ca32f"
+      "sha256": "275f65fdcde0d1ac76e973fd2a9df2ac1eaee7fb110c3fe3670936100a13e1fb"
     },
     {
       "path": "tests/README.md",
       "size": 14368,
-      "sha256": "ab9c471b7ba185dc362dc05cb9dcb0b240639309fa248e26d8965a7093823260"
+      "sha256": "999db171024cee6fddc331010ddbada6b8e8151550c561a9f5e20d55447ecaa3"
     },
     {
       "path": "tests/host/extract_settings.py",
@@ -725,13 +725,13 @@
     },
     {
       "path": "tests/host/test_panel.cpp",
-      "size": 25200,
-      "sha256": "0ad8fc91ce6b51c4eaad48477dbaba9df5fe06715d7a8793ca9372c3b949557c"
+      "size": 29228,
+      "sha256": "e0329275cd4f7d3335e62678c4b81c459244e884214814012060ff6bd8cf16ab"
     },
     {
       "path": "tests/host/test_panel_parity.cjs",
-      "size": 10031,
-      "sha256": "c2b6c4f4bb3e0797622e4919e91021b3ce60f04073071f07c21d2faaa454b274"
+      "size": 11216,
+      "sha256": "5b22b336061be849fa5bb2bff2a3431c69e0eca255794b5a0a83e41035dfd127"
     },
     {
       "path": "tests/host/test_radar.cpp",
@@ -745,13 +745,13 @@
     },
     {
       "path": "tests/host/test_settings.cpp",
-      "size": 12610,
-      "sha256": "3527179679bcefacd248e64cd1b7f030967d2f5a029b91ca86a16aaf1078b557"
+      "size": 12619,
+      "sha256": "2ce32590216c6bc21ef78d6152269485de9a8678e4c2295dd6f4e3d3be85d39f"
     },
     {
       "path": "tests/host/test_widget_handlers.cpp",
-      "size": 9817,
-      "sha256": "cebfee539682c1f484e0c59a87a9a6649ebcabbeb8cbd508ee355221952e45f0"
+      "size": 9855,
+      "sha256": "3bdd0135bab9004fe2311384518ce1e7c13345da815cd842e066da21b6b97108"
     },
     {
       "path": "tests/host/test_widgets.cpp",
@@ -845,8 +845,8 @@
     },
     {
       "path": "tests/ota/test_update.cpp",
-      "size": 5445,
-      "sha256": "65ba3c540027fca9bacb63af1b560f0f721012f112420243b03051e95436781e"
+      "size": 7049,
+      "sha256": "6392e587092c343d7362988cdca1569c47721f777d6faeeea3c7f8103f0c06c8"
     },
     {
       "path": "tests/release/test_prepare_release.py",
@@ -855,8 +855,8 @@
     },
     {
       "path": "tests/release/test_web_assets.py",
-      "size": 4854,
-      "sha256": "6b5ade4e242eb3c0c7239e171ea765c72c93db1b82730c1ed51a94bc43651660"
+      "size": 6089,
+      "sha256": "a82b36187d6f36402ca44a5ca11ccb0d6ccb725f7820532d650cfa5fb51cdfff"
     },
     {
       "path": "tests/store/mocks/esp_partition.h",
@@ -910,13 +910,18 @@
     },
     {
       "path": "tests/ui/test_library.cjs",
-      "size": 16633,
-      "sha256": "81d2545c7375f6044c99bbed6d6c5124fa2092aa1095d702c3141eb407688467"
+      "size": 16791,
+      "sha256": "be47fa86e17c6464a5bcf05a1a18eb5a11d1ac389d40c737de57fb8fc06ee72c"
     },
     {
       "path": "tests/ui/test_logos.cjs",
       "size": 4022,
       "sha256": "ea08f9dfe5103d29941ccdf54e265e4a250f1d1258739a583e59acfe642e9d2f"
+    },
+    {
+      "path": "tests/ui/test_paired_updates.cjs",
+      "size": 3232,
+      "sha256": "5eb77f3f64fea0551dc395e9d451c71fc50e4b797e127c5662eef25a2dcb1289"
     },
     {
       "path": "tests/ui/test_preview.cjs",
@@ -940,8 +945,8 @@
     },
     {
       "path": "tests/ui/test_updates.cjs",
-      "size": 12168,
-      "sha256": "bd0571e7cd0078728a87d59f46be18cf1017bee0f336d96ec8c4aa911870373d"
+      "size": 14228,
+      "sha256": "bfa8ff0061a28e59f73abd426e1b96b0901edffef6077ab7e7c70b36ae45d3fa"
     },
     {
       "path": "tests/ui/test_web_build.cjs",
@@ -970,8 +975,13 @@
     },
     {
       "path": "tools/prepare_release.py",
-      "size": 16437,
-      "sha256": "b89071037532d240f2e81c617c962981ec523a5c0248fbf35c14dea329c217ae"
+      "size": 16813,
+      "sha256": "a4cc6204d8001c62488b989faffa05a126c11de80bdb6e74555e60bdf001f39e"
+    },
+    {
+      "path": "tools/publish_release.py",
+      "size": 8819,
+      "sha256": "3aa8a38a2504ddf4315f6e1af258317ab28f29ab95a36766d8947d0a5278d6ea"
     }
   ]
 }

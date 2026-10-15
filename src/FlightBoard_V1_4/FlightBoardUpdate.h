@@ -21,6 +21,8 @@ public:
 
   void setPrepareCheck(bool (*check)()) { prepareCheck_ = check; }
 
+  void setInterfaceCheck(bool (*check)(const char*, size_t), const char* binding = "") { interfaceCheck_ = check; binding_ = binding; }
+
   void begin() {
     char token[33];
     snprintf(token, sizeof(token), "%08lx%08lx%08lx%08lx",
@@ -33,6 +35,8 @@ public:
     for (int i = 0; i < server_.headers(); ++i) names.push_back(server_.headerName(i));
     names.push_back("X-Update-Token");
     names.push_back("X-Firmware-Size");
+    names.push_back("X-Interface-Size");
+    names.push_back("X-Interface-Sha256");
     std::vector<const char*> headers;
     for (const String& name : names) headers.push_back(name.c_str());
     server_.collectHeaders(headers.data(), headers.size());
@@ -70,6 +74,11 @@ private:
                                         sizeof(esp_app_desc_t);
   WebServer& server_;
   bool (*prepareCheck_)() = nullptr;
+  bool (*interfaceCheck_)(const char*, size_t) = nullptr;
+  const char* binding_ = "";
+  String expectedBinding_, interfaceSha_;
+  size_t interfaceSize_ = 0, bindingMatched_ = 0;
+  bool bindingFound_ = false;
   String token_, error_;
   int errorStatus_ = 400;
   bool requestSeen_ = false, receiving_ = false, fileComplete_ = false;
@@ -126,7 +135,7 @@ private:
   void sendSystem() {
     JsonDocument doc;
     const size_t capacity = firmwareCapacity();
-    doc["version"] = "4.1.2";
+    doc["version"] = "4.1.3";
     doc["firmwareFamily"] = firmwareFamily();
     doc["releaseManifestUrl"] = FLIGHTBOARD_RELEASE_MANIFEST_URL;
     doc["uptimeSeconds"] = (uint64_t)esp_timer_get_time() / 1000000ULL;
@@ -134,6 +143,8 @@ private:
     doc["otaSupported"] = capacity > 0;
     doc["maxFirmwareBytes"] = capacity;
     doc["updateToken"] = token_;
+    doc["pairedUpdates"] = interfaceCheck_ != nullptr;
+    doc["interfaceBinding"] = binding_;
     doc["updateBusy"] = busy();
     sendJson(200, doc);
   }
@@ -152,6 +163,7 @@ private:
   void clearRequest() {
     requestSeen_ = receiving_ = fileComplete_ = updateStarted_ = prefixValid_ = false;
     identityFound_ = layoutComplete_ = false;
+    bindingFound_ = false; bindingMatched_ = interfaceSize_ = 0; expectedBinding_ = ""; interfaceSha_ = "";
     expectedSize_ = receivedSize_ = prefixSize_ = markerMatched_ = nextSegmentAt_ = 0;
     segmentsRemaining_ = hashAppended_ = 0;
     error_ = "";
@@ -191,6 +203,10 @@ private:
     const size_t markerLength = strlen(marker);
     for (size_t i = 0; i < length; ++i) {
       const size_t offset = receivedSize_ + i;
+      if (interfaceCheck_ && !bindingFound_ && expectedBinding_.length()) {
+        bindingMatched_ = data[i] == (uint8_t)expectedBinding_[bindingMatched_] ? bindingMatched_ + 1 : (data[i] == 'Z' ? 1 : 0);
+        bindingFound_ = bindingMatched_ == expectedBinding_.length();
+      }
       if (!identityFound_) {
         markerMatched_ = data[i] == (uint8_t)marker[markerMatched_]
           ? markerMatched_ + 1 : (data[i] == (uint8_t)marker[0] ? 1 : 0);
@@ -234,6 +250,18 @@ private:
     if (upload.name != "firmware" || !filename.endsWith(".bin")) {
       fail(400, "Choisis le fichier .ino.bin du programme Flight Board.");
       return;
+    }
+    if (interfaceCheck_) {
+      interfaceSha_ = server_.header("X-Interface-Sha256");
+      if (interfaceSha_.length() != 64 || strlen(interfaceSha_.c_str()) != 64 ||
+          !parseSize(server_.header("X-Interface-Size"), interfaceSize_) || interfaceSize_ > 98304) {
+        fail(400, "Interface associee manquante. Recharge la page et utilise la mise a jour complete."); return;
+      }
+      for(size_t i=0;i<64;++i) if (!((interfaceSha_[i]>='0'&&interfaceSha_[i]<='9')||(interfaceSha_[i]>='a'&&interfaceSha_[i]<='f'))) {
+        fail(400, "Empreinte interface invalide."); return;
+      }
+      char binding[96];snprintf(binding,sizeof(binding),"ZCSWEB1:%lu:%s:",(unsigned long)interfaceSize_,interfaceSha_.c_str());
+      expectedBinding_ = binding;
     }
     const size_t capacity = firmwareCapacity();
     if (!capacity) {
@@ -318,6 +346,8 @@ private:
     if (!requestSeen_ || !fileComplete_ || !updateStarted_ || server_.args() != 0) {
       fail(400, "Envoie uniquement un fichier .ino.bin Flight Board complet.");
     }
+    if (error_.isEmpty() && interfaceCheck_ && (!bindingFound_ || !interfaceCheck_(interfaceSha_.c_str(), interfaceSize_)))
+      fail(400, "Interface absente, incomplete ou incompatible. Programme actuel conserve.");
     if (error_.isEmpty()) {
       // end(false) exige la taille exacte et verifie l'image avant de modifier le demarrage.
       if (!Update.end(false)) {

@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
 #include <pgmspace.h>
-// ZCS CONTRÔLE V4.1.2 — interface locale, aucun service ou asset externe.
+// ZCS CONTRÔLE V4.1.3 — interface locale, aucun service ou asset externe.
 const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
 <!doctype html>
 <html lang="fr">
@@ -9,7 +9,7 @@ const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#182622">
-<title>ZCS CONTRÔLE · V4.1.2</title>
+<title>ZCS CONTRÔLE · V4.1.3</title>
 <style>
 :root{color-scheme:light;--bg:#f5f5f0;--card:#fff;--raised:#eef2ed;--line:#dfe4dd;--text:#202c29;--muted:#69766f;--accent:#19786a;--ink:#fff;--amber:#98661d;--error:#b24943;--green:#19786a;--rail:#182622}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{font-size:14px;line-height:1.5}button,input,select,textarea{font:inherit}button,summary,select{touch-action:manipulation}button,summary{cursor:pointer}button{color:inherit}button:disabled,input:disabled,select:disabled{cursor:default;opacity:.45}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #5cae96;outline-offset:3px}[hidden]{display:none!important}h1,h2,p{margin:0}a{color:var(--accent)}svg{flex:none}button{transition:background .16s,border-color .16s,box-shadow .16s}
@@ -39,7 +39,7 @@ const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
     <button class="navButton" type="button" data-nav="clock" aria-label="Horloge" title="Horloge"><svg class="navIcon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg><span>Horloge</span></button>
     <button class="navButton" type="button" data-nav="animation" aria-label="Animations" title="Animations"><svg class="navIcon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.6 6.4L21 12l-6.4 2.6L12 21l-2.6-6.4L3 12l6.4-2.6ZM20 2v4m-2-2h4"/></svg><span>Animations</span></button>
   </nav>
-  <div class="sidebarFoot"><div class="deviceMark"><svg viewBox="0 0 28 28" aria-hidden="true"><rect x="2" y="5" width="24" height="16" rx="3"/><path d="M10 25h8m-4-4v4M7 10h2m4 0h2m4 0h2M7 15h2m4 0h2m4 0h2"/></svg><span>Votre panneau<small>128 × 64 pixels</small></span></div><span class="version">V4.1.2</span></div>
+  <div class="sidebarFoot"><div class="deviceMark"><svg viewBox="0 0 28 28" aria-hidden="true"><rect x="2" y="5" width="24" height="16" rx="3"/><path d="M10 25h8m-4-4v4M7 10h2m4 0h2m4 0h2M7 15h2m4 0h2m4 0h2"/></svg><span>Votre panneau<small>128 × 64 pixels</small></span></div><span class="version">V4.1.3</span></div>
 </aside>
 <div class="app">
 <header class="top">
@@ -112,7 +112,7 @@ const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
   </section>
 </main>
 </div>
-<footer class="bottom"><span class="statusLine" id="message" role="status" aria-live="polite">Votre panneau. Votre univers.</span><span class="source" id="sourceLabel">by Christ_Kmusic · V4.1.2</span></footer>
+<footer class="bottom"><span class="statusLine" id="message" role="status" aria-live="polite">Votre panneau. Votre univers.</span><span class="source" id="sourceLabel">by Christ_Kmusic · V4.1.3</span></footer>
 </div>
 <dialog class="dialog" id="filtersDialog" aria-labelledby="filtersTitle"><div class="dialogHead"><h2 class="dialogTitle" id="filtersTitle">Filtres aviation</h2><button class="btn quiet" id="filtersCloseBtn" type="button">Fermer</button></div><p class="dialogIntro">Filtres mémorisés pour le radar et le panneau.</p><form id="filtersForm"><label class="check"><input type="checkbox" id="filterLogo">Compagnies avec un logo uniquement</label><label class="field">Compagnie<select id="filterAirline"><option value="">Toutes les compagnies</option></select></label><div class="formGrid"><label class="field">Type d’appareil<input id="filterType" maxlength="4" pattern="[A-Za-z0-9]{2,4}" placeholder="Tous · ex. A320" autocapitalize="characters" autocomplete="off"></label><label class="field">Altitude maximale<select id="filterAltitude"><option value="0">Sans limite</option><option value="5000">5 000 ft</option><option value="10000">10 000 ft</option><option value="20000">20 000 ft</option><option value="30000">30 000 ft</option><option value="40000">40 000 ft</option><option value="60000">60 000 ft</option></select></label></div><p class="smallPrint">Les vols sans cette donnée sont exclus du filtre.</p><p class="dialogFeedback" id="filtersFeedback" role="status" aria-live="polite"></p><div class="dialogActions"><button class="btn" id="filtersResetBtn" type="button">Tout afficher</button><button class="btn primary" id="filtersApplyBtn" type="submit">Appliquer les filtres</button></div></form></dialog>
 <dialog class="dialog" id="settingsDialog" aria-labelledby="settingsTitle">
@@ -126,7 +126,7 @@ const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
 <div class="formGrid"><label class="field">Latitude<input id="latInput" type="number" step="any" min="-90" max="90" required></label><label class="field">Longitude<input id="lonInput" type="number" step="any" min="-180" max="180" required></label><label class="field">Rayon<select id="radiusInput"><option value="5">5 km</option><option value="10">10 km</option><option value="20">20 km</option><option value="30">30 km</option><option value="50">50 km</option></select></label></div></div></details>
 <details class="section" id="fontsSection"><summary>Polices du panneau</summary><div class="sectionBody"><p class="smallPrint">Une police pour chaque application. Les aperçus montrent les vrais pixels du panneau. En aviation, l’horloge sans vol utilise la police Horloge.</p><div class="formGrid"><label class="field">Aviation<select id="fontAviationInput" data-font-preview="fontAviationPreview"><option value="classic">Pixel classique</option><option value="modern">Moderne</option><option value="digital">Numérique · chiffres à segments</option><option value="arcade">Arcade</option><option value="compact">Compacte</option></select><canvas id="fontAviationPreview" width="128" height="22" aria-label="Aperçu de la police Aviation" style="width:100%;max-width:256px;background:#000;image-rendering:pixelated;border-radius:4px"></canvas></label><label class="field">Horloge<select id="fontClockInput" data-font-preview="fontClockPreview"><option value="classic">Pixel classique</option><option value="modern">Moderne</option><option value="digital">Numérique · chiffres à segments</option><option value="arcade">Arcade</option><option value="compact">Compacte</option></select><canvas id="fontClockPreview" width="128" height="22" aria-label="Aperçu de la police Horloge" style="width:100%;max-width:256px;background:#000;image-rendering:pixelated;border-radius:4px"></canvas></label><label class="field">Météo<select id="fontWeatherInput" data-font-preview="fontWeatherPreview"><option value="classic">Pixel classique</option><option value="modern">Moderne</option><option value="digital">Numérique · chiffres à segments</option><option value="arcade">Arcade</option><option value="compact">Compacte</option></select><canvas id="fontWeatherPreview" width="128" height="22" aria-label="Aperçu de la police Météo" style="width:100%;max-width:256px;background:#000;image-rendering:pixelated;border-radius:4px"></canvas></label><label class="field">Messages<select id="fontMessageInput" data-font-preview="fontMessagePreview"><option value="classic">Pixel classique</option><option value="modern">Moderne</option><option value="digital">Numérique · chiffres à segments</option><option value="arcade">Arcade</option><option value="compact">Compacte</option></select><canvas id="fontMessagePreview" width="128" height="22" aria-label="Aperçu de la police Messages" style="width:100%;max-width:256px;background:#000;image-rendering:pixelated;border-radius:4px"></canvas></label><label class="field">Minuteur<select id="fontTimerInput" data-font-preview="fontTimerPreview"><option value="classic">Pixel classique</option><option value="modern">Moderne</option><option value="digital">Numérique · chiffres à segments</option><option value="arcade">Arcade</option><option value="compact">Compacte</option></select><canvas id="fontTimerPreview" width="128" height="22" aria-label="Aperçu de la police Minuteur" style="width:100%;max-width:256px;background:#000;image-rendering:pixelated;border-radius:4px"></canvas></label><label class="field">Scores<select id="fontScoreInput" data-font-preview="fontScorePreview"><option value="classic">Pixel classique</option><option value="modern">Moderne</option><option value="digital">Numérique · chiffres à segments</option><option value="arcade">Arcade</option><option value="compact">Compacte</option></select><canvas id="fontScorePreview" width="128" height="22" aria-label="Aperçu de la police Scores" style="width:100%;max-width:256px;background:#000;image-rendering:pixelated;border-radius:4px"></canvas></label></div></div></details>
 <details class="section" id="nightSection"><summary>Horloge et nuit</summary><div class="sectionBody">
-<label class="field">Animation de l’horloge par défaut<select id="clockVisualInput"><option value="lava">Lave</option><option value="aurora">Aurore</option><option value="ocean">Océan</option><option value="warp">Hyperespace</option><option value="stars">Étoiles</option><option value="rain">Matrix</option><option value="plain">Minimal · fond noir</option></select></label><p class="smallPrint">Utilisée aussi en aviation quand aucun vol ne s’affiche. Ce choix est conservé après redémarrage.</p>
+<label class="field">Animation de l’horloge par défaut<select id="clockVisualInput"><option value="lava">Lave</option><option value="aurora">Aurore</option><option value="ocean">Océan</option><option value="warp">Hyperespace</option><option value="stars">Étoiles</option><option value="rain">Matrix</option><option value="plain">Minimal · fond noir</option><option value="chrono">Horloge de chevet · jour/nuit</option></select></label><p class="smallPrint">Utilisée aussi en aviation quand aucun vol ne s’affiche. Ce choix est conservé après redémarrage.</p>
 <label class="field">Fuseau horaire<select id="timezoneInput"><option value="paris">Paris · Europe centrale</option><option value="london">Londres</option><option value="utc">UTC</option><option value="newyork">New York</option><option value="dubai">Dubaï</option></select></label>
 <p class="smallPrint">Heure et changements de saison automatiques.</p>
 <label class="check"><input type="checkbox" id="nightEnabled">Adapter l’affichage pendant la nuit</label>
@@ -137,7 +137,7 @@ const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
 <div class="dialogActions"><button class="btn primary" type="submit" id="saveSettingsBtn">Enregistrer les réglages</button></div>
 </form>
 <details class="section" id="favoritesSection"><summary>Lieux favoris</summary><p class="smallPrint">Enregistrez ce lieu. Un nom existant sera mis à jour.</p><div class="favoriteAdd"><label class="field">Nom du favori<input id="favoriteName" maxlength="32" placeholder="Maison"></label><button class="btn" id="favoriteSaveBtn" type="button">Ajouter aux favoris</button></div><div class="favoriteList" id="favoriteList"></div><p class="dialogFeedback" id="favoritesFeedback" role="status" aria-live="polite"></p></details>
-<details class="section" id="systemSection"><summary>Connexion et mises à jour</summary><div class="serviceButtons"><button class="btn" id="wifiBtn" type="button" aria-haspopup="dialog" aria-controls="wifiDialog">Configurer le Wi-Fi</button><button class="btn" id="openUpdateBtn" type="button" aria-haspopup="dialog" aria-controls="updateDialog">Mettre à jour le programme</button></div><p class="smallPrint">ZCS CONTRÔLE V4.1.2 · Luminosité du panneau réglable de 10 à 100 %.</p></details>
+<details class="section" id="systemSection"><summary>Connexion et mises à jour</summary><div class="serviceButtons"><button class="btn" id="wifiBtn" type="button" aria-haspopup="dialog" aria-controls="wifiDialog">Configurer le Wi-Fi</button><button class="btn" id="openUpdateBtn" type="button" aria-haspopup="dialog" aria-controls="updateDialog">Mettre à jour le programme</button></div><p class="smallPrint">ZCS CONTRÔLE V4.1.3 · Luminosité du panneau réglable de 10 à 100 %.</p></details>
 </dialog>
 <dialog class="dialog" id="updateDialog" aria-labelledby="updateTitle">
 <div class="dialogHead"><h2 class="dialogTitle" id="updateTitle">Mise à jour</h2><button class="btn quiet" id="updateCloseBtn" type="button">Fermer</button></div>
@@ -194,7 +194,7 @@ const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
     <p>Ce Wi-Fi de secours peut s’arrêter après 60 secondes si le panneau est connecté et qu’aucune tablette ne l’utilise.</p>
   </div>
 </dialog>
-<script src="/api/update-hash.js?v=4.0.0"></script>
+<script src="/api/update-hash.js?v=4.1.3"></script>
 <script>
 'use strict';
 const el = id => document.getElementById(id);
@@ -510,8 +510,8 @@ async function checkInitialWifi() {
 }
 
 const DEMO = {
-  version:'4.1.2',app:'aviation',visual:'lava',filters:{logoOnly:false,airline:'',type:'',maxAltitudeFt:0},totalCount:3,wifiConnected:true,radarOk:true,radiusKm:30,homeLat:46.324,homeLon:-.459,place:'Niort',ageSeconds:0,
-  display:{mode:'auto',brightness:60,effectiveBrightness:60,sleeping:false,timeSynced:true,clock:'14:32',date:'15/10/2026',nightActive:false,activeHex:'demo-afr'},
+  version:'4.1.3',app:'aviation',visual:'lava',filters:{logoOnly:false,airline:'',type:'',maxAltitudeFt:0},totalCount:3,wifiConnected:true,radarOk:true,radiusKm:30,homeLat:46.324,homeLon:-.459,place:'Niort',ageSeconds:0,
+  display:{mode:'auto',brightness:60,effectiveBrightness:60,sleeping:false,timeSynced:true,clock:'14:32',date:'15/10/2026',dateLabel:'JEU 15 OCT 2026',nightActive:false,activeHex:'demo-afr'},
   aircraft:[
     {hex:'demo-afr',callsign:'AFR1234',airline:'AIR FRANCE',type:'A320',lat:46.376,lon:-.535,track:124,trackAvailable:true,altitudeFt:34000,altitudeAvailable:true,speedKmh:820,speedAvailable:true,distanceKm:8,route:{status:'known',source:'demo',indicative:true,origin:{code:'CDG',city:'Paris',name:'Paris-Charles de Gaulle'},destination:{code:'BER',city:'Berlin',name:'Berlin Brandenburg'}}},
     {hex:'demo-ryr',callsign:'RYR4SG',airline:'RYANAIR',type:'B38M',lat:46.284,lon:-.258,track:310,trackAvailable:true,altitudeFt:38000,altitudeAvailable:true,speedKmh:780,speedAvailable:true,distanceKm:16.1,route:{status:'known',source:'demo',indicative:true,origin:{code:'BCN',city:'Barcelone',name:'Josep Tarradellas Barcelona-El Prat'},destination:{code:'BER',city:'Berlin',name:'Berlin Brandenburg'}}},
@@ -538,7 +538,8 @@ const LIBRARY_ITEMS=[
   {id:'message',app:'message',name:'Votre message',description:'Un mot de bienvenue, une annonce, une pensée.'},
   {id:'timer',app:'timer',name:'Minuteur',description:'Un compte à rebours visible dans toute la pièce.'},
   {id:'score',app:'score',name:'Jour de match',description:'Votre match de football, suivi en direct avec ESPN.'},
-  ...[['aurora','Aurore','Des voiles lumineux aux couleurs du Nord.'],['ocean','Océan','Des vagues bleues, tout en douceur.'],['warp','Hyperespace','Une traversée des étoiles en profondeur.'],['lava','Lave','Des contours fluides du bleu au turquoise.'],['stars','Étoiles','Un ciel étoilé aux reflets subtils.'],['rain','Matrix','Une pluie de pixels, esprit rétro.'],['plain','Minimal','L’essentiel, sur un fond noir.']].flatMap(([visual,name,description])=>['clock','animation'].map(app=>({id:app+'-'+visual,app,visual,name:app==='animation'&&visual==='plain'?'Écran noir':name,description})))
+  ...[['aurora','Aurore','Des voiles lumineux aux couleurs du Nord.'],['ocean','Océan','Des vagues bleues, tout en douceur.'],['warp','Hyperespace','Une traversée des étoiles en profondeur.'],['lava','Lave','Des contours fluides du bleu au turquoise.'],['stars','Étoiles','Un ciel étoilé aux reflets subtils.'],['rain','Matrix','Une pluie de pixels, esprit rétro.'],['plain','Minimal','L’essentiel, sur un fond noir.']].flatMap(([visual,name,description])=>['clock','animation'].map(app=>({id:app+'-'+visual,app,visual,name:app==='animation'&&visual==='plain'?'Écran noir':name,description}))),
+  {id:'clock-chrono',app:'clock',visual:'chrono',name:'Horloge de chevet',description:'Heure, jour, date et météo locale, lisibles de jour comme de nuit.'}
 ];
 let libraryCategory='all',libraryQuery='',libraryFavorites=readLibraryFavorites(),libraryRenderKey='';
 let contentItems=[],contentToken='',contentCapacity=14,contentLoaded=false,contentBusy=false,currentContentId='',storeMode=false,storeItems=[],storeBusy=false,storeRun=0;
@@ -564,7 +565,7 @@ async function activateLibraryItem(id){
 function libraryThumbnail(canvas,item){
   const g=canvas.getContext('2d');g.fillStyle='#000';g.fillRect(0,0,128,64);
   if(item.contentId){const pack=(item.store?storeContentCache:contentCache).get(item.contentId);if(pack){drawWidgetPreview(g,item.app,pack,0);return;}}
-  if(item.app==='clock'){drawIdleClock(g,{timeSynced:true,clock:'10:24'},3.2,item.visual);return;}
+  if(item.app==='clock'){if(item.visual==='chrono'){drawIdleClock(g,{timeSynced:true,clock:'10:24',dateLabel:'LUN 16 OCT 2026'},3.2,item.visual,{available:true,temperatureC:19,windKmh:12,code:1,isDay:true});return;}drawIdleClock(g,{timeSynced:true,clock:'10:24'},3.2,item.visual);return;}
   if(item.app==='animation'){drawAmbient(g,item.visual,3.2);return;}
   if(item.app==='weather'){drawWeatherIcon(g,{code:2,isDay:true},0);canvasText(g,'METEO',50,20,'14px monospace','#edf0e9');canvasText(g,'VOTRE VILLE',51,40,'6px monospace','#a9d8c6');return;}
   if(item.app==='message'){drawWidgetPreview(g,'message',{text:'BONJOUR',color:0xafd8},0);return;}
@@ -865,7 +866,7 @@ function previewData(){const s=data();if(!s)return s;const draft=previewIsDraft(
 function previewVisible(){return !document.hidden&&el('previewToggle').open;}
 function idlePreview(s){const d=s?.display||{},mode=d.mode||'auto',app=s?.app||d.app||'aviation';return Boolean(s&&(demo||serverOnline)&&!d.sleeping&&((app==='clock'||app==='animation'||app==='message'||app==='pixel')||(app==='weather'&&panelWeatherAnimated(s.weather))||(app==='aviation'&&(mode==='clock'||(mode==='auto'&&!previewPlane(s))))));}
 function syncPreviewAnimation(){
-  const s=previewData(),animate=previewVisible()&&!idleMotion.matches&&(['weather','message','pixel'].includes(s?.app||s?.display?.app)||(s?.visual||s?.display?.visual||'lava')!=='plain')&&idlePreview(s);
+  const s=previewData(),app=s?.app||s?.display?.app,visual=s?.visual||s?.display?.visual||'lava',animate=previewVisible()&&!idleMotion.matches&&(['weather','message','pixel'].includes(app)||!['plain','chrono'].includes(visual))&&idlePreview(s);
   if(!animate){if(previewAnimationTimer!==null)clearTimeout(previewAnimationTimer);previewAnimationTimer=null;return;}
   if(previewAnimationTimer===null)previewAnimationTimer=setTimeout(()=>{previewAnimationTimer=null;drawPreview();},80);
 }
@@ -911,7 +912,22 @@ function drawAmbient(g,visual,time,clock=false){
   }
   g.putImageData(idleFrameImage,0,0);
 }
-function drawIdleClock(g,d,time,visual='lava'){
+function drawChronoClock(g,d,w){
+  // Mirrors detail::chronoFace: full date, large time and weather, still and
+  // warm-toned at night. Colors are RGB565-equivalent to the firmware palette.
+  const night=Boolean(d.nightActive),header=night?'rgb(96,112,106)':'#a2b0b0',digits=night?'rgb(216,152,88)':'#edf0e9',rule=night?'rgb(44,40,34)':'#20312c';
+  const synced=Boolean(d.timeSynced&&/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(String(d.clock||''))),dated=Boolean(d.timeSynced&&typeof d.dateLabel==='string'&&d.dateLabel.length);
+  panelRect(g,0,0,128,64,'#000');
+  canvasCenteredText(g,dated?d.dateLabel:'DATE INDISPONIBLE',64,2,124,7,header);
+  panelRect(g,4,11,120,1,rule);
+  canvasCenteredText(g,synced?d.clock:'--:--',64,15,124,30,digits);
+  panelRect(g,4,45,120,1,rule);
+  if(!w||!w.available||typeof w.temperatureC!=='number'||!Number.isFinite(w.temperatureC)||typeof w.windKmh!=='number'||!Number.isFinite(w.windKmh)){canvasCenteredText(g,'METEO INDISPONIBLE',64,51,124,7,header);return;}
+  const detail=w.stale?(night?'rgb(156,124,64)':'#e6bf81'):(night?'rgb(104,124,118)':'#a9d8c6');
+  canvasCenteredText(g,Math.floor(w.temperatureC+.5)+' C '+panelWeatherLabel(w.code,w.isDay),64,51,124,7,detail);
+}
+function drawIdleClock(g,d,time,visual='lava',w){
+  if(visual==='chrono'){drawChronoClock(g,d,w);return;}
   drawAmbient(g,visual,time,true);
   const synced=Boolean(d.timeSynced&&/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(String(d.clock||'')));
   if(visual==='stars'||visual==='rain'||visual==='warp')panelRect(g,5,synced?16:12,118,32,'#000');
@@ -947,7 +963,7 @@ function drawWidgetPreview(g,app,w,time){
 function drawZcsPreview(g,s,d,time){
   const app=s?.app||d.app||'aviation',visual=s?.visual||d.visual||'lava';
   if(drawWidgetPreview(g,app,s?.widget,time))return true;
-  if(app==='clock'){drawIdleClock(g,d,time,visual);return true;}
+  if(app==='clock'){drawIdleClock(g,d,time,visual,s?.weather);return true;}
   if(app==='animation'){drawAmbient(g,visual,time);return true;}
   if(app!=='weather')return false;
   const w=s.weather;canvasText(g,w?.stale?'ANCIEN':'METEO',4,3,'6px monospace','#a2b0b0');
@@ -970,7 +986,7 @@ function drawPreview(){
   if(drawZcsPreview(g,s,d,idleMotion.matches?0:performance.now()/1000))return;
   const p=previewPlane(s);
   if(mode==='clock'||(mode==='auto'&&!p)){
-    drawIdleClock(g,d,idleMotion.matches?0:performance.now()/1000,s?.visual||d.visual||'lava');
+    drawIdleClock(g,d,idleMotion.matches?0:performance.now()/1000,s?.visual||d.visual||'lava',s?.weather);
     return;
   }
   if(!p){canvasText(g,'FLIGHT BOARD',23,10,'bold 10px monospace','#a9d8c6');canvasText(g,'VOL INDISPONIBLE',17,32,'9px monospace','#edf0e9');canvasText(g,'CHOISIR UN AVION',20,49,'8px monospace','#a2b0b0');return;}
@@ -1100,7 +1116,32 @@ function validateRelease(value,info){
   if(typeof value.sha256!=='string'||! /^[a-f0-9]{64}$/i.test(value.sha256)||typeof value.notes!=='string'||value.notes.length>4000)throw new Error('Le catalogue de mises à jour est incomplet.');
   const manifest=releaseUrl(info.releaseManifestUrl),binary=releaseUrl(value.url),directory=manifest.pathname.slice(0,manifest.pathname.lastIndexOf('/')+1);
   if(binary.origin!==manifest.origin||!binary.pathname.startsWith(directory)||! /\.bin$/i.test(binary.pathname))throw new Error('Le programme doit provenir du même serveur et du même dossier que le catalogue.');
-  return{schema:1,version:value.version,firmwareFamily:value.firmwareFamily,url:binary.href,size:value.size,sha256:value.sha256.toLowerCase(),notes:value.notes,manifestUrl:manifest.href};
+  let interfaceAsset;
+  if(value.interface!==undefined){const a=value.interface,u=releaseUrl(a?.url);if(!Number.isSafeInteger(a?.size)||a.size<=288||a.size>98304||typeof a.sha256!=='string'||! /^[a-f0-9]{64}$/.test(a.sha256)||u.origin!==manifest.origin||u.pathname!==directory+'store/zcs-web-'+a.sha256+'.bin'||u.search)throw new Error('Interface du catalogue invalide.');interfaceAsset={size:a.size,sha256:a.sha256,url:u.href};}
+  if(info.pairedUpdates&&!interfaceAsset)throw new Error('Cette version ne contient pas son interface associee. Programme actuel conserve.');
+  return{interface:interfaceAsset,schema:1,version:value.version,firmwareFamily:value.firmwareFamily,url:binary.href,size:value.size,sha256:value.sha256.toLowerCase(),notes:value.notes,manifestUrl:manifest.href};
+}
+function firmwareInterface(buffer,info){
+  const text=new TextDecoder('latin1').decode(buffer),matches=[...text.matchAll(/ZCSWEB1:([1-9][0-9]{2,4}):([a-f0-9]{64}):/g)];
+  if(matches.length!==1)throw new Error('Ce programme ne contient pas une interface associee unique. Utilisez une version complete recente.');
+  const size=Number(matches[0][1]),sha256=matches[0][2];if(size<=288||size>98304)throw new Error('Taille interface invalide.');
+  const base=releaseUrl(info.releaseManifestUrl);base.pathname=base.pathname.slice(0,base.pathname.lastIndexOf('/')+1)+'store/zcs-web-'+sha256+'.bin';base.search='';
+  return{size,sha256,url:base.href};
+}
+async function preparePairedInterface(file,info,release){
+  if(!info.pairedUpdates)return null;
+  const asset=firmwareInterface(await file.arrayBuffer(),info);
+  if(release&&(!release.interface||release.interface.size!==asset.size||release.interface.sha256!==asset.sha256||release.interface.url!==asset.url))throw new Error('Programme et interface du catalogue incompatibles. Aucun programme installe.');
+  el('updateFeedback').textContent='Téléchargement et vérification de l’interface associée…';
+  const bytes=await downloadReleaseBytes(asset.url,asset.size,20000,new AbortController());
+  if(bytes.byteLength!==asset.size||typeof sha256!=='function'||sha256(bytes)!==asset.sha256)throw new Error('Interface incorrecte ou incomplète. Programme actuel conservé.');
+  for(let attempt=0;attempt<8;attempt++){
+    const content=await requestJson('/api/content');if(!content.available||!['__web','__web_next'].includes(content.interface?.stagingId))throw new Error('Stockage de preparation indisponible.');
+    const body=new FormData();body.append('file',new Blob([bytes]),'interface.bin');
+    try{await requestJson('/api/content/install?id='+content.interface.stagingId+'&size='+asset.size+'&sha256='+asset.sha256,{method:'POST',headers:{'X-Content-Token':content.token},body},25000);break;}
+    catch(error){if(attempt===7||!error.message.toLowerCase().includes('occupe'))throw error;await new Promise(resolve=>setTimeout(resolve,1500));}
+  }
+  return asset;
 }
 function cancelReleaseRequest(){++releaseRun;if(releaseController)releaseController.abort();releaseController=null;releaseBusy=false;}
 function updateIsCurrent(epoch,run=releaseRun){return epoch===updateEpoch&&run===releaseRun&&el('updateDialog').open&&!demo;}
@@ -1174,13 +1215,14 @@ async function installRemoteFirmware(){
   }catch(error){if(updateIsCurrent(epoch,run)){firmwareReady=null;el('updateFeedback').textContent=error.message;el('updateProgress').hidden=true;}}
   finally{if(updateIsCurrent(epoch,run)){releaseBusy=false;releaseController=null;updateControls();}}
 }
-function uploadFirmware(file,info){return new Promise((resolve,reject)=>{const xhr=new XMLHttpRequest();xhr.open('POST','/api/update');xhr.timeout=120000;xhr.setRequestHeader('X-Update-Token',info.updateToken);xhr.setRequestHeader('X-Firmware-Size',String(file.size));xhr.upload.onprogress=event=>{if(event.lengthComputable){const percent=Math.min(95,Math.round(event.loaded/event.total*95));el('updateProgress').value=percent;el('updateFeedback').textContent=percent>=95?'Programme transmis. Vérification par le Flight Board…':'Envoi du programme · '+percent+' %';}};xhr.onerror=()=>reject(new Error('Connexion interrompue. Reconnectez la tablette puis vérifiez la version du Flight Board.'));xhr.ontimeout=()=>reject(new Error('Le délai d’installation est dépassé. Vérifiez la connexion avant de réessayer.'));xhr.onload=()=>{let result;try{result=JSON.parse(xhr.responseText);}catch(error){reject(new Error('Réponse inattendue. Vérifiez la version du Flight Board avant de réessayer.'));return;}if(xhr.status<200||xhr.status>=300||result.ok===false){reject(new Error(result.error||'Installation refusée par le Flight Board.'));return;}resolve(result);};const body=new FormData();body.append('firmware',file,file.name);xhr.send(body);});}
+function uploadFirmware(file,info,asset=null){return new Promise((resolve,reject)=>{const xhr=new XMLHttpRequest();xhr.open('POST','/api/update');xhr.timeout=120000;xhr.setRequestHeader('X-Update-Token',info.updateToken);xhr.setRequestHeader('X-Firmware-Size',String(file.size));if(asset){xhr.setRequestHeader('X-Interface-Size',String(asset.size));xhr.setRequestHeader('X-Interface-Sha256',asset.sha256);}xhr.upload.onprogress=event=>{if(event.lengthComputable){const percent=Math.min(95,Math.round(event.loaded/event.total*95));el('updateProgress').value=percent;el('updateFeedback').textContent=percent>=95?'Programme transmis. Vérification par le Flight Board…':'Envoi du programme · '+percent+' %';}};xhr.onerror=()=>reject(new Error('Connexion interrompue. Reconnectez la tablette puis vérifiez la version du Flight Board.'));xhr.ontimeout=()=>reject(new Error('Le délai d’installation est dépassé. Vérifiez la connexion avant de réessayer.'));xhr.onload=()=>{let result;try{result=JSON.parse(xhr.responseText);}catch(error){reject(new Error('Réponse inattendue. Vérifiez la version du Flight Board avant de réessayer.'));return;}if(xhr.status<200||xhr.status>=300||result.ok===false){reject(new Error(result.error||'Installation refusée par le Flight Board.'));return;}resolve(result);};const body=new FormData();body.append('firmware',file,file.name);xhr.send(body);});}
 async function waitForRestart(previous){const deadline=Date.now()+60000;while(Date.now()<deadline){await new Promise(resolve=>setTimeout(resolve,2500));try{const now=await requestJson('/api/system',{},3500);if(now.updateToken!==previous.updateToken||now.uptimeSeconds<previous.uptimeSeconds||now.version!==previous.version)return now;}catch(error){/* Le redémarrage coupe normalement la connexion. */}}throw new Error('Programme transmis, mais le redémarrage n’a pas pu être confirmé. Reconnectez la tablette puis rechargez la page.');}
 async function installFirmware(release=null){
   if(demo||uploadBusy||!firmwareReady||!systemInfo?.otaSupported||!el('updateDialog').open)return;const file=firmwareReady;let previous=systemInfo;uploadBusy=true;updateControls();el('updateProgress').value=0;el('updateProgress').hidden=false;el('updateFeedback').textContent='Installation en cours. Gardez le Flight Board alimenté.';render();
   try{previous=await requestJson('/api/system');if(!previous.otaSupported||previous.updateBusy||file.size>previous.maxFirmwareBytes)throw new Error('Le Flight Board n’est pas prêt pour ce programme. Fermez puis rouvrez la mise à jour.');
     if(release){const checked=validateRelease(release,previous);if(checked.manifestUrl!==release.manifestUrl||!newerVersion(checked.version,previous.version))throw new Error('La version ou le serveur du Flight Board a changé. Recherchez de nouveau la mise à jour.');}
-    await uploadFirmware(file,previous);el('updateProgress').value=100;el('updateFeedback').textContent='Programme installé. Le Flight Board redémarre…';const updated=await waitForRestart(previous);if(release&&updated.version!==release.version){firmwareReady=null;releaseInfo=null;el('updateBtn').dataset.reload='true';el('updateBtn').textContent='Recharger l’interface';throw new Error('Le Flight Board a redémarré en version '+(updated.version||'inconnue')+', au lieu de '+release.version+'. Rechargez l’interface avant de réessayer.');}el('updateFeedback').textContent='Mise à jour terminée · Version '+updated.version+'. Rechargez la page pour ouvrir la nouvelle interface.';el('updateBtn').textContent='Recharger l’interface';el('updateBtn').dataset.reload='true';firmwareReady=null;releaseInfo=null;notify('Le Flight Board a redémarré. Rechargez la page pour afficher sa nouvelle interface.');}
+    const asset=await preparePairedInterface(file,previous,release);
+    await uploadFirmware(file,previous,asset);el('updateProgress').value=100;el('updateFeedback').textContent='Programme installé. Le Flight Board redémarre…';const updated=await waitForRestart(previous);if(release&&updated.version!==release.version){firmwareReady=null;releaseInfo=null;el('updateBtn').dataset.reload='true';el('updateBtn').textContent='Recharger l’interface';throw new Error('Le Flight Board a redémarré en version '+(updated.version||'inconnue')+', au lieu de '+release.version+'. Rechargez l’interface avant de réessayer.');}if(asset){const content=await requestJson('/api/content');if(!content.interface?.ready||content.interface.sha256!==asset.sha256)throw new Error('Le contrôle final de l’interface a échoué. Rechargez la page pour lancer sa récupération automatique.');setTimeout(()=>location.reload(),1200);}el('updateFeedback').textContent='Mise à jour terminée · Version '+updated.version+'. Rechargez la page pour ouvrir la nouvelle interface.';el('updateBtn').textContent='Recharger l’interface';el('updateBtn').dataset.reload='true';firmwareReady=null;releaseInfo=null;notify('Le Flight Board a redémarré. Rechargez la page pour afficher sa nouvelle interface.');}
   catch(error){el('updateFeedback').textContent=error.message;firmwareReady=null;el('firmwareFile').value='';el('firmwareInfo').hidden=true;}
   finally{uploadBusy=false;updateControls();refresh();}
 }

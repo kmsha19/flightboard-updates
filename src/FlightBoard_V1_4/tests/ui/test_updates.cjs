@@ -13,12 +13,12 @@ const info={version:'2.0.7',firmwareFamily:'FlightBoard.ESP32S3.Application.v2',
 const bytes=new Uint8Array(64);bytes[0]=0xE9;for(let i=1;i<bytes.length;i++)bytes[i]=i;
 const digest=value=>crypto.createHash('sha256').update(Buffer.from(value)).digest('hex');
 const release={schema:1,version:'2.0.8',firmwareFamily:info.firmwareFamily,url:'https://updates.example/releases/FlightBoard-2.0.8.bin',size:bytes.length,sha256:digest(bytes),notes:'Améliorations du radar.\nRéglages conservés.'};
-const context=vm.createContext({URL,AbortController,TypeError,TextDecoder,Uint8Array,ArrayBuffer,Number,String,Array,Boolean,Date,
+const context=vm.createContext({Blob,FormData,URL,AbortController,TypeError,TextDecoder,Uint8Array,ArrayBuffer,Number,String,Array,Boolean,Date,
   File:class extends Blob{constructor(parts,name,options){super(parts,options);this.name=name;}},
   el:id=>{if(!elements.has(id))elements.set(id,element());return elements.get(id);},
   setTimeout:(callback,delay)=>{timers.set(++timerId,{callback,delay});return timerId;},clearTimeout:id=>timers.delete(id),
   fetch:async(url,options)=>{fetches.push({url,options});const response=responses.shift();if(response instanceof Error)throw response;if(typeof response==='function')return response(options);if(!response)throw new Error('Unexpected network request '+url);return response;},
-  requestJson:async(url,options)=>{apiCalls.push({url,options});return{...context.device};},
+  requestJson:async(url,options)=>{apiCalls.push({url,options});if(context.pairedContent&&url==='/api/content')return context.pairedContent;return{...context.device};},
   sha256:digest,fmt:value=>String(Math.round(value)),render:()=>{},refresh:()=>{},notify:()=>{},
   recordUpload:async(file,device)=>{uploads.push({file,device,bytes:new Uint8Array(await file.arrayBuffer())});},
   device:{...info},restartedVersion:'2.0.8',
@@ -67,5 +67,16 @@ function rejected(value,device=info){assertions++;assert.throws(()=>validate(val
   await open();responses.push(options=>new Promise((resolve,reject)=>options.signal.addEventListener('abort',()=>reject(new Error('aborted')))));const checking=run('checkRemoteUpdate()');await tick();const deadline=[...timers.values()].find(timer=>timer.delay===15000);check(deadline);deadline.callback();await checking;includes(elements.get('updateFeedback').textContent,'trop de temps');equal(run('releaseBusy'),false);equal(elements.get('checkUpdateBtn').disabled,false);
   await open();elements.get('firmwareFile').files=[new context.File([bytes],'manual.bin')];await run('validateFirmware()');equal(elements.get('updateBtn').disabled,false);equal(elements.get('updateBtn').textContent,'Installer ce programme');await run('installFirmware()');equal(fetches.length,0,'Manual fallback must not contact the release server');equal(uploads.length,1);
   await open();run('demo=true');await run('checkRemoteUpdate()');await run('installRemoteFirmware()');equal(fetches.length,0);equal(uploads.length,0,'Demo must not make update requests');
+  run('demo=false');
+  const web=new Uint8Array(500).fill(42),webHash=digest(web),pairedBytes=new Uint8Array(1000);pairedBytes[0]=0xE9;pairedBytes.set(new TextEncoder().encode('ZCSWEB1:500:'+webHash+':'),400);
+  const asset={size:500,sha256:webHash,url:'https://updates.example/releases/store/zcs-web-'+webHash+'.bin'},pairedRelease={...release,size:pairedBytes.length,sha256:digest(pairedBytes),interface:asset};
+  rejected(release,{...info,pairedUpdates:true});
+  for(const bad of [{...asset,size:0},{...asset,sha256:'bad'},{...asset,url:'https://evil.example/file.bin'},{...asset,url:asset.url+'?v=1'}])rejected({...pairedRelease,interface:bad},{...info,pairedUpdates:true});
+  await open({pairedUpdates:true});context.pairedContent={available:true,token:'content-token',interface:{stagingId:'__web_next',ready:true,sha256:webHash}};
+  responses.push(manifest(pairedRelease));await run('checkRemoteUpdate()');responses.push(response(pairedBytes),response(web));await run('installRemoteFirmware()');
+  equal(uploads.length,1,'Complete pair must reach firmware upload');check(apiCalls.some(c=>c.url.startsWith('/api/content/install?id=__web_next')),'Interface must be staged before firmware');check(fetches[2].url===asset.url,'Matching interface is downloaded before flashing');
+  await open({pairedUpdates:true});context.pairedContent={available:true,token:'content-token',interface:{stagingId:'__web_next',ready:true,sha256:webHash}};
+  responses.push(manifest(pairedRelease));await run('checkRemoteUpdate()');responses.push(response(pairedBytes),new Error('Interface offline'));await run('installRemoteFirmware()');equal(uploads.length,0,'Unavailable interface must prevent flashing');
+  await open({pairedUpdates:true});responses.push(manifest(pairedRelease));await run('checkRemoteUpdate()');responses.push(response(pairedBytes),response(new Uint8Array(500)));await run('installRemoteFirmware()');equal(uploads.length,0,'Corrupt interface must prevent flashing');
   console.log(`Remote update UI: ${assertions} assertions passed`);
 })().catch(error=>{console.error(error);process.exitCode=1;});

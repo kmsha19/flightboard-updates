@@ -54,19 +54,19 @@ function harness(){
   equal(new Set(ids).size,ids.length,'The redesigned DOM keeps IDs unique');
   for(const id of new Set([...script.matchAll(/\bel\('([^']+)'\)/g)].map(m=>m[1])))check(ids.includes(id),'Required UI element missing: '+id);
   const h=harness(),items=h.items;
-  equal(items.length,19,'The library exposes five live/practical apps and all14 visual presets');
-  equal(new Set(items.map(i=>i.id)).size,19,'Favorites require unique stable IDs');
+  equal(items.length,20,'The library exposes live/practical apps, eight clock presets and seven animations');
+  equal(new Set(items.map(i=>i.id)).size,20,'Favorites require unique stable IDs');
   for(const app of ['clock','animation']){
-    const rows=items.filter(i=>i.app===app);equal(rows.length,7);
-    same(rows.map(i=>i.visual).sort(),['aurora','lava','ocean','plain','rain','stars','warp']);
+    const rows=items.filter(i=>i.app===app);equal(rows.length,app==='clock'?8:7);
+    same(rows.map(i=>i.visual).sort(),app==='clock'?['aurora','chrono','lava','ocean','plain','rain','stars','warp']:['aurora','lava','ocean','plain','rain','stars','warp']);
   }
   equal(items.filter(i=>i.app==='aviation').length,1);equal(items.filter(i=>i.app==='weather').length,1);
   for(const item of items){check(typeof item.id==='string'&&item.id.length>0);check(typeof item.name==='string'&&item.name.length>0);check(typeof item.description==='string');}
   equal(h.run("normalizeLibraryText('Étoilé')"),'etoile');
-  h.run("libraryCategory='all';libraryQuery='METEO'");same(h.run('visibleLibraryItems().map(i=>i.app)'),['weather'],'Search ignores accents and case');
-  h.run("libraryCategory='clock';libraryQuery=''");equal(h.run('visibleLibraryItems().length'),7);
+  h.run("libraryCategory='all';libraryQuery='METEO'");same(h.run('visibleLibraryItems().map(i=>i.app)'),['weather','clock'],'Search ignores accents and case, and matches the bedside clock description');
+  h.run("libraryCategory='clock';libraryQuery=''");equal(h.run('visibleLibraryItems().length'),8);
   h.run("libraryQuery='océan'");same(h.run('visibleLibraryItems().map(i=>i.visual)'),['ocean'],'Category and query must intersect');
-  h.run("libraryCategory='all';libraryQuery='   '");equal(h.run('visibleLibraryItems().length'),19,'Whitespace-only query should not hide the catalogue');
+  h.run("libraryCategory='all';libraryQuery='   '");equal(h.run('visibleLibraryItems().length'),20,'Whitespace-only query should not hide the catalogue');
   h.run("libraryQuery='zzzz-no-match'");equal(h.run('visibleLibraryItems().length'),0);
   equal(h.posts.length,0,'Searching and filtering must remain local');
 
@@ -98,13 +98,13 @@ function harness(){
   const race=harness();race.held=true;const applying=race.run('activateLibraryItem('+JSON.stringify(clock.id)+')');await settle();race.run('openLibraryItem('+JSON.stringify(animation.id)+')');race.pending.resolve();await applying;equal(race.context.currentView,'animation');equal(race.context.draftVisual,'warp','Late activation success preserves a newer inspected preset');
 
   // Polling updates live badges without rebuilding cards or losing keyboard focus.
-  const dom=harness();dom.run('renderLibrary=actualRenderLibrary;actualRenderLibrary()');const grid=dom.el('libraryGrid');equal(grid.children.length,19);equal(grid.replacements,1);const firstCard=grid.children[0];
+  const dom=harness();dom.run('renderLibrary=actualRenderLibrary;actualRenderLibrary()');const grid=dom.el('libraryGrid');equal(grid.children.length,20);equal(grid.replacements,1);const firstCard=grid.children[0];
   const weatherCard=grid.children.find(card=>card.dataset.libraryId===weather.id),clockCard=grid.children.find(card=>card.dataset.libraryId===clock.id);
   equal(weatherCard.querySelector('.libraryLiveBadge').hidden,false);equal(weatherCard.querySelector('.libraryActivate').disabled,true);equal(clockCard.querySelector('.libraryLiveBadge').hidden,true);equal(clockCard.querySelector('.libraryActivate').disabled,false);
   dom.context.state.app='clock';dom.context.state.visual='aurora';dom.run('actualRenderLibrary()');equal(grid.replacements,1,'Polls retain the existing focusable cards');equal(grid.children[0],firstCard);equal(clockCard.querySelector('.libraryLiveBadge').hidden,false);equal(weatherCard.querySelector('.libraryLiveBadge').hidden,true);
   dom.context.serverOnline=false;dom.run('actualRenderLibrary()');check(grid.children.every(card=>card.querySelector('.libraryActivate').disabled),'Offline browsing must disable every activation button');check(grid.children.every(card=>card.querySelector('.libraryLiveBadge').hidden),'Offline snapshots are not live');equal(grid.replacements,1);
   dom.context.serverOnline=true;dom.run('libraryCategory="favorites";actualRenderLibrary()');equal(grid.children.length,0);equal(dom.el('libraryEmpty').hidden,false);check(dom.el('libraryEmpty').textContent.includes('étoile'));
-  dom.run('libraryCategory="clock";actualRenderLibrary()');equal(grid.children.length,7);equal(dom.el('libraryEmpty').hidden,true);equal(dom.el('libraryCount').textContent,'7 contenus');
+  dom.run('libraryCategory="clock";actualRenderLibrary()');equal(grid.children.length,8);equal(dom.el('libraryEmpty').hidden,true);equal(dom.el('libraryCount').textContent,'8 contenus');
   const card=grid.children[0];card.querySelector('.libraryOpen').events.click();equal(dom.context.currentView,'clock');equal(dom.posts.length,0,'Discover buttons stay local');
   card.querySelector('.libraryFavorite').events.click();equal(dom.posts.length,0,'Favorite buttons stay local');dom.run('actualRenderLibrary()');equal(grid.children[0].querySelector('.libraryFavorite').attributes['aria-pressed'],'true');equal(dom.focused,grid.children[0].querySelector('.libraryFavorite'),'Toggling a favorite retains focus on the rebuilt star');check(dom.focused!==card.querySelector('.libraryFavorite'),'Focus moves to a connected replacement button');equal(dom.focusOptions.preventScroll,true);
   dom.run('libraryFavorites='+JSON.stringify([clock.id,animation.id])+';libraryCategory="favorites";libraryQuery="";actualRenderLibrary()');grid.children.find(card=>card.dataset.libraryId===clock.id).querySelector('.libraryFavorite').events.click();equal(grid.children.length,1);equal(dom.focused,grid.children[0].querySelector('.libraryFavorite'),'Removing a filtered favorite focuses the next visible star');grid.children[0].querySelector('.libraryFavorite').events.click();equal(grid.children.length,0);equal(dom.focused,dom.el('librarySearch'),'Removing the last favorite returns focus to search');equal(dom.focusOptions.preventScroll,true);
