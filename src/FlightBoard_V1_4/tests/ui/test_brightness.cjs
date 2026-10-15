@@ -18,7 +18,7 @@ function harness(){
     return new Promise((resolve,reject)=>requests.push({method,url,body:body&&JSON.parse(JSON.stringify(body)),done:false,
       resolve(result){this.done=true;pending--;resolve(result);},reject(message){this.done=true;pending--;reject(Error(message));}}));
   }
-  const context=vm.createContext({Number,String,Boolean,Math,Object,TextEncoder,CITIES:{},el,
+  const context=vm.createContext({Number,String,Boolean,Math,Object,TextEncoder,CITIES:{},el,document:{querySelectorAll:()=>[]},
     demo:false,uploadBusy:false,settingsBusy:false,serverOnline:true,settingsEpoch:0,currentSettings:settings(),latest:{display:{brightness:60}},selectedHex:'abc',
     post:(url,body)=>request('POST',url,body),requestJson:url=>request('GET',url),
     setTimeout:(fn,ms)=>{timers.push({fn,ms});},notify:message=>notices.push(message),

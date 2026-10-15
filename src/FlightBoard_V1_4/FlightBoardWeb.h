@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
 #include <pgmspace.h>
-// ZCS CONTRÔLE V4.1.1 — interface locale, aucun service ou asset externe.
+// ZCS CONTRÔLE V4.1.2 — interface locale, aucun service ou asset externe.
 const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
 <!doctype html>
 <html lang="fr">
@@ -9,7 +9,7 @@ const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#182622">
-<title>ZCS CONTRÔLE · V4.1.1</title>
+<title>ZCS CONTRÔLE · V4.1.2</title>
 <style>
 :root{color-scheme:light;--bg:#f5f5f0;--card:#fff;--raised:#eef2ed;--line:#dfe4dd;--text:#202c29;--muted:#69766f;--accent:#19786a;--ink:#fff;--amber:#98661d;--error:#b24943;--green:#19786a;--rail:#182622}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{font-size:14px;line-height:1.5}button,input,select,textarea{font:inherit}button,summary,select{touch-action:manipulation}button,summary{cursor:pointer}button{color:inherit}button:disabled,input:disabled,select:disabled{cursor:default;opacity:.45}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #5cae96;outline-offset:3px}[hidden]{display:none!important}h1,h2,p{margin:0}a{color:var(--accent)}svg{flex:none}button{transition:background .16s,border-color .16s,box-shadow .16s}
@@ -39,7 +39,7 @@ const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
     <button class="navButton" type="button" data-nav="clock" aria-label="Horloge" title="Horloge"><svg class="navIcon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg><span>Horloge</span></button>
     <button class="navButton" type="button" data-nav="animation" aria-label="Animations" title="Animations"><svg class="navIcon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.6 6.4L21 12l-6.4 2.6L12 21l-2.6-6.4L3 12l6.4-2.6ZM20 2v4m-2-2h4"/></svg><span>Animations</span></button>
   </nav>
-  <div class="sidebarFoot"><div class="deviceMark"><svg viewBox="0 0 28 28" aria-hidden="true"><rect x="2" y="5" width="24" height="16" rx="3"/><path d="M10 25h8m-4-4v4M7 10h2m4 0h2m4 0h2M7 15h2m4 0h2m4 0h2"/></svg><span>Votre panneau<small>128 × 64 pixels</small></span></div><span class="version">V4.1.1</span></div>
+  <div class="sidebarFoot"><div class="deviceMark"><svg viewBox="0 0 28 28" aria-hidden="true"><rect x="2" y="5" width="24" height="16" rx="3"/><path d="M10 25h8m-4-4v4M7 10h2m4 0h2m4 0h2M7 15h2m4 0h2m4 0h2"/></svg><span>Votre panneau<small>128 × 64 pixels</small></span></div><span class="version">V4.1.2</span></div>
 </aside>
 <div class="app">
 <header class="top">
@@ -112,7 +112,7 @@ const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
   </section>
 </main>
 </div>
-<footer class="bottom"><span class="statusLine" id="message" role="status" aria-live="polite">Votre panneau. Votre univers.</span><span class="source" id="sourceLabel">by Christ_Kmusic · V4.1.1</span></footer>
+<footer class="bottom"><span class="statusLine" id="message" role="status" aria-live="polite">Votre panneau. Votre univers.</span><span class="source" id="sourceLabel">by Christ_Kmusic · V4.1.2</span></footer>
 </div>
 <dialog class="dialog" id="filtersDialog" aria-labelledby="filtersTitle"><div class="dialogHead"><h2 class="dialogTitle" id="filtersTitle">Filtres aviation</h2><button class="btn quiet" id="filtersCloseBtn" type="button">Fermer</button></div><p class="dialogIntro">Filtres mémorisés pour le radar et le panneau.</p><form id="filtersForm"><label class="check"><input type="checkbox" id="filterLogo">Compagnies avec un logo uniquement</label><label class="field">Compagnie<select id="filterAirline"><option value="">Toutes les compagnies</option></select></label><div class="formGrid"><label class="field">Type d’appareil<input id="filterType" maxlength="4" pattern="[A-Za-z0-9]{2,4}" placeholder="Tous · ex. A320" autocapitalize="characters" autocomplete="off"></label><label class="field">Altitude maximale<select id="filterAltitude"><option value="0">Sans limite</option><option value="5000">5 000 ft</option><option value="10000">10 000 ft</option><option value="20000">20 000 ft</option><option value="30000">30 000 ft</option><option value="40000">40 000 ft</option><option value="60000">60 000 ft</option></select></label></div><p class="smallPrint">Les vols sans cette donnée sont exclus du filtre.</p><p class="dialogFeedback" id="filtersFeedback" role="status" aria-live="polite"></p><div class="dialogActions"><button class="btn" id="filtersResetBtn" type="button">Tout afficher</button><button class="btn primary" id="filtersApplyBtn" type="submit">Appliquer les filtres</button></div></form></dialog>
 <dialog class="dialog" id="settingsDialog" aria-labelledby="settingsTitle">
@@ -124,6 +124,7 @@ const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
 <label class="field">Un lieu prédéfini<select id="cityInput"><option value="niort">Niort</option><option value="cdg">Paris-CDG</option><option value="orly">Paris-Orly</option><option value="paris">Paris</option><option value="londres">Londres</option><option value="amsterdam">Amsterdam</option><option value="francfort">Francfort</option><option value="newyork">New York</option><option value="dubai">Dubaï</option><option value="custom">Autre lieu / coordonnées GPS</option></select></label>
 <label class="field">Nom du lieu<input id="placeInput" maxlength="32" placeholder="Maison" required></label>
 <div class="formGrid"><label class="field">Latitude<input id="latInput" type="number" step="any" min="-90" max="90" required></label><label class="field">Longitude<input id="lonInput" type="number" step="any" min="-180" max="180" required></label><label class="field">Rayon<select id="radiusInput"><option value="5">5 km</option><option value="10">10 km</option><option value="20">20 km</option><option value="30">30 km</option><option value="50">50 km</option></select></label></div></div></details>
+<details class="section" id="fontsSection"><summary>Polices du panneau</summary><div class="sectionBody"><p class="smallPrint">Une police pour chaque application. Les aperçus montrent les vrais pixels du panneau. En aviation, l’horloge sans vol utilise la police Horloge.</p><div class="formGrid"><label class="field">Aviation<select id="fontAviationInput" data-font-preview="fontAviationPreview"><option value="classic">Pixel classique</option><option value="modern">Moderne</option><option value="digital">Numérique · chiffres à segments</option><option value="arcade">Arcade</option><option value="compact">Compacte</option></select><canvas id="fontAviationPreview" width="128" height="22" aria-label="Aperçu de la police Aviation" style="width:100%;max-width:256px;background:#000;image-rendering:pixelated;border-radius:4px"></canvas></label><label class="field">Horloge<select id="fontClockInput" data-font-preview="fontClockPreview"><option value="classic">Pixel classique</option><option value="modern">Moderne</option><option value="digital">Numérique · chiffres à segments</option><option value="arcade">Arcade</option><option value="compact">Compacte</option></select><canvas id="fontClockPreview" width="128" height="22" aria-label="Aperçu de la police Horloge" style="width:100%;max-width:256px;background:#000;image-rendering:pixelated;border-radius:4px"></canvas></label><label class="field">Météo<select id="fontWeatherInput" data-font-preview="fontWeatherPreview"><option value="classic">Pixel classique</option><option value="modern">Moderne</option><option value="digital">Numérique · chiffres à segments</option><option value="arcade">Arcade</option><option value="compact">Compacte</option></select><canvas id="fontWeatherPreview" width="128" height="22" aria-label="Aperçu de la police Météo" style="width:100%;max-width:256px;background:#000;image-rendering:pixelated;border-radius:4px"></canvas></label><label class="field">Messages<select id="fontMessageInput" data-font-preview="fontMessagePreview"><option value="classic">Pixel classique</option><option value="modern">Moderne</option><option value="digital">Numérique · chiffres à segments</option><option value="arcade">Arcade</option><option value="compact">Compacte</option></select><canvas id="fontMessagePreview" width="128" height="22" aria-label="Aperçu de la police Messages" style="width:100%;max-width:256px;background:#000;image-rendering:pixelated;border-radius:4px"></canvas></label><label class="field">Minuteur<select id="fontTimerInput" data-font-preview="fontTimerPreview"><option value="classic">Pixel classique</option><option value="modern">Moderne</option><option value="digital">Numérique · chiffres à segments</option><option value="arcade">Arcade</option><option value="compact">Compacte</option></select><canvas id="fontTimerPreview" width="128" height="22" aria-label="Aperçu de la police Minuteur" style="width:100%;max-width:256px;background:#000;image-rendering:pixelated;border-radius:4px"></canvas></label><label class="field">Scores<select id="fontScoreInput" data-font-preview="fontScorePreview"><option value="classic">Pixel classique</option><option value="modern">Moderne</option><option value="digital">Numérique · chiffres à segments</option><option value="arcade">Arcade</option><option value="compact">Compacte</option></select><canvas id="fontScorePreview" width="128" height="22" aria-label="Aperçu de la police Scores" style="width:100%;max-width:256px;background:#000;image-rendering:pixelated;border-radius:4px"></canvas></label></div></div></details>
 <details class="section" id="nightSection"><summary>Horloge et nuit</summary><div class="sectionBody">
 <label class="field">Animation de l’horloge par défaut<select id="clockVisualInput"><option value="lava">Lave</option><option value="aurora">Aurore</option><option value="ocean">Océan</option><option value="warp">Hyperespace</option><option value="stars">Étoiles</option><option value="rain">Matrix</option><option value="plain">Minimal · fond noir</option></select></label><p class="smallPrint">Utilisée aussi en aviation quand aucun vol ne s’affiche. Ce choix est conservé après redémarrage.</p>
 <label class="field">Fuseau horaire<select id="timezoneInput"><option value="paris">Paris · Europe centrale</option><option value="london">Londres</option><option value="utc">UTC</option><option value="newyork">New York</option><option value="dubai">Dubaï</option></select></label>
@@ -136,7 +137,7 @@ const char FLIGHT_BOARD_HTML[] PROGMEM = R"FBPAGE(
 <div class="dialogActions"><button class="btn primary" type="submit" id="saveSettingsBtn">Enregistrer les réglages</button></div>
 </form>
 <details class="section" id="favoritesSection"><summary>Lieux favoris</summary><p class="smallPrint">Enregistrez ce lieu. Un nom existant sera mis à jour.</p><div class="favoriteAdd"><label class="field">Nom du favori<input id="favoriteName" maxlength="32" placeholder="Maison"></label><button class="btn" id="favoriteSaveBtn" type="button">Ajouter aux favoris</button></div><div class="favoriteList" id="favoriteList"></div><p class="dialogFeedback" id="favoritesFeedback" role="status" aria-live="polite"></p></details>
-<details class="section" id="systemSection"><summary>Connexion et mises à jour</summary><div class="serviceButtons"><button class="btn" id="wifiBtn" type="button" aria-haspopup="dialog" aria-controls="wifiDialog">Configurer le Wi-Fi</button><button class="btn" id="openUpdateBtn" type="button" aria-haspopup="dialog" aria-controls="updateDialog">Mettre à jour le programme</button></div><p class="smallPrint">ZCS CONTRÔLE V4.1.1 · Luminosité du panneau réglable de 10 à 100 %.</p></details>
+<details class="section" id="systemSection"><summary>Connexion et mises à jour</summary><div class="serviceButtons"><button class="btn" id="wifiBtn" type="button" aria-haspopup="dialog" aria-controls="wifiDialog">Configurer le Wi-Fi</button><button class="btn" id="openUpdateBtn" type="button" aria-haspopup="dialog" aria-controls="updateDialog">Mettre à jour le programme</button></div><p class="smallPrint">ZCS CONTRÔLE V4.1.2 · Luminosité du panneau réglable de 10 à 100 %.</p></details>
 </dialog>
 <dialog class="dialog" id="updateDialog" aria-labelledby="updateTitle">
 <div class="dialogHead"><h2 class="dialogTitle" id="updateTitle">Mise à jour</h2><button class="btn quiet" id="updateCloseBtn" type="button">Fermer</button></div>
@@ -509,7 +510,7 @@ async function checkInitialWifi() {
 }
 
 const DEMO = {
-  version:'4.1.1',app:'aviation',visual:'lava',filters:{logoOnly:false,airline:'',type:'',maxAltitudeFt:0},totalCount:3,wifiConnected:true,radarOk:true,radiusKm:30,homeLat:46.324,homeLon:-.459,place:'Niort',ageSeconds:0,
+  version:'4.1.2',app:'aviation',visual:'lava',filters:{logoOnly:false,airline:'',type:'',maxAltitudeFt:0},totalCount:3,wifiConnected:true,radarOk:true,radiusKm:30,homeLat:46.324,homeLon:-.459,place:'Niort',ageSeconds:0,
   display:{mode:'auto',brightness:60,effectiveBrightness:60,sleeping:false,timeSynced:true,clock:'14:32',date:'15/10/2026',nightActive:false,activeHex:'demo-afr'},
   aircraft:[
     {hex:'demo-afr',callsign:'AFR1234',airline:'AIR FRANCE',type:'A320',lat:46.376,lon:-.535,track:124,trackAvailable:true,altitudeFt:34000,altitudeAvailable:true,speedKmh:820,speedAvailable:true,distanceKm:8,route:{status:'known',source:'demo',indicative:true,origin:{code:'CDG',city:'Paris',name:'Paris-Charles de Gaulle'},destination:{code:'BER',city:'Berlin',name:'Berlin Brandenburg'}}},
@@ -822,7 +823,7 @@ function renderDetails(){
   el('modeHint').textContent=demo?'Tester l’affichage dans la démo':panelApp(s)==='aviation'?'Affichage du panneau':'Ces commandes activent Flight Board sur le panneau';
 }
 function previewPlane(s){if(!usable(s))return null;return aircraft(s).find(p=>key(p)===s?.display?.activeHex)||null;}
-function canvasText(g,text,x,y,font,color){return paintPanelText(g,panelTextLayout(text,Number(String(font).match(/(\d+)px/)?.[1])||7,128-x),x,y,color);}
+function canvasText(g,text,x,y,font,color){return paintPanelText(g,panelTextLayout(text,Number(String(font).match(/(\d+)px/)?.[1])||7,128-x,g.panelFont),x,y,color);}
 function panelAircraftType(type){return typeof type==='string'&&type.length>=2&&type.length<=4&&!/[^A-Z0-9]/.test(type)?type:'TYPE --';}
 // Compact original bitmap glyphs: one bit is one LED, with integer enlargement.
 const PANEL_FONT_5X7={
@@ -831,10 +832,12 @@ const PANEL_FONT_5X7={
   "!":'01010101010001',"'":'01010000000000',' ':'00000000000000','-':'00000007000000',':':'00010000010000','.':'00000000000001',',':'00000000000201','/':'01010202020404','>':'00040201020400','?':'0E110102040004'
 };
 const PANEL_FONT_3X5={A:'25755',B:'65656',C:'34443',D:'65556',E:'74747',F:'74744',G:'34553',H:'55755',I:'72227',J:'11152',K:'55655',L:'44447',M:'57755',N:'57555',O:'25552',P:'65644',Q:'25573',R:'65655',S:'34216',T:'72222',U:'55557',V:'55552',W:'55577',X:'55255',Y:'55222',Z:'71247',0:'25552',1:'26227',2:'61247',3:'61216',4:'55711',5:'74616',6:'34652',7:'71222',8:'25252',9:'25316',"!":'11101',"'":'11000',' ':'00000','-':'00700',':':'01010','.':'00001',',':'00011','/':'11244','>':'42124','?':'61020'};
-function panelGlyph(character,small){const glyphs=small?PANEL_FONT_3X5:PANEL_FONT_5X7,c=Object.prototype.hasOwnProperty.call(glyphs,character)?character:'?';return{bits:glyphs[c],width:({"!":1,"'":1,' ':small?1:3,':':1,'.':1,',':small?1:2,'/':3,'>':3,'-':3})[c]||(small?3:5)};}
+const PANEL_FONT_MODERN={"A":"040A11111F1111","B":"1E11111E11111E","C":"0F10101010100F","D":"1E11111111111E","E":"1F10101E10101F","F":"1F10101E101010","G":"0F10101711110F","H":"1111111F111111","I":"0E04040404040E","J":"0702020212120C","K":"11121418141211","L":"1010101010101F","M":"111B1515111111","N":"11191513111111","O":"0E11111111110E","P":"1E11111E101010","Q":"0E11111115120D","R":"1E11111E141211","S":"0F10100E01011E","T":"1F040404040404","U":"1111111111110E","V":"11111111110A04","W":"11111115151B11","X":"11110A040A1111","Y":"11110A04040404","Z":"1F01020408101F","0":"0E11131519110E","1":"040C040404040E","2":"0E11010204081F","3":"1E01010601011E","4":"02060A121F0202","5":"1F10101E01011E","6":"0E10101E11110E","7":"1F010204080808","8":"0E11110E11110E","9":"0E11110F01010E"};
+const PANEL_FONT_DIGITAL={"0":"0E11110011110E","1":"00010100010100","2":"0E01010E10100E","3":"0E01010E01010E","4":"0011110E010100","5":"0E10100E01010E","6":"0E10100E11110E","7":"0E010100010100","8":"0E11110E11110E","9":"0E11110E01010E"};
+function panelGlyph(character,small,style="classic"){const glyphs=small?PANEL_FONT_3X5:PANEL_FONT_5X7,c=Object.prototype.hasOwnProperty.call(glyphs,character)?character:'?';let bits=glyphs[c];if(!small){if(style==='digital'&&PANEL_FONT_DIGITAL[c])bits=PANEL_FONT_DIGITAL[c];else if((style==='modern'||style==='digital')&&PANEL_FONT_MODERN[c])bits=PANEL_FONT_MODERN[c];else if(style==='arcade'&&/[A-Z0-9]/.test(c))bits=bits.match(/../g).map(row=>{const n=parseInt(row,16);return ((n|(n>>1))&31).toString(16).padStart(2,'0');}).join('');}return{bits,width:({"!":1,"'":1,' ':small?1:3,':':1,'.':1,',':small?1:2,'/':3,'>':3,'-':3})[c]||(small?3:5)};}
 function panelTextWidth(text,small,scale){return Math.max(0,Array.from(text).reduce((width,c)=>width+panelGlyph(c,small).width+1,0)-1)*scale;}
-function panelTextLayout(value,size,maxWidth){
-  let text=String(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/\s/g,' '),small=size<7,scale=Math.max(1,Math.floor(size/(small?5:7)));
+function panelTextLayout(value,size,maxWidth,style="classic"){
+  let text=String(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/\s/g,' '),small=size<7||style==='compact',scale=Math.max(1,Math.floor(size/(small?5:7)));
   while(scale>1&&panelTextWidth(text,small,scale)>maxWidth)--scale;
   if(panelTextWidth(text,small,scale)>maxWidth){small=true;scale=1;}
   if(panelTextWidth(text,small,scale)>maxWidth)text='...';
@@ -842,13 +845,13 @@ function panelTextLayout(value,size,maxWidth){
 }
 function paintPanelText(g,layout,x,y,color){
   x=Math.round(x);y=Math.round(y);let cursor=x;g.fillStyle=color;
-  for(const c of layout.text){const glyph=panelGlyph(c,layout.small),digits=layout.small?1:2,rows=layout.small?5:7;
+  for(const c of layout.text){const glyph=panelGlyph(c,layout.small,g.panelFont),digits=layout.small?1:2,rows=layout.small?5:7;
     for(let row=0;row<rows;row++){const bits=parseInt(glyph.bits.slice(row*digits,(row+1)*digits),16);for(let col=0;col<glyph.width;col++)if(bits&(1<<(glyph.width-col-1)))g.fillRect(cursor+col*layout.scale,y+row*layout.scale,layout.scale,layout.scale);}
     cursor+=(glyph.width+1)*layout.scale;
   }
   return{...layout,x,y,color};
 }
-function canvasCenteredText(g,text,center,y,width,size,color){const layout=panelTextLayout(text,size,width);return paintPanelText(g,layout,Math.round(center-layout.width/2),y,color);}
+function canvasCenteredText(g,text,center,y,width,size,color){const layout=panelTextLayout(text,size,width,g.panelFont);return paintPanelText(g,layout,Math.round(center-layout.width/2),y,color);}
 function previewMetric(g,label,value,unit,center,color){
   canvasCenteredText(g,label,center,37,38,6,'#a2b0b0');
   canvasCenteredText(g,value,center,44,38,10,color,8);
@@ -933,8 +936,8 @@ function drawWidgetPreview(g,app,w,time){
   if(!['message','timer','score','pixel'].includes(app))return false;const muted='#a2b0b0',white='#edf0e9',mint='#a9d8c6',amber='#e6bf81';if(!w){canvasCenteredText(g,'CONTENU INDISPONIBLE',64,25,122,7,muted);return true;}
   if(app==='message'){
     canvasCenteredText(g,'MESSAGE',64,3,122,6,muted);
-    if(typeof w.text!=='string'||!w.text.length||w.text.length>120||/[^\x20-\x7e]/.test(w.text)){canvasCenteredText(g,'AUCUN MESSAGE',64,25,122,7,muted);return true;}const text=w.text.toUpperCase(),width=panelTextWidth(text,false,2),phase=Math.floor(time*1000/50);let cursor=width<=120?Math.floor((128-width)/2):128-phase%(width+128);const color=panelRgb565(Number(w.color??0xafd8));
-    for(const c of text.slice(0,120)){const glyph=panelGlyph(c,false);for(let row=0;row<7;row++){const bits=parseInt(glyph.bits.slice(row*2,row*2+2),16);for(let col=0;col<glyph.width;col++)if(bits&(1<<(glyph.width-col-1)))panelRect(g,cursor+col*2,25+row*2,2,2,color);}cursor+=(glyph.width+1)*2;}return true;
+    if(typeof w.text!=='string'||!w.text.length||w.text.length>120||/[^\x20-\x7e]/.test(w.text)){canvasCenteredText(g,'AUCUN MESSAGE',64,25,122,7,muted);return true;}const text=w.text.toUpperCase(),small=g.panelFont==='compact',width=panelTextWidth(text,small,2),phase=Math.floor(time*1000/50);let cursor=width<=120?Math.floor((128-width)/2):128-phase%(width+128);const color=panelRgb565(Number(w.color??0xafd8));
+    for(const c of text.slice(0,120)){const glyph=panelGlyph(c,small,g.panelFont),digits=small?1:2;for(let row=0;row<(small?5:7);row++){const bits=parseInt(glyph.bits.slice(row*digits,row*digits+digits),16);for(let col=0;col<glyph.width;col++)if(bits&(1<<(glyph.width-col-1)))panelRect(g,cursor+col*2,25+row*2,2,2,color);}cursor+=(glyph.width+1)*2;}return true;
   }
   if(app==='timer'){const n=Math.max(0,Number(w.remainingSeconds??w.durationSeconds)||0);canvasCenteredText(g,'MINUTEUR',64,3,122,6,muted);canvasCenteredText(g,n<=5999?timeLabel(n):'--:--',64,22,122,28,white);canvasCenteredText(g,n===0?'TERMINE':w.running?'EN COURS':'PAUSE',64,55,122,6,w.running&&n?mint:amber);return true;}
   if(app==='score'){const ascii=(s,n,empty=false)=>typeof s==='string'&&(empty||s.length>0)&&s.length<=n&&!/[^\x20-\x7e]/.test(s);if(!w.available||!ascii(w.home,12)||!ascii(w.away,12)||!ascii(w.status??'',24,true)||![w.homeScore,w.awayScore].every(n=>Number.isInteger(n)&&n>=0&&n<=999)){canvasCenteredText(g,'SCORE INDISPONIBLE',64,25,122,7,muted);return true;}canvasCenteredText(g,w.home||'',31,5,58,7,mint);canvasCenteredText(g,w.away||'',97,5,58,7,mint);canvasCenteredText(g,String(w.homeScore)+'-'+String(w.awayScore),64,22,122,21,white);canvasCenteredText(g,w.status||'',64,49,122,6,muted);if(w.stale)canvasCenteredText(g,'ANCIEN',64,58,122,6,amber);return true;}
@@ -961,7 +964,7 @@ function drawPreview(){
   el('displayMode').textContent=(app==='aviation'?'Flight Board · '+(MODE_NAMES[mode]||'Épinglé'):APP_NAMES[app]||'ZCS CONTROL')+' · 128 × 64';el('previewStatus').textContent=d.sleeping?'En veille':d.nightActive?'Luminosité de nuit · '+bright+' %':'Aperçu · '+bright+' %';el('previewHelp').textContent=d.sleeping?'Reprise automatique à la fin de la nuit.':d.panelReady===true?'Panneau : '+d.panelBrightness+' % · Modifiable dans les réglages.':d.panelReady===false?'Le pilote du panneau n’a pas pu démarrer.':'Aperçu du panneau 128 × 64.';
   if(previewIsDraft()){el('previewStatus').textContent='Aperçu de votre sélection';el('previewHelp').textContent=storeMode&&currentContentId?'Ajoutez ce contenu à votre bibliothèque pour l’afficher.':'Appuyez sur « Afficher sur le panneau » pour l’activer.';}
   if(!previewVisible())return;
-  const g=c.getContext('2d');g.fillStyle='#000';g.fillRect(0,0,128,64);g.textBaseline='top';
+  const g=c.getContext('2d');const fontApp=app==='clock'||(app==='aviation'&&(mode==='clock'||(mode==='auto'&&!previewPlane(s))))?'clock':app;g.panelFont=s?.fonts?.[fontApp]||'classic';g.fillStyle='#000';g.fillRect(0,0,128,64);g.textBaseline='top';
   if(d.sleeping)return;
   if(!s||(!demo&&!serverOnline)){canvasText(g,'ZCS CONTROL',20,9,'bold 11px monospace','#a9d8c6');canvasText(g,'CONNEXION',31,31,'10px monospace','#edf0e9');canvasText(g,'EN ATTENTE',31,46,'10px monospace','#a2b0b0');return;}
   if(drawZcsPreview(g,s,d,idleMotion.matches?0:performance.now()/1000))return;
@@ -1047,13 +1050,21 @@ function flushBrightness(){
   })();
   return brightnessWork;
 }
+function renderFontSamples(){document.querySelectorAll('[data-font-preview]').forEach(select=>{const canvas=el(select.dataset.fontPreview),g=canvas.getContext('2d');g.panelFont=select.value;g.fillStyle='#000';g.fillRect(0,0,128,22);canvasCenteredText(g,'ABC 12:34',64,4,124,14,'#fff');});}
 function fillSettings(s){
+  el('fontAviationInput').value=s.fontAviation||'classic';
+  el('fontClockInput').value=s.fontClock||'classic';
+  el('fontWeatherInput').value=s.fontWeather||'classic';
+  el('fontMessageInput').value=s.fontMessage||'classic';
+  el('fontTimerInput').value=s.fontTimer||'classic';
+  el('fontScoreInput').value=s.fontScore||'classic';
+  renderFontSamples();
   brightnessErrors={};el('brightnessFeedback').textContent='';el('nightBrightnessFeedback').textContent='';
   el('placeInput').value=s.place;el('latInput').value=s.lat;el('lonInput').value=s.lon;el('cityInput').value=cityMatching(s.lat,s.lon);el('latInput').readOnly=el('cityInput').value!=='custom';el('lonInput').readOnly=el('cityInput').value!=='custom';el('radiusInput').value=String(s.radiusKm);el('brightnessInput').value=s.brightness;el('brightnessValue').textContent=s.brightness+' %';el('clockVisualInput').value=s.visual||'lava';el('timezoneInput').value=s.timezone||'paris';el('nightEnabled').checked=Boolean(s.nightEnabled);el('nightStart').value=minuteString(s.nightStart??1320);el('nightEnd').value=minuteString(s.nightEnd??420);el('nightBrightness').value=s.nightBrightness??15;el('nightBrightnessValue').textContent=(s.nightBrightness??15)+' %';el('nightAction').value=s.nightAction||'dim';el('favoriteName').value=s.place;nightControls();
 }
 async function openSettings(){if(demo){notify('Revenez au direct pour modifier les réglages du Flight Board.');return;}if(uploadBusy||el('settingsDialog').open)return;const epoch=++settingsEpoch;try{await brightnessWork;const s=await requestJson('/api/settings');if(epoch!==settingsEpoch||demo)return;currentSettings=s;fillSettings(s);renderBrightnessStatus(s);el('settingsFeedback').textContent='';el('favoritesFeedback').textContent='';el('settingsDialog').showModal();loadFavorites();}catch(error){notify(error.message);}}
 async function saveSettings(event){
-  event.preventDefault();if(demo||settingsBusy||uploadBusy)return;const payload={visual:el('clockVisualInput').value,place:el('placeInput').value.trim(),lat:Number(el('latInput').value),lon:Number(el('lonInput').value),radiusKm:Number(el('radiusInput').value),brightness:Number(el('brightnessInput').value),timezone:el('timezoneInput').value,nightEnabled:el('nightEnabled').checked,nightStart:minutes(el('nightStart').value),nightEnd:minutes(el('nightEnd').value),nightBrightness:Number(el('nightBrightness').value),nightAction:el('nightAction').value};
+  event.preventDefault();if(demo||settingsBusy||uploadBusy)return;const payload={fontAviation:el('fontAviationInput').value,fontClock:el('fontClockInput').value,fontWeather:el('fontWeatherInput').value,fontMessage:el('fontMessageInput').value,fontTimer:el('fontTimerInput').value,fontScore:el('fontScoreInput').value,visual:el('clockVisualInput').value,place:el('placeInput').value.trim(),lat:Number(el('latInput').value),lon:Number(el('lonInput').value),radiusKm:Number(el('radiusInput').value),brightness:Number(el('brightnessInput').value),timezone:el('timezoneInput').value,nightEnabled:el('nightEnabled').checked,nightStart:minutes(el('nightStart').value),nightEnd:minutes(el('nightEnd').value),nightBrightness:Number(el('nightBrightness').value),nightAction:el('nightAction').value};
   if(!payload.place||new TextEncoder().encode(payload.place).length>32){el('settingsFeedback').textContent='Le nom du lieu doit tenir sur 32 octets.';return;}
   if(!el('latInput').value||!el('lonInput').value||!Number.isFinite(payload.lat)||!Number.isFinite(payload.lon)||Math.abs(payload.lat)>90||Math.abs(payload.lon)>180){el('settingsFeedback').textContent='Vérifiez les coordonnées du lieu.';return;}
   if(payload.nightEnabled&&(!Number.isInteger(payload.nightStart)||!Number.isInteger(payload.nightEnd)||payload.nightStart===payload.nightEnd)){el('nightSection').open=true;el('settingsFeedback').textContent='Choisissez deux horaires différents pour le début et la fin de la nuit.';return;}
@@ -1192,6 +1203,7 @@ el('moduleSettingsBtn').addEventListener('click',()=>{el('locationSection').open
 el('filtersBtn').addEventListener('click',openFilters);el('filtersCloseBtn').addEventListener('click',()=>el('filtersDialog').close());el('filtersForm').addEventListener('submit',event=>{event.preventDefault();saveFilters();});el('filtersResetBtn').addEventListener('click',()=>saveFilters(true));
 
 el('demoBtn').addEventListener('click',()=>setDemo(!demo));el('liveBtn').addEventListener('click',()=>setDemo(false));el('sendBtn').addEventListener('click',sendSelected);el('autoBtn').addEventListener('click',()=>setMode('auto'));el('clockBtn').addEventListener('click',()=>setMode('clock'));
+document.querySelectorAll('[data-font-preview]').forEach(select=>select.addEventListener('change',renderFontSamples));
 el('settingsBtn').addEventListener('click',openSettings);el('locationBtn').addEventListener('click',()=>{el('locationSection').open=true;openSettings();});el('cancelBtn').addEventListener('click',()=>el('settingsDialog').close());el('settingsDialog').addEventListener('close',()=>++settingsEpoch);el('settingsForm').addEventListener('submit',saveSettings);el('cityInput').addEventListener('change',selectCity);
 el('brightnessInput').addEventListener('input',()=>queueBrightness('brightness'));el('nightBrightness').addEventListener('input',()=>queueBrightness('nightBrightness'));el('nightEnabled').addEventListener('change',nightControls);el('nightAction').addEventListener('change',nightControls);el('favoriteSelect').addEventListener('change',useFavorite);el('favoriteSaveBtn').addEventListener('click',addFavorite);
 el('fullscreenBtn').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen();else notify('Le plein écran n’est pas disponible dans ce navigateur.');}catch(error){notify('Le navigateur n’a pas autorisé le plein écran.');}});document.addEventListener('fullscreenchange',()=>{el('fullscreenBtn').setAttribute('aria-label',document.fullscreenElement?'Quitter le plein écran':'Passer en plein écran');});

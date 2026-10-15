@@ -62,6 +62,15 @@ try {
     console.log(`PASS panel/tablet ${name}: ${8192-different}/8192 identical RGB565 pixels`);
   }
   compare('plane',plane);
+  const styles=['classic','modern','digital','arcade','compact'],fontApps=['aviation','clock','weather','message','timer','score'];
+  for(let f=0;f<styles.length;f++)for(let a=0;a<fontApps.length;a++){
+    const app=fontApps[a],fonts=Object.fromEntries(fontApps.map(key=>[key,styles[f]]));
+    const extra={app,fonts,weather:{available:true,temperatureC:-3.6,windKmh:12,code:0,isDay:true},widget:{text:"C'EST BIEN!",color:0x07e0,remainingSeconds:5999,running:false,home:'PSG',away:'OM',status:'69 MIN',homeScore:12,awayScore:9,available:true,stale:false}};
+    compare('font_'+f+'_'+a,plane,display,true,extra);
+    if(a===0)compare('font_idle_'+f,plane,{...display,mode:'clock'},true,extra);
+    if(a===3)compare('font_scroll_'+f,plane,display,true,{...extra,widget:{text:'W'.repeat(120),color:0xf800}},6400,false);
+  }
+
   for(const type of ['B738','B38M','PC21','A1','AB3'])compare('type_'+type,{...plane,type});
   compare('type_missing',{...plane,type:undefined});
   compare('type_invalid',{...plane,type:'A320X'});

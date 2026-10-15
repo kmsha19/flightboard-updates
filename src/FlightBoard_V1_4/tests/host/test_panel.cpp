@@ -343,6 +343,17 @@ int main(int argc, char** argv) {
     const std::string dir = argv[1];
     auto plane = makePlane(); auto frame = makeFrame(&plane);
     writeFixture((dir + "/plane.bin").c_str(), frame);
+    const Font fonts[] = {Font::Classic, Font::Modern, Font::Digital, Font::Arcade, Font::Compact};
+    const App fontApps[] = {App::Aviation, App::Clock, App::Weather, App::Message, App::Timer, App::Score};
+    for (int f=0; f<5; ++f) for(int a=0; a<6; ++a) {
+      auto fontFrame=makeFrame(&plane); fontFrame.app=fontApps[a]; fontFrame.font=fonts[f];fontFrame.clockFont=fonts[f];
+      PanelWeather fontWeather; fontWeather.available=true;fontWeather.temperatureC=-3.6;fontWeather.windKmh=12;fontWeather.code=0; fontFrame.weather=&fontWeather;
+      ZcsWidgetFrame fontWidget; fontWidget.message={"C'EST BIEN!",0x07e0}; fontWidget.timer={5999,false};fontWidget.score={"PSG","OM","69 MIN",12,9,true,false};fontFrame.widget=&fontWidget;
+      writeFixture((dir+"/font_"+std::to_string(f)+"_"+std::to_string(a)+".bin").c_str(),fontFrame);
+      if(a==0){fontFrame.mode=Mode::Clock;writeFixture((dir+"/font_idle_"+std::to_string(f)+".bin").c_str(),fontFrame);}
+      if(a==3){const std::string message(120,'W');fontWidget.message={message.c_str(),0xf800};writeFixture((dir+"/font_scroll_"+std::to_string(f)+".bin").c_str(),fontFrame,6400);}
+    }
+
     for (const char* type : {"B738", "B38M", "PC21", "A1", "AB3"}) {
       plane.aircraftType = type;
       writeFixture((dir + "/type_" + type + ".bin").c_str(), frame);

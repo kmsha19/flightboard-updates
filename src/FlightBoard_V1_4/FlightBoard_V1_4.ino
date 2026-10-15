@@ -27,13 +27,14 @@ const char* WIFI_PASSWORD = "";
 #include "FlightBoardPanel.h"
 #include "FlightBoardPanelRenderer.h"
 
-// ZCS CONTROL V4.1.1 — Waveshare ESP32-S3-RGB-Matrix + HUB75 128x64
+// ZCS CONTROL V4.1.2 — Waveshare ESP32-S3-RGB-Matrix + HUB75 128x64
 // Luminosite physique pilotee par les reglages de jour et de nuit.
 struct BoardSettings {
   double lat = 46.324, lon = -0.459;
   int radiusKm = 30, brightness = 60, mode = 0;
   String place = "Niort", timezone = "paris", nightAction = "dim";
   String app = "aviation", visual = "lava", contentId;
+  String fontAviation = "classic", fontClock = "classic", fontWeather = "classic", fontMessage = "classic", fontTimer = "classic", fontScore = "classic";
   bool aviationLogoOnly = false;
   String aviationAirline, aviationType;
   int aviationMaxAltitudeFt = 0;
@@ -93,6 +94,9 @@ int savedNightBrightness = 15;
 uint32_t brightnessChangedMs = 0;
 bool brightnessSaveError = false;
 
+bool validFont(const String& value) {
+  return strlen(value.c_str()) == value.length() && (value == "classic" || value == "modern" || value == "digital" || value == "arcade" || value == "compact");
+}
 bool validApp(const String& app) {
   return strlen(app.c_str()) == app.length() &&
     (app == "aviation" || app == "clock" || app == "animation" || app == "weather" || app == "message" || app == "timer" || app == "score" || app == "pixel");
@@ -124,6 +128,7 @@ bool validAviationAirline(const String& airline) {
 
 bool validSettings(const BoardSettings& p) {
   return validApp(p.app) && validVisual(p.visual) &&
+    validFont(p.fontAviation) && validFont(p.fontClock) && validFont(p.fontWeather) && validFont(p.fontMessage) && validFont(p.fontTimer) && validFont(p.fontScore) &&
     validAviationType(p.aviationType) && validAviationAirline(p.aviationAirline) &&
     p.aviationMaxAltitudeFt >= 0 && p.aviationMaxAltitudeFt <= 60000 &&
     isfinite(p.lat) && isfinite(p.lon) && p.lat >= -90 && p.lat <= 90 &&
@@ -142,6 +147,13 @@ bool validSettings(const BoardSettings& p) {
 void settingsJson(JsonDocument& doc, const BoardSettings& p) {
   doc["app"] = p.app;
   doc["visual"] = p.visual;
+  doc["fontAviation"] = p.fontAviation;
+  doc["fontClock"] = p.fontClock;
+  doc["fontWeather"] = p.fontWeather;
+  doc["fontMessage"] = p.fontMessage;
+  doc["fontTimer"] = p.fontTimer;
+  doc["fontScore"] = p.fontScore;
+
   doc["contentId"] = p.contentId;
   doc["aviationLogoOnly"] = p.aviationLogoOnly;
   doc["aviationAirline"] = p.aviationAirline;
@@ -174,7 +186,7 @@ bool persistSettings(const BoardSettings& next) {
 }
 
 bool parseSettings(JsonObjectConst body, BoardSettings& next) {
-  for (const char* key : {"place", "timezone", "nightAction", "app", "visual", "aviationAirline", "aviationType"}) {
+  for (const char* key : {"place", "timezone", "nightAction", "app", "visual", "fontAviation", "fontClock", "fontWeather", "fontMessage", "fontTimer", "fontScore", "aviationAirline", "aviationType"}) {
     if (body[key].is<JsonString>()) {
       JsonString value = body[key].as<JsonString>();
       if (strlen(value.c_str()) != value.size()) return false;
@@ -213,6 +225,12 @@ bool parseSettings(JsonObjectConst body, BoardSettings& next) {
     if (!body["nightAction"].is<String>()) return false;
     next.nightAction = body["nightAction"].as<String>();
   }
+  if (!body["fontAviation"].isUnbound()) { if (!body["fontAviation"].is<String>()) return false; next.fontAviation = body["fontAviation"].as<String>(); }
+  if (!body["fontClock"].isUnbound()) { if (!body["fontClock"].is<String>()) return false; next.fontClock = body["fontClock"].as<String>(); }
+  if (!body["fontWeather"].isUnbound()) { if (!body["fontWeather"].is<String>()) return false; next.fontWeather = body["fontWeather"].as<String>(); }
+  if (!body["fontMessage"].isUnbound()) { if (!body["fontMessage"].is<String>()) return false; next.fontMessage = body["fontMessage"].as<String>(); }
+  if (!body["fontTimer"].isUnbound()) { if (!body["fontTimer"].is<String>()) return false; next.fontTimer = body["fontTimer"].as<String>(); }
+  if (!body["fontScore"].isUnbound()) { if (!body["fontScore"].is<String>()) return false; next.fontScore = body["fontScore"].as<String>(); }
   for (const char* key : {"app", "visual", "aviationAirline", "aviationType"}) {
     if (body[key].isUnbound()) continue;
     if (!body[key].is<String>()) return false;
@@ -382,6 +400,9 @@ void updatePanel() {
   if (panel.frames() && (uint32_t)(nowMs - renderedAt) < kFrameIntervalMs) return;
   const uint32_t started = micros();
   PanelFrame frame;
+  auto fontStyle = [](const String& name) { return name == "modern" ? Font::Modern : name == "digital" ? Font::Digital : name == "arcade" ? Font::Arcade : name == "compact" ? Font::Compact : Font::Classic; };
+  const String& chosenFont = settings.app == "clock" ? settings.fontClock : settings.app == "weather" ? settings.fontWeather : settings.app == "message" ? settings.fontMessage : settings.app == "timer" ? settings.fontTimer : settings.app == "score" ? settings.fontScore : settings.fontAviation;
+  frame.font = fontStyle(chosenFont); frame.clockFont = fontStyle(settings.fontClock);
   frame.mode = static_cast<Mode>(settings.mode);
   frame.app = settings.app == "weather" ? App::Weather : settings.app == "clock" ? App::Clock :
     settings.app == "animation" ? App::Animation : settings.app == "message" ? App::Message :
@@ -492,7 +513,14 @@ void sendError(int status, const String& message) {
 void sendRadarState() {
   JsonDocument doc;
 
-  doc["version"] = "4.1.1";
+  doc["version"] = "4.1.2";
+  doc["fonts"]["aviation"] = settings.fontAviation;
+  doc["fonts"]["clock"] = settings.fontClock;
+  doc["fonts"]["weather"] = settings.fontWeather;
+  doc["fonts"]["message"] = settings.fontMessage;
+  doc["fonts"]["timer"] = settings.fontTimer;
+  doc["fonts"]["score"] = settings.fontScore;
+
   doc["app"] = settings.app;
   doc["visual"] = settings.visual;
   doc["contentId"] = settings.contentId;
@@ -1168,7 +1196,7 @@ void setup() {
   Serial.begin(115200);
   delay(1500);
 
-  Serial.println("\n=== ZCS CONTROL V4.1.1 ===");
+  Serial.println("\n=== ZCS CONTROL V4.1.2 ===");
   Serial.println(
     "Radar + favoris + horaires + mise a jour tablette"
   );

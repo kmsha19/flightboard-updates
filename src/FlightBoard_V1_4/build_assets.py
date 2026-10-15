@@ -161,7 +161,7 @@ def compress_ui(html):
 
 
 def build_web(html, minified, compressed):
-    version = '4.1.1'
+    version = '4.1.2'
     digest = sha256(compressed).hexdigest()
     url = f'https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/zcs-web-{version}.bin'
     if len(compressed) > 98304:

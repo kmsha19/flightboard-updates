@@ -46,4 +46,11 @@ for(const [name,height,digits] of [['PANEL_FONT_5X7',7,2],['PANEL_FONT_3X5',5,1]
   check(Object.values(glyphs).every(bits=>bits.length===height*digits),'Every encoded glyph must contain all of its rows');
   check(Object.values(glyphs).every(bits=>/^[0-9A-F]+$/.test(bits)),'Every glyph must contain valid hexadecimal bitmap data');
 }
+const signatures=new Set();
+for(const style of ['classic','modern','digital','arcade','compact']){
+ g.panelFont=style;layout=paint('ABC 12:34',14);verifyPixels(layout);check(layout.width<=122);
+ signatures.add(JSON.stringify(rects));
+ for(const sample of ['AFR1234','99:59','-3 C','KM/H',"C'EST BIEN!",'PSG 12-9']){layout=paint(sample,14,122);verifyPixels(layout);check(layout.width<=122);}
+}
+equal(signatures.size,5,'All five styles must produce visibly different real bitmap pixels');
 console.log(`Bitmap font UI: ${assertions} assertions passed`);

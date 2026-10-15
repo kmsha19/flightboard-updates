@@ -1,9 +1,9 @@
 {
   "schema": 1,
-  "version": "4.1.1",
+  "version": "4.1.2",
   "firmwareFamily": "FlightBoard.ESP32S3.Application.v2",
-  "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/releases/ZCS-Control-4.1.1-Waveshare-K716.ino.bin",
-  "size": 1288064,
-  "sha256": "37e4e87e9905bbaa6dbe3847556728f06f823920a99b59325d08fea0a9e226d0",
-  "notes": "Choix de l’animation de l’horloge par défaut dans Réglages → Horloge et nuit, mémorisé après redémarrage."
+  "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/releases/ZCS-Control-4.1.2-Waveshare-K716.ino.bin",
+  "size": 1291136,
+  "sha256": "f0d571576c9cc7ff89c2a4752e580ee8bf24d67899503844b15d62dc3be9dd99",
+  "notes": "Cinq polices de panneau : Pixel classique, Moderne, Numérique, Arcade et Compacte. Choix mémorisé par application avec aperçu en pixels avant enregistrement."
 }

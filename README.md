@@ -1,4 +1,4 @@
-# ZCS CONTRÔLE · V4.1.1
+# ZCS CONTRÔLE · V4.1.2
 
 **by Christ_Kmusic** — une bibliothèque de contenus pour votre panneau LED, pilotée depuis une tablette ou un téléphone.
 
@@ -17,6 +17,7 @@ La V4 repense entièrement l’interface : navigation latérale, espace clair, a
 - **Minuteur** : compte à rebours, démarrer, mettre en pause, reprendre et réinitialiser. Après un redémarrage, il reprend en pause depuis le dernier état enregistré.
 - **Scores** : choix du match par compétition et date — Ligue 1, Premier League et Ligue des champions. Le panneau suit le match via ESPN toutes les minutes.
 - **Store** : huit contenus initiaux : Ville néon, Voyage cosmique, Pluie à la fenêtre, Feu de camp, Chat pixel, Orbite arcade, Bienvenue et Focus 25 minutes. Un téléchargement ajoute le contenu à la bibliothèque sans modifier l’affichage en cours. Jusqu’à 14 contenus installés ; un contenu actif doit être quitté avant sa suppression.
+- **Polices du panneau** : Pixel classique, Moderne, Numérique, Arcade et Compacte. Choix indépendant pour Aviation, Horloge, Météo, Message, Minuteur et Scores, avec un aperçu en vrais pixels avant enregistrement. Les petits libellés gardent leur tracé compact pour rester lisibles.
 - **Horloge par défaut** : animation au choix dans Réglages → Horloge et nuit, mémorisée après redémarrage et utilisée également sans vol.
 - **Réglages** : luminosités de jour et de nuit immédiates et mémorisées, horaires de nuit, fuseau horaire, lieu, Wi-Fi et mise à jour depuis la tablette.
 
@@ -41,10 +42,10 @@ Sur une carte déjà configurée et compatible : ouvrir **http://flightboard.loc
 
 Les réglages, le Wi-Fi, les lieux favoris et la cadence radar restent en mémoire. La mise à jour ne change pas les partitions. Le téléchargement passe par HTTPS, puis sa taille et son SHA-256 sont vérifiés avant l’installation sur la partition inactive.
 
-- [Programme V4.1.1](releases/ZCS-Control-4.1.1-Waveshare-K716.ino.bin)
-- [Empreinte SHA-256](releases/ZCS-Control-4.1.1-Waveshare-K716.ino.bin.sha256)
-- [Interface V4.1.1 pour installation hors ligne](store/zcs-web-4.1.1.bin)
-- [Empreinte et provenance de l’interface](store/zcs-web-4.1.1.json)
+- [Programme V4.1.2](releases/ZCS-Control-4.1.2-Waveshare-K716.ino.bin)
+- [Empreinte SHA-256](releases/ZCS-Control-4.1.2-Waveshare-K716.ino.bin.sha256)
+- [Interface V4.1.2 pour installation hors ligne](store/zcs-web-4.1.2.bin)
+- [Empreinte et provenance de l’interface](store/zcs-web-4.1.2.json)
 - [Catalogue du Store](store/catalog.json)
 - [Manifeste de mise à jour](latest.json)
 - [Sources complètes](src/FlightBoard_V1_4)
@@ -56,7 +57,7 @@ Le fichier `.ino.bin` est l’application OTA. Ne pas envoyer un bootloader ou u
 
 ## Compiler les sources
 
-Le dossier du sketch conserve le nom `FlightBoard_V1_4` pour la compatibilité Arduino ; la version du programme est bien **4.1.1**.
+Le dossier du sketch conserve le nom `FlightBoard_V1_4` pour la compatibilité Arduino ; la version du programme est bien **4.1.2**.
 
 Dépendances utilisées : cœur **ESP32 3.3.12**, **ArduinoJson 7.4.3**. Le pilote HUB75 Waveshare est embarqué et épinglé sous `assets/vendor/waveshare-hub75`. Les fichiers générés sont inclus : Node et Python ne sont nécessaires que pour régénérer les ressources après une modification.
 
@@ -94,7 +95,7 @@ python3 tests/test_logo_images.py
 
 Les tests du stockage simulent des coupures, des erreurs de lecture/écriture et de la corruption ; la banque précédente reste exploitable si une nouvelle installation est interrompue. L’initialisation n’efface jamais automatiquement une partition inconnue. Les tests de la page de secours vérifient téléchargement, import local, limites de taille, SHA-256, Wi-Fi et OTA.
 
-Les tests couvrent la bibliothèque, les réponses tardives, les favoris, les aperçus indépendants, les curseurs de luminosité, l’aviation, les mises à jour et le programme embarqué. La comparaison C++/JavaScript vérifie 345 scènes du panneau, pixel par pixel. Le rendu optique et le câblage nécessitent toujours une vérification sur le matériel correspondant.
+Les tests couvrent la bibliothèque, les réponses tardives, les favoris, les aperçus indépendants, les curseurs de luminosité, l’aviation, les mises à jour et le programme embarqué. La comparaison C++/JavaScript vérifie 385 scènes du panneau, pixel par pixel. Le rendu optique et le câblage nécessitent toujours une vérification sur le matériel correspondant.
 
 ## Données et ressources
 

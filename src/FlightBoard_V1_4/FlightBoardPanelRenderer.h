@@ -17,6 +17,7 @@ constexpr int kWidth = 128, kHeight = 64;
 constexpr uint32_t kFrameIntervalMs = 80;  // 12.5 fps for the idle animation.
 enum class Mode : uint8_t { Auto, Manual, Clock };
 enum class App : uint8_t { Aviation, Clock, Animation, Weather, Message, Timer, Score, Pixel };
+enum class Font : uint8_t { Classic, Modern, Digital, Arcade, Compact };
 enum class Visual : uint8_t { Lava, Stars, Rain, Plain, Aurora, Ocean, Warp };
 enum class RouteStatus : uint8_t { NotRequested, Loading, Known, Unknown, Error, Unconfirmed };
 enum class Scene : uint8_t { Sleeping, Connecting, Idle, Unavailable, Aircraft, Animation, Weather, Widget };
@@ -24,6 +25,7 @@ enum class Scene : uint8_t { Sleeping, Connecting, Idle, Unavailable, Aircraft, 
 struct PanelCanvas {
   void* context = nullptr;
   void (*pixel)(void* context, int16_t x, int16_t y, uint16_t rgb565) = nullptr;
+  Font font = Font::Classic;
 };
 
 struct PanelLogo {
@@ -57,6 +59,7 @@ struct PanelWeather {
 struct PanelFrame {
   App app = App::Aviation;
   Visual visual = Visual::Lava;
+  Font font = Font::Classic, clockFont = Font::Classic;
   Mode mode = Mode::Auto;
   bool stateAvailable = true;
   bool wifiConnected = false;
@@ -156,6 +159,16 @@ constexpr uint8_t kFont3[46][5] = {
   {1,1,1,0,1},{1,1,0,0,0}
 };
 
+constexpr uint8_t kFontModern[36][7] = {{4,10,17,17,31,17,17},{30,17,17,30,17,17,30},{15,16,16,16,16,16,15},{30,17,17,17,17,17,30},{31,16,16,30,16,16,31},{31,16,16,30,16,16,16},{15,16,16,23,17,17,15},{17,17,17,31,17,17,17},{14,4,4,4,4,4,14},{7,2,2,2,18,18,12},{17,18,20,24,20,18,17},{16,16,16,16,16,16,31},{17,27,21,21,17,17,17},{17,25,21,19,17,17,17},{14,17,17,17,17,17,14},{30,17,17,30,16,16,16},{14,17,17,17,21,18,13},{30,17,17,30,20,18,17},{15,16,16,14,1,1,30},{31,4,4,4,4,4,4},{17,17,17,17,17,17,14},{17,17,17,17,17,10,4},{17,17,17,21,21,27,17},{17,17,10,4,10,17,17},{17,17,10,4,4,4,4},{31,1,2,4,8,16,31},{14,17,19,21,25,17,14},{4,12,4,4,4,4,14},{14,17,1,2,4,8,31},{30,1,1,6,1,1,30},{2,6,10,18,31,2,2},{31,16,16,30,1,1,30},{14,16,16,30,17,17,14},{31,1,2,4,8,8,8},{14,17,17,14,17,17,14},{14,17,17,15,1,1,14}};
+constexpr uint8_t kFontDigital[10][7] = {{14,17,17,0,17,17,14},{0,1,1,0,1,1,0},{14,1,1,14,16,16,14},{14,1,1,14,1,1,14},{0,17,17,14,1,1,0},{14,16,16,14,1,1,14},{14,16,16,14,17,17,14},{14,1,1,0,1,1,0},{14,17,17,14,17,17,14},{14,17,17,14,1,1,14}};
+inline uint8_t styledRow(uint8_t index, int row, bool small, Font font) {
+  if (small) return kFont3[index][row];
+  if (font == Font::Digital && index >= 26 && index < 36) return kFontDigital[index-26][row];
+  if ((font == Font::Modern || font == Font::Digital) && index < 36) return kFontModern[index][row];
+  const uint8_t bits = kFont5[index][row];
+  return font == Font::Arcade && index < 36 ? uint8_t((bits | (bits >> 1)) & 31) : bits;
+}
+
 inline uint8_t glyphIndex(char c) {
   if (c >= 'a' && c <= 'z') c -= 'a' - 'A';
   if (c >= 'A' && c <= 'Z') return uint8_t(c - 'A');
@@ -193,8 +206,8 @@ struct TextLayout {
   int width;
 };
 
-inline TextLayout layout(const char* text, uint8_t size, int maxWidth) {
-  TextLayout out{text ? text : "", size < 7, 1, 0};
+inline TextLayout layout(const char* text, uint8_t size, int maxWidth, Font font = Font::Classic) {
+  TextLayout out{text ? text : "", size < 7 || font == Font::Compact, 1, 0};
   out.scale = uint8_t(size / (out.small ? 5 : 7));
   if (!out.scale) out.scale = 1;
   while (out.scale > 1 && textWidth(out.text, out.small, out.scale) > maxWidth) --out.scale;
@@ -222,7 +235,7 @@ inline void paintText(const PanelCanvas& canvas, const TextLayout& text, int x, 
     const uint8_t index = glyphIndex(text.text[i]);
     const uint8_t width = glyphWidth(index, text.small);
     for (int row = 0; row < (text.small ? 5 : 7); ++row) {
-      const uint8_t bits = text.small ? kFont3[index][row] : kFont5[index][row];
+      const uint8_t bits = styledRow(index, row, text.small, canvas.font);
       for (int col = 0; col < width; ++col)
         if (bits & (1 << (width - col - 1)))
           rectangle(canvas, x + col * text.scale, y + row * text.scale, text.scale, text.scale, color);
@@ -232,12 +245,12 @@ inline void paintText(const PanelCanvas& canvas, const TextLayout& text, int x, 
 }
 
 inline void text(const PanelCanvas& canvas, const char* value, int x, int y, uint8_t size, uint16_t color) {
-  paintText(canvas, layout(value, size, kWidth - x), x, y, color);
+  paintText(canvas, layout(value, size, kWidth - x, canvas.font), x, y, color);
 }
 
 inline void centered(const PanelCanvas& canvas, const char* value, int center, int y,
                      int maxWidth, uint8_t size, uint16_t color) {
-  const TextLayout l = layout(value, size, maxWidth);
+  const TextLayout l = layout(value, size, maxWidth, canvas.font);
   paintText(canvas, l, center - l.width / 2, y, color);
 }
 
@@ -537,15 +550,18 @@ inline void aircraft(const PanelCanvas& canvas, const PanelAircraft& plane) {
 }
 inline void widgetMessage(const PanelCanvas& canvas, const ZcsMessageFrame& message, uint32_t nowMs) {
   centered(canvas, "MESSAGE", 64, 3, 122, 6, kMuted);
-  const int width = zcsMessageWidth(message.text);
+  const bool small = canvas.font == Font::Compact;
+  int width = 0;
+  for (size_t i=0; message.text && message.text[i] && i<120; ++i) width += (glyphWidth(glyphIndex(message.text[i]),small)+1)*2;
+  if(width) width -= 2;
   if (!width) { centered(canvas, "AUCUN MESSAGE", 64, 25, 122, 7, kMuted); return; }
   int x = width <= 120 ? (kWidth - width) / 2 : kWidth - int((nowMs / 50) % uint32_t(width + kWidth));
   for (size_t i = 0; message.text[i] && i < 120 && x < kWidth; ++i) {
     const uint8_t glyph = glyphIndex(message.text[i]);
-    const int advance = (glyphWidth(glyph, false) + 1) * 2;
+    const int advance = (glyphWidth(glyph, small) + 1) * 2;
     if (x + advance > 0) {
       const char value[2] = {message.text[i], 0};
-      paintText(canvas, {value, false, 2, advance - 2}, x, 25, message.color);
+      paintText(canvas, {value, small, 2, advance - 2}, x, 25, message.color);
     }
     x += advance;
   }
@@ -595,9 +611,11 @@ inline void widget(const PanelCanvas& canvas, const PanelFrame& frame, uint32_t 
 }
 }  // namespace detail
 
-inline void renderPanel(const PanelCanvas& canvas, const PanelFrame& frame, uint32_t nowMs) {
-  if (!canvas.pixel) return;
+inline void renderPanel(const PanelCanvas& target, const PanelFrame& frame, uint32_t nowMs) {
+  if (!target.pixel) return;
   const Scene scene = panelScene(frame);
+  PanelCanvas canvas = target;
+  canvas.font = scene == Scene::Idle ? frame.clockFont : frame.font;
   if (scene == Scene::Idle) {
     detail::idle(canvas, frame, nowMs);
     return;

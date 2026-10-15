@@ -1,7 +1,7 @@
 {
-  "version": "4.1.1",
+  "version": "4.1.2",
   "root": "src/FlightBoard_V1_4",
-  "firmwareSha256": "37e4e87e9905bbaa6dbe3847556728f06f823920a99b59325d08fea0a9e226d0",
+  "firmwareSha256": "f0d571576c9cc7ff89c2a4752e580ee8bf24d67899503844b15d62dc3be9dd99",
   "files": [
     {
       "path": "AirlineLogos.h",
@@ -35,8 +35,8 @@
     },
     {
       "path": "FlightBoardPanelRenderer.h",
-      "size": 28215,
-      "sha256": "879eb46fd0f5b50b6089c5908fa0537cf56dc5a85239a5164089173a84fd35ba"
+      "size": 30217,
+      "sha256": "ee077c9d4772401ccafc320e0c553b03be97e62812bd86ff0f3fec56afcb5313"
     },
     {
       "path": "FlightBoardRadar.h",
@@ -56,17 +56,17 @@
     {
       "path": "FlightBoardUpdate.h",
       "size": 13566,
-      "sha256": "d2d9446da1664271786e6df5addfb387dd7c29d316526afb35fd5c577e6f363c"
+      "sha256": "3e6a86df2dc4d6bd2137a0eca0ac83d16937180a4970b5b001a35018406b9322"
     },
     {
       "path": "FlightBoardWeb.h",
-      "size": 182690,
-      "sha256": "a81cfdf9fdd25626a1f6f15268d8bcf802f0af31bb252c8e23bf258a77536a5b"
+      "size": 188997,
+      "sha256": "cdca54526bd59557eba5c1ddb291a95256c7395a62f3289dafe81badae9ae5f6"
     },
     {
       "path": "FlightBoardWebGzip.h",
       "size": 393,
-      "sha256": "f33cfb50299a8f6101f5770c953490f3060e69d8ccecfa9d28ae28b1f9ad59f0"
+      "sha256": "69cc357b4864bbd95dd924a5550bc772204890d4ec60329e98f00c1f03333b0f"
     },
     {
       "path": "FlightBoardWiFi.h",
@@ -75,13 +75,13 @@
     },
     {
       "path": "FlightBoard_V1_4.ino",
-      "size": 43629,
-      "sha256": "9e6bf8c65c0d2afd38a1dffd8040a8b07ca456def680e2db2cbb5c4fccc7f32e"
+      "size": 46216,
+      "sha256": "77274aef48a769f9cc21918c6289162180e96255c92386bbd8e37830208d517b"
     },
     {
       "path": "ZcsBootstrap.h",
-      "size": 21918,
-      "sha256": "7741c5f61af8f8d37865701141bfe1a694487f13ce3ab603a59a868b8ff19370"
+      "size": 21912,
+      "sha256": "d321e543390cfcb102513f97df1089850011c7806b1449bd962d4bb70765475b"
     },
     {
       "path": "ZcsContentApi.h",
@@ -595,18 +595,18 @@
     },
     {
       "path": "assets/zcs-web.bin",
-      "size": 44289,
-      "sha256": "d5669c3a7523001f31f27d75e79a50f1f37ce5754c66b3b52fd6cac644b31deb"
+      "size": 45382,
+      "sha256": "d6e5fda81e122610a6968212ad1fccd6b01a1bbdaeb2062132ebe628535cd1b9"
     },
     {
       "path": "assets/zcs-web.json",
       "size": 431,
-      "sha256": "1330e819742db25f5e834d34f64ad932c23f5d73de51d480f6c198cc2727ed91"
+      "sha256": "ac308102d27c00077fbc4c75602d2f9c95a602098d55517424bc0d17973c57a8"
     },
     {
       "path": "build_assets.py",
       "size": 19552,
-      "sha256": "9af44f9aad87d19b59cc0c195c9e9b74a611ce2462b532ae09baec71e0862aa4"
+      "sha256": "4e2ffc3706be64906aa113c173a0df190f61651f893f0ed8a7f3ccf1bb165469"
     },
     {
       "path": "package-lock.json",
@@ -625,8 +625,8 @@
     },
     {
       "path": "tests/host/extract_settings.py",
-      "size": 2399,
-      "sha256": "55f3a35a74b22da5b95ec34af9a8a22779a87fa935daa1bfaf50ba52ac822279"
+      "size": 2400,
+      "sha256": "9e693a2ce5ab9367c201398462dc6568175855e7258836f586f883ff42e4d47a"
     },
     {
       "path": "tests/host/mocks/Arduino.h",
@@ -725,13 +725,13 @@
     },
     {
       "path": "tests/host/test_panel.cpp",
-      "size": 24054,
-      "sha256": "76503902677b15160ac1386566bb74a5b5b06b2f4f4e358886e69e89131dd15f"
+      "size": 25200,
+      "sha256": "0ad8fc91ce6b51c4eaad48477dbaba9df5fe06715d7a8793ca9372c3b949557c"
     },
     {
       "path": "tests/host/test_panel_parity.cjs",
-      "size": 9209,
-      "sha256": "66fa90ceead4e1dd948fca88d63cf6ab7c717e654b224ce220be301a1093b047"
+      "size": 10031,
+      "sha256": "c2b6c4f4bb3e0797622e4919e91021b3ce60f04073071f07c21d2faaa454b274"
     },
     {
       "path": "tests/host/test_radar.cpp",
@@ -745,8 +745,8 @@
     },
     {
       "path": "tests/host/test_settings.cpp",
-      "size": 11723,
-      "sha256": "16d8089bdd49d779c1ff36730451ef02d361db603844300da7eb57d9e8a27627"
+      "size": 12610,
+      "sha256": "3527179679bcefacd248e64cd1b7f030967d2f5a029b91ca86a16aaf1078b557"
     },
     {
       "path": "tests/host/test_widget_handlers.cpp",
@@ -890,13 +890,13 @@
     },
     {
       "path": "tests/ui/test_brightness.cjs",
-      "size": 12967,
-      "sha256": "bb52b3283330f62c3cba1dbf715df3996bb88d84ee653eb26fd0e275ae4cb6ab"
+      "size": 13002,
+      "sha256": "1ee12370b330cddd1af1a8c600be7ab910ba1bc6b110d5b4711a07e16b9dbb5c"
     },
     {
       "path": "tests/ui/test_fonts.cjs",
-      "size": 4454,
-      "sha256": "2d60f5a1bd3dd40cbb0ccd5803d2200b8732827cf8ec9ebc87072ae33e3434ac"
+      "size": 4941,
+      "sha256": "871ca295000d6fd063df12c2be3cb7568d06e9219cf45c13b1b7057c803b08da"
     },
     {
       "path": "tests/ui/test_hash.cjs",

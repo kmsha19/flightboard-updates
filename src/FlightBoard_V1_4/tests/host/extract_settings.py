@@ -13,7 +13,7 @@ parser.add_argument('--output', type=Path)
 args = parser.parse_args()
 source = (Path(args.project) / 'FlightBoard_V1_4.ino').read_text()
 struct = source[source.index('struct BoardSettings {'):source.index('\nWebServer webServer(')]
-functions = source[source.index('bool validApp('):source.index('\nvoid resetRadar()')]
+functions = source[source.index('bool validFont('):source.index('\nvoid resetRadar()')]
 brightness_globals = '\n'.join(re.search(r'^' + declaration + r'[^\n]*;', source, re.M).group(0)
     for declaration in ('int savedBrightness ', 'int savedNightBrightness ', 'uint32_t brightnessChangedMs ', 'bool brightnessSaveError '))
 out = args.output or Path(__file__).with_name('settings_under_test.inc')
