@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "version": "2.0.8",
+  "firmwareFamily": "FlightBoard.ESP32S3.Application.v2",
+  "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/releases/FlightBoard-2.0.8-ESP32S3.ino.bin",
+  "size": 1282752,
+  "sha256": "393ea64e2d6dc94477e3b7647a6f596b9aa9e0e2175062d267e0ea381fa16493",
+  "notes": "Le radar retrouve son rythme après redémarrage. Recherche et installation des mises à jour depuis la tablette."
+}
