@@ -49,7 +49,7 @@ void test_zcs_defaults_and_legacy_retention(){
 }
 void test_zcs_strict_validation(){
   reset();
-  for(const char* app:{"aviation","clock","animation","weather"}){
+  for(const char* app:{"aviation","clock","animation","weather","message","timer","score","pixel"}){
     auto d=validBody();d["app"]=app;BoardSettings next;CHECK(parse(d,next));CHECK(next.app==app);
   }
   for(const char* visual:{"lava","stars","rain","plain","aurora","ocean","warp"}){

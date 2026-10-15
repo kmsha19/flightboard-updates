@@ -1,0 +1,193 @@
+{
+  "schema": 1,
+  "id": "__logos",
+  "size": 23246,
+  "sha256": "1708553766c12fe60663590a27558c43b10d82609132ffab196aead79125492a",
+  "images": [
+    {
+      "code": "AFR",
+      "offset": 0,
+      "size": 244
+    },
+    {
+      "code": "BEL",
+      "offset": 244,
+      "size": 564
+    },
+    {
+      "code": "VRE",
+      "offset": 808,
+      "size": 678
+    },
+    {
+      "code": "ETH",
+      "offset": 1486,
+      "size": 512
+    },
+    {
+      "code": "CRL",
+      "offset": 1998,
+      "size": 530
+    },
+    {
+      "code": "FWI",
+      "offset": 2528,
+      "size": 814
+    },
+    {
+      "code": "FBU",
+      "offset": 3342,
+      "size": 590
+    },
+    {
+      "code": "REU",
+      "offset": 3932,
+      "size": 748
+    },
+    {
+      "code": "THT",
+      "offset": 4680,
+      "size": 754
+    },
+    {
+      "code": "MAU",
+      "offset": 5434,
+      "size": 466
+    },
+    {
+      "code": "SZN",
+      "offset": 5900,
+      "size": 554
+    },
+    {
+      "code": "RAM",
+      "offset": 6454,
+      "size": 812
+    },
+    {
+      "code": "DAH",
+      "offset": 7266,
+      "size": 956
+    },
+    {
+      "code": "TAR",
+      "offset": 8222,
+      "size": 486
+    },
+    {
+      "code": "LBT",
+      "offset": 8708,
+      "size": 808
+    },
+    {
+      "code": "ACA",
+      "offset": 9516,
+      "size": 682
+    },
+    {
+      "code": "TSC",
+      "offset": 10198,
+      "size": 766
+    },
+    {
+      "code": "SWR",
+      "offset": 10964,
+      "size": 420
+    },
+    {
+      "code": "LGL",
+      "offset": 11384,
+      "size": 770
+    },
+    {
+      "code": "TRA",
+      "offset": 12154,
+      "size": 666
+    },
+    {
+      "code": "SKK",
+      "offset": 12820,
+      "size": 616
+    },
+    {
+      "code": "CRC",
+      "offset": 13436,
+      "size": 840
+    },
+    {
+      "code": "QTR",
+      "offset": 14276,
+      "size": 682
+    },
+    {
+      "code": "THY",
+      "offset": 14958,
+      "size": 644
+    },
+    {
+      "code": "ETD",
+      "offset": 15602,
+      "size": 766
+    },
+    {
+      "code": "KQA",
+      "offset": 16368,
+      "size": 724
+    },
+    {
+      "code": "RWD",
+      "offset": 17092,
+      "size": 784
+    },
+    {
+      "code": "RYR",
+      "offset": 17876,
+      "size": 768
+    },
+    {
+      "code": "EZY",
+      "offset": 18644,
+      "size": 236
+    },
+    {
+      "code": "UPS",
+      "offset": 18880,
+      "size": 652
+    },
+    {
+      "code": "BCS",
+      "offset": 19532,
+      "size": 222
+    },
+    {
+      "code": "DLH",
+      "offset": 19754,
+      "size": 506
+    },
+    {
+      "code": "KLM",
+      "offset": 20260,
+      "size": 804
+    },
+    {
+      "code": "BAW",
+      "offset": 21064,
+      "size": 446
+    },
+    {
+      "code": "IBE",
+      "offset": 21510,
+      "size": 584
+    },
+    {
+      "code": "UAE",
+      "offset": 22094,
+      "size": 848
+    },
+    {
+      "code": "DEFAULT",
+      "offset": 22942,
+      "size": 304
+    }
+  ]
+}

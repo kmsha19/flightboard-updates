@@ -33,7 +33,7 @@ void test_operating_company_aliases() {
     CHECK(operating != &DEFAULT_AIRLINE);
     CHECK(brand != &DEFAULT_AIRLINE);
     CHECK(operating->pixels == brand->pixels);
-    CHECK(operating->image == brand->image);
+    CHECK(operating->imageOffset == brand->imageOffset);
     CHECK(operating->imageSize == brand->imageSize);
     CHECK(std::strcmp(operating->id, brand->id) == 0);
   }
@@ -50,11 +50,10 @@ void test_unrecognized_callsigns() {
 
 void check_asset(const AirlineAsset& asset) {
   CHECK(asset.pixels != nullptr);
-  CHECK(asset.image != nullptr);
   CHECK(asset.imageSize >= 20);
-  CHECK(std::memcmp(asset.image, "RIFF", 4) == 0);
-  CHECK(std::memcmp(asset.image + 8, "WEBP", 4) == 0);
-  CHECK(std::memcmp(asset.image + 12, "VP8L", 4) == 0);
+  CHECK(asset.imageOffset <= AIRLINE_IMAGES_SIZE);
+  CHECK(asset.imageSize <= AIRLINE_IMAGES_SIZE - asset.imageOffset);
+  CHECK(std::strlen(AIRLINE_IMAGES_SHA256) == 64);
   CHECK(asset.name && std::strlen(asset.name));
   CHECK(asset.id && std::strlen(asset.id));
 }

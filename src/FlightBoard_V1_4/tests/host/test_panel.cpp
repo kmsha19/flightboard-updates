@@ -82,10 +82,14 @@ void test_data_rules() {
 }
 
 void test_fonts_and_layout() {
-  CHECK(sizeof(detail::kFont3) + sizeof(detail::kFont5) == 528);
+  CHECK(sizeof(detail::kFont3) + sizeof(detail::kFont5) == 46 * 12);
   CHECK(detail::glyphIndex('a') == detail::glyphIndex('A'));
   CHECK(detail::glyphIndex('$') == detail::glyphIndex('?'));
   CHECK(detail::glyphIndex('\t') == detail::glyphIndex(' '));
+  CHECK(detail::glyphIndex('!') != detail::glyphIndex('?'));
+  CHECK(detail::glyphIndex('\'') != detail::glyphIndex('?'));
+  CHECK(detail::glyphWidth(detail::glyphIndex('!'), false) == 1);
+  CHECK(detail::glyphWidth(detail::glyphIndex('\''), true) == 1);
   auto l = detail::layout("LFPG > EDDB", 14, 122);
   CHECK(l.width == 118 && l.scale == 2 && !l.small);
   l = detail::layout("1234567", 10, 38);
@@ -196,10 +200,8 @@ void test_idle() {
     if (color == 0xffff) {
       ++white; CHECK(x >= 14 && x < 114 && y >= 18 && y < 46);
     } else {
-      CHECK((color & 0xf800) == 0);  // Plasma has no red component.
+      CHECK((color >> 11) <= 4);  // Blue/cyan contours may have a faint red component.
       if (color) ++blue;
-      if (x >= 14 && x < 114 && y >= 18 && y < 46)
-        CHECK(((color >> 5) & 63) <= 14 && (color & 31) <= 7);  // Dark clock backdrop.
     }
   }
   CHECK(white > 500 && blue > 500);
@@ -212,6 +214,31 @@ void test_idle() {
   for (const char* clock : {"00:00", "09:59", "23:59"}) CHECK(detail::validClock(clock));
   CHECK(!detail::validClock(nullptr));
   frame.mode = Mode::Manual; screen.draw(frame); CHECK(screen.pixels != unsynced);
+}
+
+void test_lava_background() {
+  auto frame = makeFrame(); frame.visual = Visual::Lava;
+  for (const uint32_t phase : {0U, 3200U, 8000U}) {
+    Screen animation, clockBackground, clock, outline;
+    frame.app = App::Animation; detail::ambient(animation.canvas(), frame, phase);
+    frame.app = App::Clock; detail::ambient(clockBackground.canvas(), frame, phase);
+    CHECK(animation.pixels == clockBackground.pixels); // No shaded central band.
+    uint16_t brightestAnimation = 0;
+    for (int y = 18; y < 46; ++y) for (int x = 14; x < 114; ++x)
+      brightestAnimation = std::max<uint16_t>(brightestAnimation, animation.at(x, y) & 31);
+    CHECK(brightestAnimation > 24);
+    for (int dy : {-1, 1}) for (int dx : {-1, 1})
+      detail::centered(outline.canvas(), "14:32", 64 + dx, 18 + dy, 116, 30, 1);
+    detail::centered(outline.canvas(), "14:32", 64, 18, 116, 30, 2);
+    clock.draw(frame, phase);
+    size_t blackStroke = 0;
+    for (size_t i = 0; i < clock.pixels.size(); ++i) {
+      if (outline.pixels[i] == 2) CHECK(clock.pixels[i] == 0xffff);
+      else if (outline.pixels[i] == 1) { CHECK(clock.pixels[i] == 0); ++blackStroke; }
+      else CHECK(clock.pixels[i] == animation.pixels[i]); // Nothing changes outside the glyphs and their contour.
+    }
+    CHECK(blackStroke > 100);
+  }
 }
 
 void test_zcs_scenes() {
@@ -311,7 +338,7 @@ void writeFixture(const char* path, const PanelFrame& frame, uint32_t time = 0) 
 }
 
 int main(int argc, char** argv) {
-  test_data_rules(); test_fonts_and_layout(); test_plane_and_routes(); test_aircraft_type_header(); test_idle(); test_zcs_scenes(); test_animated_weather_and_clock();
+  test_data_rules(); test_fonts_and_layout(); test_plane_and_routes(); test_aircraft_type_header(); test_idle(); test_lava_background(); test_zcs_scenes(); test_animated_weather_and_clock();
   if (argc == 2) {
     const std::string dir = argv[1];
     auto plane = makePlane(); auto frame = makeFrame(&plane);
@@ -355,6 +382,44 @@ int main(int argc, char** argv) {
       writeFixture((name + "_reduced.bin").c_str(), frame, 3200);
       frame.animate = true;
     }
+    ZcsWidgetFrame widget;
+    frame = makeFrame(); frame.widget = &widget; frame.app = App::Message;
+    widget.message = {"BONJOUR", 0x07e0};
+    writeFixture((dir + "/widget_message_short.bin").c_str(), frame);
+    widget.message = {"", 0x07e0};
+    writeFixture((dir + "/widget_message_empty.bin").c_str(), frame);
+    widget.message = {"C'EST BIEN!", 0x07e0};
+    writeFixture((dir + "/widget_message_punctuation.bin").c_str(), frame);
+    const std::string longMessage(120, 'W'); widget.message = {longMessage.c_str(), 0xf800};
+    writeFixture((dir + "/widget_message_long.bin").c_str(), frame, 6400);
+    writeFixture((dir + "/widget_message_wrap.bin").c_str(), frame, UINT32_MAX);
+    frame.animate = false; writeFixture((dir + "/widget_message_reduced.bin").c_str(), frame, 6400); frame.animate = true;
+    frame.app = App::Timer; widget.timer = {60, true};
+    writeFixture((dir + "/widget_timer_running.bin").c_str(), frame);
+    widget.timer = {62, false}; writeFixture((dir + "/widget_timer_paused.bin").c_str(), frame);
+    widget.timer = {0, false}; writeFixture((dir + "/widget_timer_finished.bin").c_str(), frame);
+    widget.timer = {5999, true}; writeFixture((dir + "/widget_timer_large.bin").c_str(), frame);
+    widget.timer = {100000, false}; writeFixture((dir + "/widget_timer_invalid.bin").c_str(), frame);
+    frame.app = App::Score; widget.score = {"PSG", "OM", "69 MIN", 0, 0, true, false};
+    writeFixture((dir + "/widget_score_zero.bin").c_str(), frame);
+    widget.score.homeScore = 999; widget.score.awayScore = 999; widget.score.stale = true;
+    writeFixture((dir + "/widget_score_stale.bin").c_str(), frame);
+    widget.score = {"ABCDEFGHIJKL", "MNOPQRSTUVWX", "123456789012345678901234", 12, 9, true, false};
+    writeFixture((dir + "/widget_score_labels.bin").c_str(), frame);
+    widget.score.available = false; writeFixture((dir + "/widget_score_missing.bin").c_str(), frame);
+    frame.app = App::Pixel;
+    const uint16_t palette[] = {0xf800, 0x07e0, 0x001f}; const uint8_t packed[] = {0x01, 0x22, 0x10};
+    widget.pixel = {3, 1, 2, 3, 100, palette, packed, sizeof(packed)};
+    writeFixture((dir + "/widget_pixel_odd.bin").c_str(), frame);
+    writeFixture((dir + "/widget_pixel_next.bin").c_str(), frame, 100);
+    writeFixture((dir + "/widget_pixel_wrap.bin").c_str(), frame, UINT32_MAX);
+    frame.animate = false; writeFixture((dir + "/widget_pixel_reduced.bin").c_str(), frame, 100); frame.animate = true;
+    widget.pixel.width = 1; widget.pixel.height = 3;
+    writeFixture((dir + "/widget_pixel_portrait.bin").c_str(), frame);
+    widget.pixel.dataBytes = 0; writeFixture((dir + "/widget_pixel_invalid.bin").c_str(), frame);
+    frame.widget = nullptr; writeFixture((dir + "/widget_missing.bin").c_str(), frame);
+    frame.widget = &widget; frame.sleeping = true; writeFixture((dir + "/widget_sleep.bin").c_str(), frame);
+    frame = makeFrame(&plane); frame.mode = Mode::Manual;
     PanelWeather weather;
     frame.app = App::Weather; frame.weather = &weather;
     writeFixture((dir + "/weather_missing.bin").c_str(), frame);

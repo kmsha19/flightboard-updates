@@ -19,7 +19,8 @@ const g={font:'10px monospace',fillStyle:'',
 };
 const canvas={style:{},getContext:()=>g},toggle={open:true,addEventListener:(event,callback)=>events.set('preview:'+event,callback)};
 const elements=new Map([['ledPreview',canvas],['previewToggle',toggle]]);
-const context=vm.createContext({captureText:layout=>texts.push(layout),String,Number,Boolean,Math,demo:false,serverOnline:true,currentView:'home',draftVisual:null,panelApp:s=>s?.app||s?.display?.app||'aviation',active:null,now:0,
+const context=vm.createContext({captureText:layout=>{if(layout.color!=='#000')texts.push(layout);},String,Number,Boolean,Math,demo:false,serverOnline:true,currentView:'home',draftVisual:null,panelApp:s=>s?.app||s?.display?.app||'aviation',active:null,now:0,
+  APP_NAMES:{},WIDGET_APPS:['message','timer','score','pixel'],widgetView:()=>false,currentContentId:'',contentCache:new Map(),widgetRemaining:w=>w?.remainingSeconds,
   state:{display:{mode:'clock',clock:'07:08',date:'15/10/2026',timeSynced:true,effectiveBrightness:60}},
   MODE_NAMES:{auto:'Auto',manual:'Épinglé',clock:'Horloge'},window:{matchMedia:()=>motion},
   document:{hidden:false,addEventListener:(event,callback)=>events.set('document:'+event,callback)},
@@ -45,9 +46,8 @@ for(let y=0;y<64;y++)for(let x=0;x<128;x++){
   if(x>=14&&x<=114&&y>=18&&y<=46)maxClockChannel=Math.max(maxClockChannel,green,b);
 }
 check(cyan>0&&blue>0&&black>0,'The fluid field needs cyan cores, electric blue edges and black space');
-check(maxClockChannel<=57,'The area behind the clock must remain dark even under a bright fluid core');
-const channel=maxClockChannel/255,luminance=((channel+.055)/1.055)**2.4;
-check(1.05/(luminance+.05)>10,'White digits must retain at least 10:1 contrast against the clock background');
+check(maxClockChannel>180,'Clock lava keeps its flowing colours through the middle without a black band');
+check(fills.some(f=>f.color==='#000'&&f.width===4&&f.height===4),'White numerals have a local black outline for contrast');
 draw();equal(timers.size,1,'Repeated renders must not duplicate the animation timer');assertions++;assert.deepEqual(frames[0],first,'The same phase must produce exactly the same pixels');
 context.now=40;draw();assertions++;assert.deepEqual(frames[0],first,'Sub-frame updates must retain the current phase');
 context.now=5000;draw();assertions++;assert.notDeepEqual(frames[0],first,'The shapes must move over time');
@@ -71,7 +71,18 @@ context.serverOnline=false;draw();equal(texts.length,0,'Night sleep stays dark e
 reset();draw();equal(frames.length,0);equal(timers.size,0,'A disconnected device must not animate an apparently live clock');
 context.demo=true;draw();equal(timers.size,1,'Demo can animate without a device connection');
 context.demo=false;context.serverOnline=true;context.state.app='animation';context.state.visual='stars';reset();draw();equal(timers.size,1);equal(texts.length,0,'Standalone animations must not show a clock or aviation text');
-context.state.visual='plain';draw();equal(timers.size,0,'A static visual needs no animation timer');equal(frames.length,0);equal(texts.length,0);
+// Lava stays unchanged behind the clock; local outlines keep the digits legible.
+context.state.visual='lava';
+for(const phase of [0,3200,8000]){
+  context.now=phase;context.state.app='animation';draw();equal(texts.length,0);
+  const animation=frames[0];let centerBlue=0;
+  for(let y=18;y<46;y++)for(let x=14;x<114;x++)centerBlue=Math.max(centerBlue,animation[(y*128+x)*4+2]);
+  check(centerBlue>200,'Standalone lava must remain bright through the former central black band');
+  context.state.app='clock';draw();const clock=frames[0];
+  assertions++;assert.deepEqual(animation,clock,'Clock and standalone lava share an unattenuated full-panel background');
+  check(fills.some(f=>f.color==='#000'&&f.width===4&&f.height===4),'Clock legibility uses a local outline rather than a central band');
+}
+context.state.app='animation';context.state.visual='plain';draw();equal(timers.size,0,'A static visual needs no animation timer');equal(frames.length,0);equal(texts.length,0);
 context.state.app='clock';draw();equal(timers.size,0);equal(texts[0].text,'07:08','A plain clock still displays the synchronized hour');
 for(const visual of ['aurora','ocean','warp']){
   context.state.app='animation';context.state.visual=visual;context.now=0;draw();equal(timers.size,1);equal(texts.length,0);

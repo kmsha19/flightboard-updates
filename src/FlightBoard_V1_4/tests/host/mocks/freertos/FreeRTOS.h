@@ -18,6 +18,6 @@ inline QueueHandle_t xQueueCreate(int,size_t size){if(queueFailuresAfter==0)retu
 inline void vQueueDelete(QueueHandle_t q){++queueDeletes;fakeQueues.erase(std::remove(fakeQueues.begin(),fakeQueues.end(),q),fakeQueues.end());delete q;}
 inline int xQueueSend(QueueHandle_t q,const void* data,unsigned long wait){if(!q||!q->items.empty())return 0;std::vector<uint8_t> item(q->itemSize);std::memcpy(item.data(),data,q->itemSize);q->items.push_back(item);if(stopWorkerAfterSend&&wait==portMAX_DELAY)throw WorkerStopped();return pdTRUE;}
 inline int xQueueReceive(QueueHandle_t q,void* data,unsigned long){if(!q||q->items.empty())return 0;std::memcpy(data,q->items.front().data(),q->itemSize);q->items.pop_front();return pdTRUE;}
-inline int xTaskCreate(void(*fn)(void*),const char*,unsigned int,void* context,unsigned int,TaskHandle_t* handle){if(!taskCreateSuccess)return 0;workerFunction=fn;workerContext=context;*handle=context;return pdPASS;}
+inline int xTaskCreate(void(*fn)(void*),const char*,unsigned int,void* context,unsigned int,TaskHandle_t* handle){if(!taskCreateSuccess)return 0;workerFunction=fn;workerContext=context;if(handle)*handle=context;return pdPASS;}
 inline int taskDeletes=0;
 inline void vTaskDelete(TaskHandle_t){++taskDeletes;}

@@ -9,16 +9,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "ZcsWidgets.h"
 
 namespace flightboard_panel {
 
 constexpr int kWidth = 128, kHeight = 64;
 constexpr uint32_t kFrameIntervalMs = 80;  // 12.5 fps for the idle animation.
 enum class Mode : uint8_t { Auto, Manual, Clock };
-enum class App : uint8_t { Aviation, Clock, Animation, Weather };
+enum class App : uint8_t { Aviation, Clock, Animation, Weather, Message, Timer, Score, Pixel };
 enum class Visual : uint8_t { Lava, Stars, Rain, Plain, Aurora, Ocean, Warp };
 enum class RouteStatus : uint8_t { NotRequested, Loading, Known, Unknown, Error, Unconfirmed };
-enum class Scene : uint8_t { Sleeping, Connecting, Idle, Unavailable, Aircraft, Animation, Weather };
+enum class Scene : uint8_t { Sleeping, Connecting, Idle, Unavailable, Aircraft, Animation, Weather, Widget };
 
 struct PanelCanvas {
   void* context = nullptr;
@@ -67,6 +68,7 @@ struct PanelFrame {
   bool animate = true;
   const PanelAircraft* aircraft = nullptr;  // Already selected by auto/manual mode.
   const PanelWeather* weather = nullptr;
+  const ZcsWidgetFrame* widget = nullptr;
 };
 
 constexpr uint16_t rgb565(uint8_t r, uint8_t g, uint8_t b) {
@@ -79,6 +81,7 @@ inline Scene panelScene(const PanelFrame& frame) {
   if (frame.app == App::Clock) return Scene::Idle;
   if (frame.app == App::Animation) return Scene::Animation;
   if (frame.app == App::Weather) return Scene::Weather;
+  if (frame.app == App::Message || frame.app == App::Timer || frame.app == App::Score || frame.app == App::Pixel) return Scene::Widget;
   const bool usable = frame.wifiConnected && frame.radarHealthy &&
       frame.ageSeconds >= 0 && frame.ageSeconds <= 90 && frame.aircraft;
   if (frame.mode == Mode::Clock || (frame.mode == Mode::Auto && !usable)) return Scene::Idle;
@@ -98,6 +101,13 @@ inline bool weatherCodeValid(int code) {
 inline bool panelAnimated(const PanelFrame& frame) {
   const auto scene = panelScene(frame);
   const auto* w = frame.weather;
+  if (scene == Scene::Widget) {
+    if (!frame.animate || !frame.widget) return false;
+    const auto& widget = *frame.widget;
+    return frame.app == App::Message ? zcsMessageWidth(widget.message.text) > 120 :
+      frame.app == App::Timer ? widget.timer.running && widget.timer.remainingSeconds > 0 :
+      frame.app == App::Pixel && zcsPixelDimensionsValid(widget.pixel) && widget.pixel.frameCount > 1;
+  }
   return frame.animate && ((scene == Scene::Weather && w && w->available &&
     isfinite(w->temperatureC) && isfinite(w->windKmh) &&
     weatherCodeValid(w->code)) ||
@@ -112,8 +122,8 @@ constexpr uint16_t kAmber = rgb565(230, 191, 129);
 constexpr uint16_t kDivider = rgb565(32, 49, 44);
 
 // The same original bitmap rows as FlightBoardWeb.h; no font dependency.
-// A-Z, 0-9, space, dash, colon, dot, comma, slash, greater-than, question mark.
-constexpr uint8_t kFont5[44][7] = {
+// A-Z, 0-9, space, dash, colon, dot, comma, slash, greater-than, ?, !, apostrophe.
+constexpr uint8_t kFont5[46][7] = {
   {14,17,17,31,17,17,17},{30,17,17,30,17,17,30},{15,16,16,16,16,16,15},
   {30,17,17,17,17,17,30},{31,16,16,30,16,16,31},{31,16,16,30,16,16,16},
   {15,16,16,23,17,17,15},{17,17,17,31,17,17,17},{31,4,4,4,4,4,31},
@@ -128,9 +138,10 @@ constexpr uint8_t kFont5[44][7] = {
   {14,16,16,30,17,17,14},{31,1,2,4,8,8,8},{14,17,17,14,17,17,14},
   {14,17,17,15,1,1,14},{0,0,0,0,0,0,0},{0,0,0,7,0,0,0},
   {0,1,0,0,1,0,0},{0,0,0,0,0,0,1},{0,0,0,0,0,2,1},
-  {1,1,2,2,2,4,4},{0,4,2,1,2,4,0},{14,17,1,2,4,0,4}
+  {1,1,2,2,2,4,4},{0,4,2,1,2,4,0},{14,17,1,2,4,0,4},
+  {1,1,1,1,1,0,1},{1,1,0,0,0,0,0}
 };
-constexpr uint8_t kFont3[44][5] = {
+constexpr uint8_t kFont3[46][5] = {
   {2,5,7,5,5},{6,5,6,5,6},{3,4,4,4,3},{6,5,5,5,6},
   {7,4,7,4,7},{7,4,7,4,4},{3,4,5,5,3},{5,5,7,5,5},
   {7,2,2,2,7},{1,1,1,5,2},{5,5,6,5,5},{4,4,4,4,7},
@@ -141,7 +152,8 @@ constexpr uint8_t kFont3[44][5] = {
   {6,1,2,4,7},{6,1,2,1,6},{5,5,7,1,1},{7,4,6,1,6},
   {3,4,6,5,2},{7,1,2,2,2},{2,5,2,5,2},{2,5,3,1,6},
   {0,0,0,0,0},{0,0,7,0,0},{0,1,0,1,0},{0,0,0,0,1},
-  {0,0,0,1,1},{1,1,2,4,4},{4,2,1,2,4},{6,1,0,2,0}
+  {0,0,0,1,1},{1,1,2,4,4},{4,2,1,2,4},{6,1,0,2,0},
+  {1,1,1,0,1},{1,1,0,0,0}
 };
 
 inline uint8_t glyphIndex(char c) {
@@ -152,13 +164,14 @@ inline uint8_t glyphIndex(char c) {
     case ' ': case '\t': case '\r': case '\n': return 36;
     case '-': return 37; case ':': return 38; case '.': return 39;
     case ',': return 40; case '/': return 41; case '>': return 42;
+    case '!': return 44; case '\'': return 45;
     default: return 43;
   }
 }
 
 inline uint8_t glyphWidth(uint8_t index, bool small) {
   if (index == 36) return small ? 1 : 3;
-  if (index == 38 || index == 39) return 1;
+  if (index == 38 || index == 39 || index == 44 || index == 45) return 1;
   if (index == 40) return small ? 1 : 2;
   if (index == 37 || index == 41 || index == 42) return 3;
   return small ? 3 : 5;
@@ -328,25 +341,33 @@ inline void ambient(const PanelCanvas& canvas, const PanelFrame& frame, uint32_t
     }
     return;
   }
-  const float t = frame.animate ? float(nowMs / kFrameIntervalMs) * .08f : 0;
-  const float blobs[4][3] = {
-    {20 + 14 * sinf(t * .43f), 16 + 11 * cosf(t * .31f), 170},
-    {62 + 28 * cosf(t * .29f + 1.2f), 13 + 10 * sinf(t * .37f), 210},
-    {103 + 17 * sinf(t * .33f + 2), 45 + 13 * cosf(t * .27f), 160},
-    {46 + 26 * sinf(t * .25f + 4), 53 + 10 * sinf(t * .41f), 190}
+  // Quantized contour bands around drifting, gently warped fluid islands.
+  // Fixed-point coordinates keep the ESP32 and browser bit-for-bit identical.
+  const int t = int(tick % 65536);
+  const auto flow = [](int phase) {
+    const int f = phase & 3;
+    return wave(phase) * (4 - f) + wave(phase + 4) * f;
   };
+  const int centers[4][2] = {
+    {80 + flow(t), 128 + flow(t / 2 + 71)},
+    {432 + flow(t / 2 + 34), 384 + flow(t + 170)},
+    {712 + flow(t + 128), 96 + flow(t / 2 + 210)},
+    {1024 + flow(t / 2 + 83), 432 + flow(t + 29)}
+  };
+  static constexpr uint16_t colors[] = {0, rgb565(8,24,160), rgb565(0,52,234),
+    rgb565(0,108,255), rgb565(0,172,250), rgb565(0,225,222), rgb565(32,250,198), 0};
   for (int y = 0; y < kHeight; ++y) {
-    const float vertical = 1 - smooth((fabsf(float(y - 32)) - 14) / 10);
+    const int warpX = flow(y * 3 + t) / 6;
     for (int x = 0; x < kWidth; ++x) {
-      float field = 0;
-      for (const auto& blob : blobs) {
-        const float dx = x - blob[0], dy = y - blob[1];
-        field += blob[2] / (dx * dx + dy * dy + 8);
+      const int px = x * 8 + warpX, py = y * 8 + flow(x * 2 - t) / 6;
+      int field = 0;
+      for (const auto& center : centers) {
+        const int dx = px - center[0], dy = py - center[1];
+        field += 691200 / (dx * dx + dy * dy + 4608);
       }
-      const float edge = smooth((field - .95f) * 2.8f), core = smooth((field - 1.5f) * .65f);
-      const float shade = 1 - .78f * vertical * (1 - smooth((fabsf(float(x - 64)) - 52) / 12));
-      pixel(canvas, x, y, rgb565(0, uint8_t((45 + 210 * core) * edge * shade + .5f),
-                                      uint8_t(255 * edge * shade + .5f)));
+      const int band = field < 23 ? 0 : field < 30 ? 1 : field < 39 ? 2 :
+        field < 51 ? 3 : field < 67 ? 4 : field < 87 ? 5 : field < 117 ? 6 : 7;
+      pixel(canvas, x, y, colors[band]);
     }
   }
 }
@@ -357,6 +378,12 @@ inline void idle(const PanelCanvas& canvas, const PanelFrame& frame, uint32_t no
   // Calm black backing keeps digits legible over the sparse retro animations.
   if (frame.visual == Visual::Stars || frame.visual == Visual::Rain || frame.visual == Visual::Warp)
     rectangle(canvas, 5, synced ? 16 : 12, 118, 32, 0);
+  if (frame.visual == Visual::Lava) {
+    for (int dy = -1; dy <= 1; dy += 2)
+      for (int dx = -1; dx <= 1; dx += 2)
+        centered(canvas, synced ? frame.clock : "--:--", 64 + dx,
+                 (synced ? 18 : 14) + dy, 116, 30, 0);
+  }
   centered(canvas, synced ? frame.clock : "--:--", 64, synced ? 18 : 14, 116, 30, 0xffff);
   if (!synced) centered(canvas, "ATTENTE HEURE", 64, 51, 116, 7, rgb565(195, 217, 230));
 }
@@ -508,6 +535,64 @@ inline void aircraft(const PanelCanvas& canvas, const PanelAircraft& plane) {
   metric(canvas, "VIT", speed, "KM/H", 64, kWhite);
   metric(canvas, "ALT", altitude, "FT", 107, kAmber);
 }
+inline void widgetMessage(const PanelCanvas& canvas, const ZcsMessageFrame& message, uint32_t nowMs) {
+  centered(canvas, "MESSAGE", 64, 3, 122, 6, kMuted);
+  const int width = zcsMessageWidth(message.text);
+  if (!width) { centered(canvas, "AUCUN MESSAGE", 64, 25, 122, 7, kMuted); return; }
+  int x = width <= 120 ? (kWidth - width) / 2 : kWidth - int((nowMs / 50) % uint32_t(width + kWidth));
+  for (size_t i = 0; message.text[i] && i < 120 && x < kWidth; ++i) {
+    const uint8_t glyph = glyphIndex(message.text[i]);
+    const int advance = (glyphWidth(glyph, false) + 1) * 2;
+    if (x + advance > 0) {
+      const char value[2] = {message.text[i], 0};
+      paintText(canvas, {value, false, 2, advance - 2}, x, 25, message.color);
+    }
+    x += advance;
+  }
+}
+
+inline void widgetTimer(const PanelCanvas& canvas, const ZcsTimerFrame& timer) {
+  centered(canvas, "MINUTEUR", 64, 3, 122, 6, kMuted);
+  char value[6] = "--:--";
+  if (timer.remainingSeconds <= 5999)
+    snprintf(value, sizeof(value), "%02u:%02u", unsigned(timer.remainingSeconds / 60), unsigned(timer.remainingSeconds % 60));
+  centered(canvas, value, 64, 22, 122, 28, kWhite);
+  const char* status = timer.remainingSeconds == 0 ? "TERMINE" : timer.running ? "EN COURS" : "PAUSE";
+  centered(canvas, status, 64, 55, 122, 6, timer.running && timer.remainingSeconds ? kMint : kAmber);
+}
+
+inline void widgetScore(const PanelCanvas& canvas, const ZcsScoreFrame& score) {
+  if (!score.available || !zcsValidScore(score)) {
+    centered(canvas, "SCORE INDISPONIBLE", 64, 25, 122, 7, kMuted); return;
+  }
+  centered(canvas, score.home, 31, 5, 58, 7, kMint);
+  centered(canvas, score.away, 97, 5, 58, 7, kMint);
+  char value[8]; snprintf(value, sizeof(value), "%u-%u", unsigned(score.homeScore), unsigned(score.awayScore));
+  centered(canvas, value, 64, 22, 122, 21, kWhite);
+  centered(canvas, score.status, 64, 49, 122, 6, kMuted);
+  if (score.stale) centered(canvas, "ANCIEN", 64, 58, 122, 6, kAmber);
+}
+
+inline void widgetPixel(const PanelCanvas& canvas, const ZcsPixelFrame& image, uint32_t nowMs) {
+  if (!zcsPixelDimensionsValid(image)) {
+    centered(canvas, "PIXEL INDISPONIBLE", 64, 25, 122, 7, kMuted); return;
+  }
+  const int scaleX = kWidth / image.width, scaleY = kHeight / image.height;
+  const int scale = scaleX < scaleY ? scaleX : scaleY;
+  const int left = (kWidth - image.width * scale) / 2, top = (kHeight - image.height * scale) / 2;
+  for (uint8_t y = 0; y < image.height; ++y) for (uint8_t x = 0; x < image.width; ++x)
+    rectangle(canvas, left + x * scale, top + y * scale, scale, scale, zcsPixelAt(image, x, y, nowMs));
+}
+
+inline void widget(const PanelCanvas& canvas, const PanelFrame& frame, uint32_t nowMs) {
+  if (!frame.widget) { centered(canvas, "CONTENU INDISPONIBLE", 64, 25, 122, 7, kMuted); return; }
+  const auto& content = *frame.widget;
+  const uint32_t phase = frame.animate ? nowMs : 0;
+  if (frame.app == App::Message) widgetMessage(canvas, content.message, phase);
+  else if (frame.app == App::Timer) widgetTimer(canvas, content.timer);
+  else if (frame.app == App::Score) widgetScore(canvas, content.score);
+  else if (frame.app == App::Pixel) widgetPixel(canvas, content.pixel, phase);
+}
 }  // namespace detail
 
 inline void renderPanel(const PanelCanvas& canvas, const PanelFrame& frame, uint32_t nowMs) {
@@ -519,7 +604,8 @@ inline void renderPanel(const PanelCanvas& canvas, const PanelFrame& frame, uint
   }
   if (scene == Scene::Animation) { detail::ambient(canvas, frame, nowMs); return; }
   detail::rectangle(canvas, 0, 0, kWidth, kHeight, 0);
-  if (scene == Scene::Weather) detail::weather(canvas, frame, nowMs);
+  if (scene == Scene::Widget) detail::widget(canvas, frame, nowMs);
+  else if (scene == Scene::Weather) detail::weather(canvas, frame, nowMs);
   else if (scene == Scene::Aircraft) detail::aircraft(canvas, *frame.aircraft);
   else if (scene == Scene::Connecting) {
     detail::text(canvas, "ZCS CONTROL", 20, 9, 11, detail::kMint);

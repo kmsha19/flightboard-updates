@@ -23,6 +23,7 @@ const canvas={style:{},getContext:()=>g},elements=new Map([['ledPreview',canvas]
 const route={status:'known',origin:{code:'CDG'},destination:{code:'BER'}};
 const plane={callsign:'AFR1234',type:'A320',distanceKm:8.4,speedKmh:819.6,speedAvailable:true,altitudeFt:34000,altitudeAvailable:true,route};
 const context=vm.createContext({captureText:layout=>draws.push(layout),String,Number,Math,demo:false,serverOnline:true,currentView:'home',draftVisual:null,panelApp:s=>s?.app||s?.display?.app||'aviation',selected:plane,
+  APP_NAMES:{},WIDGET_APPS:['message','timer','score','pixel'],widgetView:()=>false,currentContentId:'',contentCache:new Map(),widgetRemaining:w=>w?.remainingSeconds,
   state:{display:{mode:'manual',effectiveBrightness:60}},logoCache:new Map([['AFR1234',[]]]),
   MODE_NAMES:{auto:'Auto',manual:'Épinglé',clock:'Horloge'},
   el:id=>{if(!elements.has(id))elements.set(id,{});return elements.get(id);},

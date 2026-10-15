@@ -6,6 +6,7 @@ or stale build. They are provenance checks, not a publisher signature.
 """
 import argparse
 import hashlib
+import gzip
 import json
 import os
 from pathlib import Path
@@ -114,11 +115,53 @@ def validate_sources(sketch, compiled):
             raise ValueError(f'Compiled source differs from the public source: {relative}')
 
 
+def validate_web_assets(sketch, version):
+    """Bind the external interface and embedded rescue page to the compiled header."""
+    header_path = sketch / 'FlightBoardWebGzip.h'
+    if not header_path.exists():
+        return  # Legacy releases have no generated web asset header.
+    regular_file(header_path)
+    header = header_path.read_text()
+    if 'ZCS_WEB_SIZE' not in header:
+        return  # Legacy releases keep the full interface inside their application.
+    required = ['assets/zcs-web.bin', 'assets/zcs-web.json', 'assets/bootstrap.html',
+                'FlightBoardWeb.h', 'ZcsBootstrap.h']
+    for relative in required:
+        regular_file(sketch / relative)
+    payload = (sketch / required[0]).read_bytes()
+    metadata = json.loads((sketch / required[1]).read_text())
+    url = f'https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/store/zcs-web-{version}.bin'
+    source = re.search(r'R"FBPAGE\((.*?)\)FBPAGE"', (sketch / 'FlightBoardWeb.h').read_text(), re.S)
+    if not source:
+        raise ValueError('Missing readable web source')
+    digest = hashlib.sha256(payload).hexdigest()
+    expected = {'schema': 1, 'id': '__web', 'version': version, 'size': len(payload),
+                'sha256': digest, 'url': url,
+                'sourceSha256': hashlib.sha256(source.group(1).encode()).hexdigest(),
+                'minifiedSha256': hashlib.sha256(gzip.decompress(payload)).hexdigest()}
+    if not 0 < len(payload) <= 98304 or metadata != expected:
+        raise ValueError('Web interface metadata differs from its source or content')
+    patterns = {'SIZE': r'constexpr uint32_t ZCS_WEB_SIZE = ([0-9]+);',
+                'SHA256': r'const char ZCS_WEB_SHA256\[\] PROGMEM = "([^"]+)";',
+                'URL': r'const char ZCS_WEB_URL\[\] PROGMEM = "([^"]+)";'}
+    for key, value in {'SIZE': str(len(payload)), 'SHA256': digest, 'URL': url}.items():
+        if re.findall(patterns[key], header) != [value]:
+            raise ValueError('Web content differs from the compiled fingerprint')
+    template = (sketch / 'assets/bootstrap.html').read_text()
+    for key, value in {'VERSION': version, 'SIZE': str(len(payload)), 'SHA256': digest, 'URL': url}.items():
+        template = template.replace('__WEB_' + key + '__', value)
+    rescue_header = (sketch / 'ZcsBootstrap.h').read_text()
+    rescue = bytes(int(value, 16) for value in re.findall(r'0x([A-F0-9]{2})', rescue_header))
+    if len(rescue) > 4096 or gzip.decompress(rescue) != template.encode():
+        raise ValueError('Embedded rescue interface differs from its source or content fingerprint')
+
+
 def validate_build(binary, sketch, version):
     binary, sketch = Path(binary), Path(sketch)
     regular_file(binary)
     build = binary.parent
     validate_sources(sketch, build / 'sketch')
+    validate_web_assets(sketch, version)
     options_path = build / 'build.options.json'
     regular_file(options_path)
     options = json.loads(options_path.read_text())

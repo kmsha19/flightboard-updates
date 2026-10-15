@@ -24,6 +24,11 @@ let layout=paint('A');equal(layout.width,5);equal(layout.height,7);verifyPixels(
 const actual=Array.from({length:7},(_,y)=>Array.from({length:5},(_,x)=>rects.some(r=>r.x===layout.x+x&&r.y===10+y)?'#':'.').join(''));
 assertions++;assert.deepEqual(actual,['.###.','#...#','#...#','#####','#...#','#...#','#...#'],'A must be an actual 5×7 glyph');
 layout=paint('DIST',6,38);equal(layout.height,5);equal(layout.width,15);verifyPixels(layout);
+for(const [character,large,small] of [['!','01010101010001','11101'],["'",'01010000000000','11000']]){
+  equal(run(`panelGlyph(${JSON.stringify(character)},false).bits`),large);
+  equal(run(`panelGlyph(${JSON.stringify(character)},true).bits`),small);
+  for(const size of [6,7]){layout=paint(character,size);equal(layout.width,1);verifyPixels(layout);check(rects.length>0,'Common punctuation must have its own visible glyph');}
+}
 for(const text of ['AFR1234','LFPG > EDDB','CDG > BER','1234567','34000','8,4','KM/H','TRAJET NON CONFIRME']){
   const width=text==='1234567'?38:122;
   layout=paint(text,text.includes(' > ')?14:7,width);verifyPixels(layout);check(layout.width<=width,'Text must fit its assigned panel area');

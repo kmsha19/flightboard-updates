@@ -126,7 +126,7 @@ private:
   void sendSystem() {
     JsonDocument doc;
     const size_t capacity = firmwareCapacity();
-    doc["version"] = "4.0.0";
+    doc["version"] = "4.1.0";
     doc["firmwareFamily"] = firmwareFamily();
     doc["releaseManifestUrl"] = FLIGHTBOARD_RELEASE_MANIFEST_URL;
     doc["uptimeSeconds"] = (uint64_t)esp_timer_get_time() / 1000000ULL;

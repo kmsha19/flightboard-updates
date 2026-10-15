@@ -38,11 +38,13 @@ struct HTTPClient {
   inline static std::map<std::string,std::string> responseHeaders;
   inline static std::string responseJson="{\"ac\":[]}";
   inline static String lastUrl;
+  inline static bool http10 = false;
+  inline static int connectTimeout = 0, readTimeout = 0;
   MockHTTPStream stream;
   std::vector<std::string> collectedHeaders;
-  void useHTTP10(bool){}
-  void setConnectTimeout(int){}
-  void setTimeout(int){}
+  void useHTTP10(bool value){http10=value;}
+  void setConnectTimeout(int value){connectTimeout=value;}
+  void setTimeout(int value){readTimeout=value;}
   bool begin(WiFiClientSecure&,const String& url){lastUrl=url;return beginSuccess;}
   void addHeader(const char* name,const char* value){headers[name]=value;}
   void collectHeaders(const char* names[],size_t count){

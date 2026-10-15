@@ -29,4 +29,8 @@ def production_function(signature):
     return source[start:source.index('\n}', start) + 2]
 out.with_name('brightness_under_test.inc').write_text('\n\n'.join(production_function(signature)
     for signature in ('void sendSettings()', 'bool readJsonBody(JsonDocument& doc)', 'void changeBrightness()')))
+content = (Path(args.project) / 'ZcsContentApi.h').read_text()
+out.with_name('widgets_under_test.inc').write_text(
+    content[content.index('bool packText('):content.index('bool readPack(')] + '\n' +
+    content[content.index('void widgetState('):content.index('bool contentAuthorized(')])
 print('Extracted BoardSettings and actual settings functions from', args.project)

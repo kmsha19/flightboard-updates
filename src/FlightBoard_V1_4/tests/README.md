@@ -19,9 +19,9 @@ persistante et les écritures OTA sont simulés. Aucune connexion réseau ni éc
 sur l’ESP32 n’est effectuée ; `Secrets.h` n’est pas lu. Les fichiers générés restent
 dans un dossier temporaire automatiquement supprimé.
 
-## V4 : vérification de l’interface embarquée
+## V4 : vérification des ressources locales
 
-`node tests/ui/test_web_build.cjs` vérifie que la minification déterministe utilise esbuild 0.28.2, conserve exactement le HTML/CSS et tous les attributs du DOM, préserve les fonctions globales, propriétés et textes Unicode, et refuse une source ou une dépendance inattendue. Le gzip réellement livré doit être identique à la transformation de la source lisible actuelle et contenir un script JavaScript valide, sans horodatage de compilation. La suite hôte applique également cette vérification de fraîcheur. Les tests de comportement continuent de lire `FlightBoardWeb.h` ; les essais navigateur utilisent le gzip servi par la carte.
+`node tests/ui/test_web_build.cjs` vérifie que la minification déterministe utilise esbuild 0.28.2, conserve exactement le HTML/CSS et tous les attributs du DOM, préserve les propriétés, références externes et textes Unicode tout en isolant les fonctions applicatives dans une IIFE, et refuse une source ou une dépendance inattendue. Le gzip réellement livré doit être identique à la transformation de la source lisible actuelle et contenir un script JavaScript valide, sans horodatage de compilation. La suite hôte applique également cette vérification de fraîcheur. Les tests de comportement continuent de lire `FlightBoardWeb.h` ; les essais navigateur utilisent le gzip servi par la carte.
 
 Les suites couvrent les favoris et leurs erreurs de sauvegarde, les horaires et
 changements d’heure, la migration V1.9, le traitement du radar et les files de
@@ -67,7 +67,7 @@ Il vérifie notamment les affichages connu/inconnu/erreur et le rejet des répon
 
 Agencement du panneau 128×64 : `node tests/ui/test_preview.cjs` vérifie aussi les positions des textes, leurs limites et les mesures distance/vitesse/altitude.
 
-Logos : `node tests/ui/test_logos.cjs` vérifie le fallback HTML, le cache versionné et les réponses arrivant après un changement de sélection. La suite hôte vérifie les préfixes ICAO, les alias, les PNG et le dessin RGB565. Elle vérifie aussi que `FlightBoardWebGzip.h` correspond exactement au HTML source ; si nécessaire, régénérer avec `python3 build_assets.py` (Pillow 12.3.0).
+Logos : `node tests/ui/test_logos.cjs` vérifie le fallback HTML, le cache versionné et les réponses arrivant après un changement de sélection. La suite hôte vérifie les préfixes ICAO, les alias, les PNG et le dessin RGB565. Elle vérifie aussi que `assets/zcs-web.bin` correspond exactement à la compilation du HTML source ; si nécessaire, régénérer avec `python3 build_assets.py` (Pillow 12.3.0).
 
 Horloge animée : `node tests/ui/test_idle.cjs` couvre **115 assertions** : mouvement déterministe, contraste de l’heure, cadence, ciel vide, mode Horloge, absence d’heure synchronisée, luminosité et veille, aperçu replié, onglet masqué et mouvement réduit. Les six suites JavaScript totalisent **576 assertions**. Leurs vérifications de géométrie sont regroupées par rendu.
 
@@ -146,3 +146,14 @@ l’alpha et chaque pixel visible aux PNG sources conservés dans `assets/tablet
 `node tests/ui/test_library.cjs` vérifie 331 assertions : 16 contenus, catégories et recherche sans accents, favoris robustes aux erreurs de stockage, activation atomique, mode hors ligne, inspection sans commande, aperçu indépendant et focus clavier conservé. `test_zcs.cjs` comporte 116 assertions, incluant le maintien du brouillon lors de réponses tardives et lors de l’inspection d’une autre ambiance de l’application active.
 
 Les douze suites UI totalisent 1 956 assertions, dont 31 sur la minification déterministe. Le JavaScript lisible et le HTML exact extrait du gzip ont également été exercés dans le navigateur aux dimensions de la tablette ; aucun appel d’activation n’est produit par une simple consultation.
+
+## V4.1 : stockage et récupération
+
+```sh
+python3 -B tests/store/run_tests.py
+node tests/ui/test_bootstrap.cjs
+```
+
+Le stockage réel est compilé contre une Flash NOR simulée (écritures uniquement 1→0) et SHA-256 du système : CommonCrypto sur macOS, OpenSSL avec en-têtes et `libcrypto` ailleurs. Les tests vérifient les limites, les identifiants, les suppressions protégées de `__web` et `__logos`, les deux banques, les coupures de courant, les erreurs d’E/S, les entêtes falsifiés, les corruptions silencieuses et le passage à zéro du numéro de génération. Une partition inconnue n’est jamais effacée lors de `begin()`.
+
+La page de secours est extraite du vrai `ZcsBootstrap.h`. Ses tests simulent l’installation par téléchargement et fichier local, le contrôle SHA-256, les limites des réponses, la reprise après erreur, le Wi-Fi et la mise à jour firmware avec leurs jetons locaux. Le build vérifie `assets/zcs-web.bin/json` et la page de secours contre la source lisible et les empreintes compilées. Les tests de comportements du reste de l’interface continuent de lire la source lisible.

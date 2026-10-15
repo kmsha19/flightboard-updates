@@ -1,4 +1,4 @@
-# ZCS CONTRÔLE · V4.0.0
+# ZCS CONTRÔLE · V4.1.0
 
 **by Christ_Kmusic** — une bibliothèque de contenus pour votre panneau LED, pilotée depuis une tablette ou un téléphone.
 
@@ -6,16 +6,20 @@
 
 ## La bibliothèque
 
-La V4 repense entièrement l’interface : navigation latérale, espace clair, aperçu du panneau, recherche et catégories. Les **16 contenus** regroupent Flight Board, Météo, sept horloges et sept animations. Les étoiles créent une collection de favoris enregistrée dans le navigateur de cette tablette.
+La V4 repense entièrement l’interface : navigation latérale, espace clair, aperçu du panneau, recherche et catégories. La bibliothèque regroupe Flight Board, Météo, sept horloges, sept animations, les messages, le minuteur et les scores. Le Store permet d’ajouter des contenus. Les étoiles créent une collection de favoris enregistrée dans le navigateur de cette tablette.
 
 **Découvrir** ouvre un aperçu sans interrompre le panneau. **Afficher** active le contenu et son ambiance ensemble. Les favoris, la recherche et les aperçus n’envoient aucune commande au panneau. Un choix consulté pendant une requête en cours reste conservé.
 
 - **Flight Board** : radar, vols proches, indicatif, compagnie, logo, type d’appareil, trajet lorsqu’il est disponible, distance, vitesse et altitude. Filtres combinables par logo disponible, compagnie, type et altitude maximale. Le trajet reste indicatif et peut être absent lorsque sa cohérence n’est pas confirmée.
 - **Météo** : température, vent et illustration animée selon les conditions. Le dernier relevé est daté ; une donnée indisponible n’est pas remplacée par une valeur inventée.
 - **Horloge et Animations** : Aurore, Océan, Hyperespace, Lave, Étoiles, Matrix et Minimal / Écran noir. Les animations sont générées localement, sans téléchargement de vidéo.
+- **Message** : texte personnalisé et couleur, avec aperçu avant affichage.
+- **Minuteur** : compte à rebours, démarrer, mettre en pause, reprendre et réinitialiser. Après un redémarrage, il reprend en pause depuis le dernier état enregistré.
+- **Scores** : choix du match par compétition et date — Ligue 1, Premier League et Ligue des champions. Le panneau suit le match via ESPN toutes les minutes.
+- **Store** : huit contenus initiaux : Ville néon, Voyage cosmique, Pluie à la fenêtre, Feu de camp, Chat pixel, Orbite arcade, Bienvenue et Focus 25 minutes. Un téléchargement ajoute le contenu à la bibliothèque sans modifier l’affichage en cours. Jusqu’à 14 contenus installés ; un contenu actif doit être quitté avant sa suppression.
 - **Réglages** : luminosités de jour et de nuit immédiates et mémorisées, horaires de nuit, fuseau horaire, lieu, Wi-Fi et mise à jour depuis la tablette.
 
-L’interface fonctionne avec ses ressources embarquées, sans police ou bibliothèque distante. Elle est adaptée notamment aux tablettes **800 × 1340** et **1340 × 800**. L’animation de l’aperçu respecte la préférence de réduction des mouvements du navigateur.
+Après sa première installation, l’interface fonctionne depuis la mémoire du panneau, sans police ou bibliothèque distante. Le téléchargement de nouveaux contenus et des logos haute définition nécessite Internet sur la tablette. Les animations, messages et contenus déjà installés restent disponibles hors ligne. Elle est adaptée notamment aux tablettes **800 × 1340** et **1340 × 800**. L’animation de l’aperçu respecte la préférence de réduction des mouvements du navigateur.
 
 ## Matériel de cette version
 
@@ -32,21 +36,26 @@ La luminosité est réglable de 10 à 100 %. Pendant la plage de nuit, le pannea
 
 ## Installer la V4
 
-Sur une carte déjà configurée et compatible : ouvrir **http://flightboard.local/**, puis **Réglages → Connexion et mises à jour → Mettre à jour le programme → Rechercher une mise à jour**. Vérifier la compatibilité matérielle ci-dessus et lancer l’installation. La carte redémarre ; recharger ensuite la page pour recevoir la nouvelle interface.
+Sur une carte déjà configurée et compatible : ouvrir **http://flightboard.local/**, puis **Réglages → Connexion et mises à jour → Mettre à jour le programme → Rechercher une mise à jour**. Vérifier la compatibilité matérielle ci-dessus et lancer l’installation. La carte redémarre. Recharger la page puis choisir **Télécharger et installer** sur l’écran « Finaliser ZCS Contrôle ». Le fichier exact de l’interface est vérifié puis enregistré dans la mémoire du panneau. Pour les logos de la tablette, utiliser **Restaurer les logos** dans la bibliothèque ; les logos du panneau sont déjà disponibles.
 
 Les réglages, le Wi-Fi, les lieux favoris et la cadence radar restent en mémoire. La mise à jour ne change pas les partitions. Le téléchargement passe par HTTPS, puis sa taille et son SHA-256 sont vérifiés avant l’installation sur la partition inactive.
 
-- [Programme V4.0.0](releases/ZCS-Control-4.0.0-Waveshare-K716.ino.bin)
-- [Empreinte SHA-256](releases/ZCS-Control-4.0.0-Waveshare-K716.ino.bin.sha256)
+- [Programme V4.1.0](releases/ZCS-Control-4.1.0-Waveshare-K716.ino.bin)
+- [Empreinte SHA-256](releases/ZCS-Control-4.1.0-Waveshare-K716.ino.bin.sha256)
+- [Interface V4.1.0 pour installation hors ligne](store/zcs-web-4.1.0.bin)
+- [Empreinte et provenance de l’interface](store/zcs-web-4.1.0.json)
+- [Catalogue du Store](store/catalog.json)
 - [Manifeste de mise à jour](latest.json)
 - [Sources complètes](src/FlightBoard_V1_4)
 - [Inventaire SHA-256 des sources](source-manifest.json)
+
+Sans Internet, télécharger auparavant le fichier d’interface ci-dessus, puis choisir **Installer depuis un fichier** sur la page de finalisation. Cette page reste embarquée et permet aussi de configurer le Wi-Fi ou d’envoyer un programme compatible, même si l’interface complète manque ou ne correspond plus à la version installée.
 
 Le fichier `.ino.bin` est l’application OTA. Ne pas envoyer un bootloader ou une image « merged » par le formulaire de mise à jour. Pour une première installation USB, compiler et téléverser le sketch avec Arduino IDE ou Arduino CLI. Le programme public ne contient aucun identifiant Wi-Fi ; la configuration se fait depuis le réseau de secours de la carte. Au premier démarrage, ouvrir le moniteur série USB à **115200 bauds** pour lire le réseau `FlightBoard-XXXX` et sa « Clé de secours », rejoindre ce réseau puis ouvrir **http://192.168.4.1/** pour choisir le Wi-Fi. Garder cette clé privée.
 
 ## Compiler les sources
 
-Le dossier du sketch conserve le nom `FlightBoard_V1_4` pour la compatibilité Arduino ; la version du programme est bien **4.0.0**.
+Le dossier du sketch conserve le nom `FlightBoard_V1_4` pour la compatibilité Arduino ; la version du programme est bien **4.1.0**.
 
 Dépendances utilisées : cœur **ESP32 3.3.12**, **ArduinoJson 7.4.3**. Le pilote HUB75 Waveshare est embarqué et épinglé sous `assets/vendor/waveshare-hub75`. Les fichiers générés sont inclus : Node et Python ne sont nécessaires que pour régénérer les ressources après une modification.
 
@@ -66,9 +75,9 @@ python3 -m pip install Pillow==12.3.0 zopfli==0.2.3.post1
 python3 build_assets.py
 ```
 
-`FlightBoardWeb.h` reste lisible. La génération compacte seulement les espaces et les identifiants JavaScript locaux avec **esbuild 0.28.2**, puis compresse l’interface avec Zopfli. Le HTML, le CSS, les noms globaux et les propriétés sont conservés ; aucune compilation ne s’effectue sur la carte. `--hash-only` fonctionne avec la bibliothèque standard Python.
+`FlightBoardWeb.h` reste lisible. La génération compacte seulement les espaces et les identifiants JavaScript locaux avec **esbuild 0.28.2**, puis compresse l’interface avec Zopfli. Le HTML, le CSS, les propriétés et les références externes sont conservés ; le code applicatif est isolé dans une fonction pour compacter ses identifiants ; aucune compilation ne s’effectue sur la carte. `--hash-only` fonctionne avec la bibliothèque standard Python. La génération produit `assets/zcs-web.bin/json`, le pack `assets/zcs-logos.bin/json`, les empreintes compilées et `ZcsBootstrap.h` (interface de secours de moins de 4 Kio gzip). Ces ressources doivent être publiées avec le programme qui leur correspond ; les URL du pack web sont versionnées et leurs octets ne doivent jamais être remplacés après publication.
 
-Pour un binaire public, compiler une copie du sketch **sans `Secrets.h`**. `tools/prepare_release.py` contrôle la provenance de la compilation et refuse ce fichier par son nom, sans lire son contenu. Le dossier de compilation publique doit contenir uniquement les fichiers racine `.h`, `.cpp` et `.ino` (sauf `Secrets.h`), ainsi que `assets/vendor/waveshare-hub75` ; les tests et outils restent dans le dépôt source. Ne pas ajouter d’identifiants privés au dépôt.
+Pour un binaire public, compiler une copie du sketch **sans `Secrets.h`**. `tools/prepare_release.py` contrôle la provenance de la compilation et refuse ce fichier par son nom, sans lire son contenu. Le dossier de compilation publique doit contenir uniquement les fichiers racine `.h`, `.cpp` et `.ino` (sauf `Secrets.h`), ainsi que `assets/vendor/waveshare-hub75`, `assets/bootstrap.html`, `assets/zcs-web.bin` et `assets/zcs-web.json` ; les tests et outils restent dans le dépôt source. Ne pas ajouter d’identifiants privés au dépôt.
 
 ## Vérifier
 
@@ -78,14 +87,19 @@ for suite in tests/ui/*.cjs; do node "$suite"; done
 python3 tests/host/run_tests.py . --arduino-json /chemin/vers/ArduinoJson/src
 node tests/host/test_panel_parity.cjs
 python3 -B tests/release/test_prepare_release.py -v
+python3 -B tests/store/run_tests.py
+python3 tests/test_logo_images.py
 ```
 
-Les tests couvrent la bibliothèque, les réponses tardives, les favoris, les aperçus indépendants, les curseurs de luminosité, l’aviation, les mises à jour et le programme embarqué. La comparaison C++/JavaScript vérifie 320 scènes du panneau, pixel par pixel. Le rendu optique et le câblage nécessitent toujours une vérification sur le matériel correspondant.
+Les tests du stockage simulent des coupures, des erreurs de lecture/écriture et de la corruption ; la banque précédente reste exploitable si une nouvelle installation est interrompue. L’initialisation n’efface jamais automatiquement une partition inconnue. Les tests de la page de secours vérifient téléchargement, import local, limites de taille, SHA-256, Wi-Fi et OTA.
+
+Les tests couvrent la bibliothèque, les réponses tardives, les favoris, les aperçus indépendants, les curseurs de luminosité, l’aviation, les mises à jour et le programme embarqué. La comparaison C++/JavaScript vérifie 345 scènes du panneau, pixel par pixel. Le rendu optique et le câblage nécessitent toujours une vérification sur le matériel correspondant.
 
 ## Données et ressources
 
 - Les positions viennent d’ADSB.lol ; les trajets indicatifs sont recherchés via VRS. Le radar mémorise le rythme qui fonctionne et augmente son délai lors d’une limitation HTTP 429. Les nouvelles recherches sont suspendues hors aviation.
 - La météo utilise Open-Meteo avec les coordonnées du lieu arrondies à deux décimales, environ 1 km. Elle est relevée toutes les 15 minutes lorsque le module est actif. Un relevé de plus de 30 minutes est signalé comme ancien.
+- Les scores proviennent du service public ESPN. Une donnée en erreur ou âgée d’au moins trois minutes est signalée comme ancienne ; le service peut être indisponible ou changer. La recherche de matchs passe par la tablette, puis seul le match choisi est suivi par le panneau.
 - Les logos conservent leurs sources, références et licences dans [assets](src/FlightBoard_V1_4/assets). Les marques restent la propriété de leurs titulaires. Les licences des composants embarqués sont conservées dans leurs dossiers `vendor`.
 
-Les scores sportifs, messages et playlists sont des pistes futures ; ils ne font pas partie de cette version.
+Les contenus du Store sont des données JSON (pixels, messages ou minuteurs), jamais du code à exécuter. Le panneau vérifie leur taille, leur SHA-256 et leur format. Les fichiers d’interface et de logos possèdent en plus une empreinte attendue compilée dans chaque programme. Le stockage utilise deux banques dans la partition de données existante ; les réglages et les deux partitions OTA restent séparés. Les playlists automatiques ne sont pas incluses dans cette version.

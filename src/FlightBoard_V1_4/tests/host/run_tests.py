@@ -33,13 +33,12 @@ html = re.search(r'R"FBPAGE\((.*?)\)FBPAGE"',
     (project / 'FlightBoardWeb.h').read_text(), re.S).group(1).encode()
 node = shutil.which('node')
 if not node:
-    parser.error('Node.js >=18 and npm ci are required to verify the embedded UI build.')
+    parser.error('Node.js >=18 and npm ci are required to verify the downloadable UI build.')
 minified = subprocess.run([node, str(project / 'tools/minify_web.cjs')],
                          input=html, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 if minified.returncode:
     parser.error(minified.stderr.decode('utf-8', errors='replace').strip())
-compressed = bytes(int(value, 16) for value in re.findall(r'0x([A-F0-9]{2})',
-    (project / 'FlightBoardWebGzip.h').read_text()))
+compressed = (project / 'assets/zcs-web.bin').read_bytes()
 if gzip.decompress(compressed) != minified.stdout:
     parser.error('Compressed UI is stale: run python3 build_assets.py first.')
 print('PASS compressed UI exactly matches the pinned build of its readable source', flush=True)
@@ -49,7 +48,7 @@ with tempfile.TemporaryDirectory(prefix='flightboard-v20-host-') as name:
     subprocess.run([sys.executable, str(tests / 'extract_settings.py'), str(project), '--output', str(build / 'settings_under_test.inc')], check=True)
     # The Wi-Fi guard suite includes the original Wi-Fi scenarios, then tests OTA.
     shutil.copy2(tests / 'test_wifi.cpp', build / 'test_wifi.cpp')
-    for test in ('test_features', 'test_radar', 'test_routes', 'test_logos', 'test_settings', 'test_brightness', 'test_zcs_filters', 'test_zcs_weather', 'test_wifi_busy', 'test_update'):
+    for test in ('test_features', 'test_radar', 'test_routes', 'test_logos', 'test_settings', 'test_brightness', 'test_zcs_filters', 'test_widgets', 'test_widget_handlers', 'test_zcs_weather', 'test_zcs_scores', 'test_wifi_busy', 'test_update'):
         directory = tests.parent / 'ota' if test == 'test_update' else tests
         source = build / (test + '.cpp')
         shutil.copy2(directory / source.name, source)

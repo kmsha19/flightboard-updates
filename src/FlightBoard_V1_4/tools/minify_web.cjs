@@ -3,13 +3,15 @@
 
 // Build-only dependency. No JavaScript is fetched or compiled on the ESP32.
 // Preserve all HTML/CSS and external scripts byte for byte; transform only the
-// one classic inline application script. Top-level names and properties remain
-// unchanged. Syntax optimization and tree shaking are deliberately disabled.
+// one classic inline application script. An IIFE makes application names local;
+// properties and external references stay unchanged. Syntax optimization and
+// tree shaking are deliberately disabled. No HTML inline handlers are allowed.
 const fs = require('fs');
 const vm = require('vm');
 const EXPECTED_ESBUILD_VERSION = '0.28.2';
 const OPTIONS = Object.freeze({
   loader: 'js',
+  format: 'iife',
   target: 'esnext',
   charset: 'utf8',
   legalComments: 'inline',
@@ -39,6 +41,8 @@ function applicationScript(html) {
 
 function minifyWeb(html, compiler) {
   const script = applicationScript(html);
+  const markup = html.slice(0, script.start) + html.slice(script.end);
+  if (/\bon[a-z]+\s*=/i.test(markup)) throw new Error('Inline HTML event handlers are incompatible with an isolated application script');
   const esbuild = compiler || require('esbuild');
   if (esbuild.version !== EXPECTED_ESBUILD_VERSION) {
     throw new Error(`Reproducible web build requires esbuild ${EXPECTED_ESBUILD_VERSION}; run npm ci`);

@@ -35,7 +35,7 @@ function harness(){
   const state={app:'weather',visual:'ocean',place:'Lieu test',display:{app:'weather',visual:'ocean',timeSynced:true,clock:'14:32',effectiveBrightness:40,sleeping:false},weather:{available:true,temperatureC:18,code:2,isDay:true}};
   const context=vm.createContext({String,Number,Boolean,Math,Array,Object,Set,Map,JSON,Date,el,
     state,currentView:'home',draftVisual:null,appBusy:false,uploadBusy:false,demo:false,serverOnline:true,
-    APP_NAMES:{aviation:'Flight Board',weather:'Météo',clock:'Horloge',animation:'Animations'},
+    APP_NAMES:{aviation:'Flight Board',weather:'Météo',clock:'Horloge',animation:'Animations',message:'Message',timer:'Minuteur',score:'Scores',pixel:'Pixel art'},WIDGET_APPS:['message','timer','score','pixel'],widgetEditorKey:'',widgetDirty:false,widgetDraft:null,contentLogos:null,widgetView:()=>['message','timer','score','pixel'].includes(context.currentView),setPressed:()=>{},
     data:()=>context.state,panelApp:s=>s?.app||s?.display?.app||'aviation',
     localStorage:{getItem(key){if(h.getFails)throw Error('Storage unavailable');return storage.get(key)??null;},setItem(key,value){if(h.setFails)throw Error('Storage full');storage.set(key,value);}},
     document:{querySelectorAll:()=>[],createElement:()=>makeElement()},notify:message=>notices.push(message),
@@ -54,8 +54,8 @@ function harness(){
   equal(new Set(ids).size,ids.length,'The redesigned DOM keeps IDs unique');
   for(const id of new Set([...script.matchAll(/\bel\('([^']+)'\)/g)].map(m=>m[1])))check(ids.includes(id),'Required UI element missing: '+id);
   const h=harness(),items=h.items;
-  equal(items.length,16,'The library exposes the two live apps and all14 visual presets');
-  equal(new Set(items.map(i=>i.id)).size,16,'Favorites require unique stable IDs');
+  equal(items.length,19,'The library exposes five live/practical apps and all14 visual presets');
+  equal(new Set(items.map(i=>i.id)).size,19,'Favorites require unique stable IDs');
   for(const app of ['clock','animation']){
     const rows=items.filter(i=>i.app===app);equal(rows.length,7);
     same(rows.map(i=>i.visual).sort(),['aurora','lava','ocean','plain','rain','stars','warp']);
@@ -66,7 +66,7 @@ function harness(){
   h.run("libraryCategory='all';libraryQuery='METEO'");same(h.run('visibleLibraryItems().map(i=>i.app)'),['weather'],'Search ignores accents and case');
   h.run("libraryCategory='clock';libraryQuery=''");equal(h.run('visibleLibraryItems().length'),7);
   h.run("libraryQuery='océan'");same(h.run('visibleLibraryItems().map(i=>i.visual)'),['ocean'],'Category and query must intersect');
-  h.run("libraryCategory='all';libraryQuery='   '");equal(h.run('visibleLibraryItems().length'),16,'Whitespace-only query should not hide the catalogue');
+  h.run("libraryCategory='all';libraryQuery='   '");equal(h.run('visibleLibraryItems().length'),19,'Whitespace-only query should not hide the catalogue');
   h.run("libraryQuery='zzzz-no-match'");equal(h.run('visibleLibraryItems().length'),0);
   equal(h.posts.length,0,'Searching and filtering must remain local');
 
@@ -98,7 +98,7 @@ function harness(){
   const race=harness();race.held=true;const applying=race.run('activateLibraryItem('+JSON.stringify(clock.id)+')');await settle();race.run('openLibraryItem('+JSON.stringify(animation.id)+')');race.pending.resolve();await applying;equal(race.context.currentView,'animation');equal(race.context.draftVisual,'warp','Late activation success preserves a newer inspected preset');
 
   // Polling updates live badges without rebuilding cards or losing keyboard focus.
-  const dom=harness();dom.run('renderLibrary=actualRenderLibrary;actualRenderLibrary()');const grid=dom.el('libraryGrid');equal(grid.children.length,16);equal(grid.replacements,1);const firstCard=grid.children[0];
+  const dom=harness();dom.run('renderLibrary=actualRenderLibrary;actualRenderLibrary()');const grid=dom.el('libraryGrid');equal(grid.children.length,19);equal(grid.replacements,1);const firstCard=grid.children[0];
   const weatherCard=grid.children.find(card=>card.dataset.libraryId===weather.id),clockCard=grid.children.find(card=>card.dataset.libraryId===clock.id);
   equal(weatherCard.querySelector('.libraryLiveBadge').hidden,false);equal(weatherCard.querySelector('.libraryActivate').disabled,true);equal(clockCard.querySelector('.libraryLiveBadge').hidden,true);equal(clockCard.querySelector('.libraryActivate').disabled,false);
   dom.context.state.app='clock';dom.context.state.visual='aurora';dom.run('actualRenderLibrary()');equal(grid.replacements,1,'Polls retain the existing focusable cards');equal(grid.children[0],firstCard);equal(clockCard.querySelector('.libraryLiveBadge').hidden,false);equal(weatherCard.querySelector('.libraryLiveBadge').hidden,true);

@@ -37,19 +37,22 @@ equal(cli.status, 0, 'Build CLI succeeds');
 equal(cli.stdout, minified, 'CLI produces only the exact build artifact');
 equal(cli.stderr, '', 'Successful build has no diagnostics');
 
-// Preserve script-visible top-level names, DOM IDs, property names, UTF-8
-// strings, and template interpolation while shortening local variables.
+// Preserve explicit exports, external references, property names, UTF-8 strings
+// and template interpolation; application globals become IIFE-local names.
 const fixture = '<!doctype html><style>.x{color:#fff}</style><div id="luminosité"></div><script src="/hash.js"></script><script>\n' +
   'function adjustNightBrightness(longBrightnessName){ const chosenBrightness = Math.min(60, longBrightnessName); return {nightBrightness:chosenBrightness, message:`Nuit : ${chosenBrightness} % ☾`}; }\n' +
-  'var markup="<\\/script>";\n</script><p>Après</p>';
+  'var markup="<\\/script>";globalThis.result={adjustNightBrightness,markup,hash:sha256("abc")};\n</script><p>Après</p>';
 const fixtureBuilt = minifyWeb(fixture);
-const originalContext = {}, minifiedContext = {};
+const originalContext = {sha256:s=>'external-'+s}, minifiedContext = {sha256:s=>'external-'+s};
 vm.runInNewContext(applicationScript(fixture).code, originalContext);
 vm.runInNewContext(applicationScript(fixtureBuilt).code, minifiedContext);
 for (const value of [0, 5, 20, 60, 100]) {
-  equal(JSON.stringify(minifiedContext.adjustNightBrightness(value)), JSON.stringify(originalContext.adjustNightBrightness(value)), `Public function and values preserved at ${value}%`);
+  equal(JSON.stringify(minifiedContext.result.adjustNightBrightness(value)), JSON.stringify(originalContext.result.adjustNightBrightness(value)), `Properties and values preserved at ${value}%`);
 }
-equal(minifiedContext.markup, originalContext.markup, 'A string containing a closing script tag remains safely escaped');
+equal(minifiedContext.result.markup, originalContext.result.markup, 'A string containing a closing script tag remains safely escaped');
+equal(minifiedContext.result.hash, 'external-abc', 'External SHA-256 dependency remains available inside the IIFE');
+equal(minifiedContext.adjustNightBrightness, undefined, 'Application declarations stay inside the IIFE');
+rejects(() => minifyWeb('<button onclick="start()">Start</button><script>function start(){}</script>'), /Inline HTML/, 'Inline handlers cannot silently lose access to global functions');
 rejects(() => minifyWeb('<html></html>'), /exactly one/, 'Missing app script fails closed');
 rejects(() => minifyWeb('<script>var x=1;</script><script>var y=2;</script>'), /exactly one/, 'Multiple app scripts fail closed');
 rejects(() => minifyWeb('<script type="module">var x=1;</script>'), /classic inline/, 'Unexpected script type fails closed');
@@ -63,11 +66,16 @@ equal(invalidCli.stdout, '', 'Failed CLI never emits a partial build');
 
 if (!process.argv.includes('--source-only')) {
   const header = fs.readFileSync(path.join(root, 'FlightBoardWebGzip.h'), 'utf8');
-  const compressed = Buffer.from([...header.matchAll(/0x([A-F0-9]{2})/g)].map(match => parseInt(match[1], 16)));
+  const compressed = fs.readFileSync(path.join(root, 'assets/zcs-web.bin'));
+  const manifest = JSON.parse(fs.readFileSync(path.join(root, 'assets/zcs-web.json')));
+  equal(manifest.size, compressed.length, 'Web manifest size matches the artifact');
+  equal(manifest.sha256, crypto.createHash('sha256').update(compressed).digest('hex'), 'Web manifest fingerprint matches the artifact');
+  ok(header.includes('ZCS_WEB_SIZE = '+compressed.length+';') && header.includes(manifest.sha256), 'Firmware pins the exact downloaded content');
+  ok(!header.includes('FLIGHT_BOARD_HTML_GZIP'), 'Full UI is never included in the firmware image');
   const served = zlib.gunzipSync(compressed).toString('utf8');
   equal(served, minified, 'Firmware gzip exactly equals the pinned transform of the current readable source');
   equal(compressed.readUInt32LE(4), 0, 'Gzip omits a build timestamp');
   equal(compressed[9], 255, 'Gzip has an OS-independent marker');
   new vm.Script(applicationScript(served).code, { filename: 'actual firmware gzip' }); checks++;
 }
-console.log(`Embedded web build: ${checks} assertions passed; readable SHA-256 ${crypto.createHash('sha256').update(sourceBytes).digest('hex')}`);
+console.log(`Downloadable web build: ${checks} assertions passed; readable SHA-256 ${crypto.createHash('sha256').update(sourceBytes).digest('hex')}`);

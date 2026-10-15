@@ -33,19 +33,21 @@ try {
   const canvas={style:{},getContext:()=>g},elements=new Map([['ledPreview',canvas],['previewToggle',{open:true}]]);
   const motion={matches:true};
   const context=vm.createContext({String,Number,Math,demo:false,serverOnline:true,currentView:'home',draftVisual:null,panelApp:s=>s?.app||s?.display?.app||'aviation',selected:null,state:null,now:0,
+    APP_NAMES:{},WIDGET_APPS:['message','timer','score','pixel'],widgetView:()=>false,currentContentId:'',contentCache:new Map(),widgetRemaining:w=>w?.remainingSeconds,
     logoCache:new Map(),MODE_NAMES:{auto:'Auto',manual:'Épinglé',clock:'Horloge'},
     el:id=>{if(!elements.has(id))elements.set(id,{});return elements.get(id);},
     document:{hidden:false},window:{matchMedia:()=>motion},performance:{now:()=>context.now},fetchLogo:()=>{},
     setTimeout:()=>1,clearTimeout:()=>{},
     fmt:(n,d)=>Number(n).toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d})
   });
-  vm.runInContext('const data=()=>state,previewPlane=()=>selected,routeFor=p=>p.route;'+script.slice(start,end),context);
+  vm.runInContext('const data=()=>state,previewPlane=()=>selected,routeFor=p=>p.route;'+['asciiMessage','timeLabel'].map(name=>script.match(new RegExp('function '+name+'\\([^\\n]+'))[0]).join('\n')+'\n'+script.slice(start,end),context);
   const plane={callsign:'AFR1234',type:'A320',distanceKm:8.4,speedKmh:819.6,speedAvailable:true,altitudeFt:34000,altitudeAvailable:true,
     route:{status:'known',origin:{code:'CDG'},destination:{code:'BER'}}};
   const display={mode:'auto',timeSynced:true,clock:'14:32'};
-  function compare(name,selected,settings=display,online=true,extra={},now=0,reduced=true){
+  function compare(name,selected,settings=display,online=true,extra={},now=0,reduced=true,directWidget=false){
     context.selected=selected;context.state={display:settings,...extra};context.serverOnline=online;context.now=now;motion.matches=reduced;pixels=new Uint16Array(8192);
-    vm.runInContext('drawPreview()',context);
+    if(directWidget){g.fillStyle='#000';g.fillRect(0,0,128,64);if(!settings.sleeping)context.drawWidgetPreview(g,extra.app,extra.widget,reduced?0:now/1000);}
+    else vm.runInContext('drawPreview()',context);
     const actual=fs.readFileSync(path.join(tmp,name+'.bin'));
     assert.equal(actual.length,16384);
     let different=0;
@@ -53,16 +55,10 @@ try {
       const native=actual.readUInt16LE(i*2);
       if(native!==pixels[i]){
         different++;
-        // Float32 on ESP32 vs JS Float64 may cross a rounding boundary in the
-        // procedural background. Text and all non-animated scenes stay exact.
-        const dr=Math.abs((native>>11)-(pixels[i]>>11));
-        const dg=Math.abs(((native>>5)&63)-((pixels[i]>>5)&63));
-        const db=Math.abs((native&31)-(pixels[i]&31));
-        assert.ok((['clock','unsynced'].includes(name)||name.includes('_lava'))&&dr===0&&dg<=1&&db<=1,
-          `${name}: pixel ${i%128},${Math.floor(i/128)} differs: native ${native}, tablet ${pixels[i]}`);
+        assert.fail(`${name}: pixel ${i%128},${Math.floor(i/128)} differs: native ${native}, tablet ${pixels[i]}`);
       }
     }
-    assert.ok(different<=8,`${name}: too many differences (${different})`);
+    assert.equal(different,0,`${name}: every pixel must agree`);
     console.log(`PASS panel/tablet ${name}: ${8192-different}/8192 identical RGB565 pixels`);
   }
   compare('plane',plane);
@@ -83,9 +79,27 @@ try {
     compare(name,plane,{...display,mode:'manual'},true,extra);
     compare(name+'_moving',plane,{...display,mode:'manual'},true,extra,3200,false);
     compare(name+'_phase',plane,{...display,mode:'manual'},true,extra,1040,false);
-    if(visual!=='lava')compare(name+'_wrap',plane,{...display,mode:'manual'},true,extra,4294967295,false);
+    compare(name+'_wrap',plane,{...display,mode:'manual'},true,extra,4294967295,false);
     compare(name+'_reduced',plane,{...display,mode:'manual'},true,extra,3200,true);
   }
+  const widgetCompare=(name,app,widget,now=0,reduced=false,settings=display)=>compare('widget_'+name,null,settings,true,{app,widget},now,reduced,true);
+  widgetCompare('message_short','message',{text:'BONJOUR',color:0x07e0});
+  widgetCompare('message_empty','message',{text:'',color:0x07e0});
+  widgetCompare('message_punctuation','message',{text:"C'EST BIEN!",color:0x07e0});
+  const longMessage={text:'W'.repeat(120),color:0xf800};
+  widgetCompare('message_long','message',longMessage,6400);
+  widgetCompare('message_wrap','message',longMessage,4294967295);
+  widgetCompare('message_reduced','message',longMessage,6400,true);
+  for(const [name,remainingSeconds,running] of [['running',60,true],['paused',62,false],['finished',0,false],['large',5999,true],['invalid',100000,false]])widgetCompare('timer_'+name,'timer',{remainingSeconds,running});
+  let score={home:'PSG',away:'OM',status:'69 MIN',homeScore:0,awayScore:0,available:true,stale:false};
+  widgetCompare('score_zero','score',score);
+  widgetCompare('score_stale','score',{...score,homeScore:999,awayScore:999,stale:true});
+  score={home:'ABCDEFGHIJKL',away:'MNOPQRSTUVWX',status:'123456789012345678901234',homeScore:12,awayScore:9,available:true,stale:false};
+  widgetCompare('score_labels','score',score);widgetCompare('score_missing','score',{...score,available:false});
+  let pixel={width:3,height:1,frameCount:2,frameMs:100,palette:[0xf800,0x07e0,0x001f],pixels:'012210'};
+  widgetCompare('pixel_odd','pixel',pixel);widgetCompare('pixel_next','pixel',pixel,100);widgetCompare('pixel_wrap','pixel',pixel,4294967295);widgetCompare('pixel_reduced','pixel',pixel,100,true);
+  pixel={...pixel,width:1,height:3};widgetCompare('pixel_portrait','pixel',pixel);widgetCompare('pixel_invalid','pixel',{...pixel,pixels:''});
+  widgetCompare('missing','pixel',null);widgetCompare('sleep','pixel',pixel,0,false,{...display,sleeping:true});
   const weather={available:true,stale:false,temperatureC:19.4,windKmh:12.3,code:0,isDay:true};
   const compareWeather=(name,w,settings=display)=>compare('weather_'+name,plane,settings,true,{app:'weather',weather:w});
   compareWeather('missing',{available:false});compareWeather('sun',weather);

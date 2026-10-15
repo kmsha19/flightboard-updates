@@ -1,9 +1,9 @@
 {
   "schema": 1,
-  "version": "4.0.0",
+  "version": "4.1.0",
   "firmwareFamily": "FlightBoard.ESP32S3.Application.v2",
-  "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/releases/ZCS-Control-4.0.0-Waveshare-K716.ino.bin",
-  "size": 1310064,
-  "sha256": "d044a668f18505131ae6d84ecacdd51d711e4a3963ec4aecc844e1874bfb3223",
-  "notes": "ZCS CONTRÔLE V4 : nouvelle interface, bibliothèque de 16 contenus, recherche, favoris et aperçus. Pour carte Waveshare ESP32-S3-RGB-Matrix et panneau HUB75 K716 128×64, balayage 1/32, avec couleurs calibrées."
+  "url": "https://raw.githubusercontent.com/kmsha19/flightboard-updates/main/releases/ZCS-Control-4.1.0-Waveshare-K716.ino.bin",
+  "size": 1288064,
+  "sha256": "78d3a97fc1de29b9273f287e7360c9b4ecfe0637e88629761a6dbfe66b464a9e",
+  "notes": "ZCS CONTRÔLE V4.1.0 : animation Lave aux contours fluides, messages personnalisés, minuterie, scores ESPN, pixel art et Store de 8 contenus. Interface installable depuis la tablette, réglages conservés. Pour Waveshare ESP32-S3-RGB-Matrix et panneau K716 128×64, balayage 1/32."
 }

@@ -34,6 +34,7 @@ public:
   void trim(){auto a=value_.find_first_not_of(" \t\r\n");if(a==std::string::npos){value_.clear();return;}auto b=value_.find_last_not_of(" \t\r\n");value_=value_.substr(a,b-a+1);}
   void toUpperCase(){for(auto& c:value_)c=std::toupper((unsigned char)c);}
   String substring(size_t a,size_t b)const{return value_.substr(a,b-a);}
+  long toInt()const{return std::strtol(value_.c_str(),nullptr,10);}
   friend String operator+(const String&a,const String&b){return a.value_+b.value_;}
   char operator[](size_t i)const{return value_[i];}
   int indexOf(const char* s)const{auto i=value_.find(s);return i==std::string::npos?-1:static_cast<int>(i);}

@@ -10,10 +10,10 @@ assert.match(html,/<span id="logoFallback"[^>]*><svg/,
   'The fallback must have an HTML wrapper: SVGElement.hidden does not reflect the hidden attribute');
 let assertions=3;
 const equal=(actual,expected,message)=>{++assertions;assert.equal(actual,expected,message);};
-const logo={hidden:true,alt:'',removeAttribute(name){delete this[name];}},fallback={hidden:false},requests=[];
+const logo={hidden:true,alt:'',removeAttribute(name){delete this[name];}},fallback={hidden:false},pixels={hidden:true},requests=[],pixelRequests=[],painted=[];
 const context=vm.createContext({String,encodeURIComponent,now:1000,Date:{now:()=>context.now},
-  Image:class {constructor(){requests.push(this);}},
-  el:id=>id==='logo'?logo:fallback,
+  Image:class {constructor(){requests.push(this);}},logoCache:new Map(),fetchLogo:p=>pixelRequests.push(p.callsign),paintLogo:(canvas,value)=>painted.push(value),
+  el:id=>id==='logo'?logo:id==='logoPixels'?pixels:fallback,
 });
 vm.runInContext("let logoImageId='',logoImageEpoch=0,logoImageFailedAt=0;"+script.slice(start,end),context);
 const render=plane=>{context.plane=plane;vm.runInContext('renderAirlineLogo(plane)',context);};
@@ -37,4 +37,5 @@ render(null);equal(logo.hidden,true);equal(logo.src,undefined);equal(fallback.hi
 requests[4].onload();equal(logo.hidden,true,'A late image cannot appear after the selected flight leaves');
 render({callsign:''});equal(requests.length,5,'Missing callsigns use the neutral fallback');
 render({callsign:'A&B'});equal(requests[5].src,'/api/logo/image?flight=A%26B&v=2.0.5','Callsigns must remain inside the query value');
+context.logoCache.set('AFR842',Array(384).fill(123));render({callsign:'AFR842'});requests.at(-1).onerror();equal(pixels.hidden,false,'Missing HQ image falls back to the cached exact LED logo');equal(fallback.hidden,true);equal(painted.at(-1).length,384);render({callsign:'BEL123'});equal(pixels.hidden,true,'Changing selection removes a previous fallback logo');requests.at(-1).onerror();equal(pixelRequests.at(-1),'BEL123','Missing image requests the local bitmap endpoint');
 console.log(`Airline image UI: ${assertions} assertions passed`);
