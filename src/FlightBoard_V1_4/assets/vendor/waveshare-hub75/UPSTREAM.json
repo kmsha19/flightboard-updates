@@ -1,0 +1,70 @@
+{
+  "repository": "https://github.com/waveshareteam/ESP32-S3-RGB-Matrix",
+  "commit": "6e92fbe4f982d078150fa901fcc48e3f19b59313",
+  "files": [
+    {
+      "path": "ESP32-HUB75-MatrixPanel-I2S-DMA.cpp",
+      "sha256": "c68543ac1150bcd4f2384bf60a782a599297eed1331e3a0a7967784ae6f96c2c",
+      "source": "https://raw.githubusercontent.com/waveshareteam/ESP32-S3-RGB-Matrix/6e92fbe4f982d078150fa901fcc48e3f19b59313/example/arduino_v3.3.7/01_SimpleTestShapes/ESP32-HUB75-MatrixPanel-I2S-DMA.cpp",
+      "size": 38553
+    },
+    {
+      "path": "ESP32-HUB75-MatrixPanel-I2S-DMA.h",
+      "sha256": "95944250adab47913ce2d35c4a35d0e6ccdb19e9d4289dc736d80166bd076d6f",
+      "source": "https://raw.githubusercontent.com/waveshareteam/ESP32-S3-RGB-Matrix/6e92fbe4f982d078150fa901fcc48e3f19b59313/example/arduino_v3.3.7/01_SimpleTestShapes/ESP32-HUB75-MatrixPanel-I2S-DMA.h",
+      "size": 39236
+    },
+    {
+      "path": "ESP32-HUB75-MatrixPanel-leddrivers.cpp",
+      "sha256": "04a5303f177527c5ce6704f17092ec7edbb273abcf826ce85fc8582a05932f85",
+      "source": "https://raw.githubusercontent.com/waveshareteam/ESP32-S3-RGB-Matrix/6e92fbe4f982d078150fa901fcc48e3f19b59313/example/arduino_v3.3.7/01_SimpleTestShapes/ESP32-HUB75-MatrixPanel-leddrivers.cpp",
+      "size": 8403
+    },
+    {
+      "path": "platforms/platform_detect.hpp",
+      "sha256": "68c6702e65c0100ede991d3c9068fe3cb48380a5b34f35cdc4a3ce0ba475bc68",
+      "source": "https://raw.githubusercontent.com/waveshareteam/ESP32-S3-RGB-Matrix/6e92fbe4f982d078150fa901fcc48e3f19b59313/example/arduino_v3.3.7/01_SimpleTestShapes/platforms/platform_detect.hpp",
+      "size": 2834
+    },
+    {
+      "path": "platforms/esp32s3/esp32s3-default-pins.hpp",
+      "sha256": "8652977751c081ca7f33f0109824f8cbcbb6aef6467d073a537bafb4def7f2e2",
+      "source": "https://raw.githubusercontent.com/waveshareteam/ESP32-S3-RGB-Matrix/6e92fbe4f982d078150fa901fcc48e3f19b59313/example/arduino_v3.3.7/01_SimpleTestShapes/platforms/esp32s3/esp32s3-default-pins.hpp",
+      "size": 396
+    },
+    {
+      "path": "platforms/esp32s3/gdma_lcd_parallel16.cpp",
+      "sha256": "80ba9516df6a5dfe38511ffe40e589ec464122dd6579c01ca4702c18bf02bac8",
+      "source": "https://raw.githubusercontent.com/waveshareteam/ESP32-S3-RGB-Matrix/6e92fbe4f982d078150fa901fcc48e3f19b59313/example/arduino_v3.3.7/01_SimpleTestShapes/platforms/esp32s3/gdma_lcd_parallel16.cpp",
+      "size": 16950
+    },
+    {
+      "path": "platforms/esp32s3/gdma_lcd_parallel16.hpp",
+      "sha256": "c8f8007ff70ebaf9a7efbdb9b789f54d83dbc2ec11a9c460ede535446cc191ec",
+      "source": "https://raw.githubusercontent.com/waveshareteam/ESP32-S3-RGB-Matrix/6e92fbe4f982d078150fa901fcc48e3f19b59313/example/arduino_v3.3.7/01_SimpleTestShapes/platforms/esp32s3/gdma_lcd_parallel16.hpp",
+      "size": 3812
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "bb01037d243b2614f6c0bcf65671eff4a004b65ef687a4fd4925a9ab068bd613",
+      "source": "https://raw.githubusercontent.com/waveshareteam/ESP32-S3-RGB-Matrix/6e92fbe4f982d078150fa901fcc48e3f19b59313/LICENSE",
+      "size": 11338
+    },
+    {
+      "path": "LICENSE-upstream-MIT.txt",
+      "sha256": "b7cf5aa4531332fe6030166cfe186aed589e8c93fdc569405b6466ded9cb5127",
+      "source": "https://raw.githubusercontent.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA/ee4a2dc643ac22bc4174c37ba18b4d4e40547c55/LICENSE.txt",
+      "size": 1071,
+      "repository": "https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA",
+      "commit": "ee4a2dc643ac22bc4174c37ba18b4d4e40547c55"
+    },
+    {
+      "path": "LICENSE-LovyanGFX-FreeBSD.txt",
+      "sha256": "ec7c22d763503f016c1e743e6089042e780fbb1c118ebcc0b1eb72232e8903b3",
+      "source": "https://raw.githubusercontent.com/lovyan03/LovyanGFX/777b345dfffcef83e2e24cc12e4d4fd9eda36e93/license.txt",
+      "size": 5952,
+      "repository": "https://github.com/lovyan03/LovyanGFX",
+      "commit": "777b345dfffcef83e2e24cc12e4d4fd9eda36e93"
+    }
+  ]
+}

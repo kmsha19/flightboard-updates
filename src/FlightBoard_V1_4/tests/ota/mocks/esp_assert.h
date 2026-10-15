@@ -1,0 +1,1 @@
+#define ESP_STATIC_ASSERT static_assert

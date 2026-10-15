@@ -1,0 +1,343 @@
+[
+  {
+    "code": "AFR",
+    "name": "AIR FRANCE",
+    "aliases": [
+      "HOP"
+    ],
+    "source": "sources/AFR.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/radarbox_logos/AFR.png",
+    "retrieved": "2026-10-15",
+    "sha256": "81ef0881dad83487658f8f19fabf7c5ce8e7cb368dd809a7485566c6287ec4c4"
+  },
+  {
+    "code": "BEL",
+    "name": "BRUSSELS AIRLINES",
+    "aliases": [],
+    "source": "sources/BEL.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/BEL.png",
+    "retrieved": "2026-10-15",
+    "sha256": "6654b2b986a0e972722ef00e42da6844b8cc28a075b51484b282921e6cefd790"
+  },
+  {
+    "code": "VRE",
+    "name": "AIR CÔTE D’IVOIRE",
+    "aliases": [],
+    "source": "sources/VRE.png",
+    "source_url": "https://www.aircotedivoire.com/wp-content/uploads/2023/06/cropped-favicon-1-192x192.png",
+    "retrieved": "2026-10-15",
+    "sha256": "4c1c38eb0085c0b7235284445b3ceadf2ea6335df3efc26bbfced5f5611e0ad8"
+  },
+  {
+    "code": "ETH",
+    "name": "ETHIOPIAN",
+    "aliases": [],
+    "source": "sources/ETH.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/ETH.png",
+    "retrieved": "2026-10-15",
+    "sha256": "8a82322376283772eb2c0ffb61c543da75818dde19aba432d83d918f3f2079f5"
+  },
+  {
+    "code": "CRL",
+    "name": "CORSAIR",
+    "aliases": [],
+    "source": "sources/CRL.png",
+    "source_url": "https://cdn.flycorsair.com/cdn-corsair-front-dev/booking-engine/favicon/favicon-96x96.png",
+    "retrieved": "2026-10-15",
+    "sha256": "31d1b663e30ab9dcb11f98b5577149be013f74fe81db005b7a579f27d49216d9"
+  },
+  {
+    "code": "FWI",
+    "name": "AIR CARAÏBES",
+    "aliases": [],
+    "source": "sources/FWI.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/FWI.png",
+    "retrieved": "2026-10-15",
+    "sha256": "5f6b12958e5b4358ed1bca6ecdef24f353c08e2fbbac03fcdb91b6240b1ea821"
+  },
+  {
+    "code": "FBU",
+    "name": "FRENCH BEE",
+    "aliases": [],
+    "source": "sources/FBU.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/FBU.png",
+    "retrieved": "2026-10-15",
+    "sha256": "d448a233e942e0a5095a9a03f224e901b4540ec6caf8c9e4981b1829ca780c74"
+  },
+  {
+    "code": "REU",
+    "name": "AIR AUSTRAL",
+    "aliases": [],
+    "source": "sources/REU.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/REU.png",
+    "retrieved": "2026-10-15",
+    "sha256": "ee527f25f28eea37a86bc2f76fc9b1f3fe2963c864636179d66086fc89c699fc"
+  },
+  {
+    "code": "THT",
+    "name": "AIR TAHITI NUI",
+    "aliases": [],
+    "source": "sources/THT.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/THT.png",
+    "retrieved": "2026-10-15",
+    "sha256": "209a5b0c6a80b8ce440dc4ca3ae5f157ee728aa75feeb052c295cc5e8c7484cb"
+  },
+  {
+    "code": "MAU",
+    "name": "AIR MAURITIUS",
+    "aliases": [],
+    "source": "sources/MAU.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/MAU.png",
+    "retrieved": "2026-10-15",
+    "sha256": "691a537157dcd037a9a49f556a39378d3ff583a5fe653046da6dadabe1d7155e"
+  },
+  {
+    "code": "SZN",
+    "name": "AIR SÉNÉGAL",
+    "aliases": [],
+    "source": "sources/SZN.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/SZN.png",
+    "retrieved": "2026-10-15",
+    "sha256": "00d8d6da1b81b618affa21d1401bb6b4a7cb9da7ec8b511b62382afa58819fa5"
+  },
+  {
+    "code": "RAM",
+    "name": "ROYAL AIR MAROC",
+    "aliases": [],
+    "source": "sources/RAM.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/RAM.png",
+    "retrieved": "2026-10-15",
+    "sha256": "27bceb50eb3728621ec487aaa1d4428126910b7276f122874488b1e923b9c601"
+  },
+  {
+    "code": "DAH",
+    "name": "AIR ALGÉRIE",
+    "aliases": [],
+    "source": "sources/DAH.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/DAH.png",
+    "retrieved": "2026-10-15",
+    "sha256": "eb806b69adbb002b2aea23da54eefe5e3c7e9a7941be7ea1c7f04ee6e9bec95a"
+  },
+  {
+    "code": "TAR",
+    "name": "TUNISAIR",
+    "aliases": [],
+    "source": "sources/TAR.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/TAR.png",
+    "retrieved": "2026-10-15",
+    "sha256": "9eaf3089c40f1ed6acf709097ee58067683c8cbf3972d1a180fb5d62f262eb7f"
+  },
+  {
+    "code": "LBT",
+    "name": "NOUVELAIR",
+    "aliases": [],
+    "source": "sources/LBT.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/LBT.png",
+    "retrieved": "2026-10-15",
+    "sha256": "339f24c3eccbcc4ab2953e20cfc45e137422abff9f8540a2c11fc5f4f740b566"
+  },
+  {
+    "code": "ACA",
+    "name": "AIR CANADA",
+    "aliases": [],
+    "source": "sources/ACA.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/ACA.png",
+    "retrieved": "2026-10-15",
+    "sha256": "77d897b306b98cbc09cce8191b108a7ceb25c7d6b335289a2a8ffeb2a671f1ef"
+  },
+  {
+    "code": "TSC",
+    "name": "AIR TRANSAT",
+    "aliases": [],
+    "source": "sources/TSC.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/TSC.png",
+    "retrieved": "2026-10-15",
+    "sha256": "86c9b31c66b7686ee9a02c26f648bdbd3cd2a3169489adac9d61a7ea014bc6ab"
+  },
+  {
+    "code": "SWR",
+    "name": "SWISS",
+    "aliases": [],
+    "source": "sources/SWR.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/SWR.png",
+    "retrieved": "2026-10-15",
+    "sha256": "90b636998807ed9ee0e291c75b1079157e5446208c33a87e2dead35dd71cd517"
+  },
+  {
+    "code": "LGL",
+    "name": "LUXAIR",
+    "aliases": [],
+    "source": "sources/LGL.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/LGL.png",
+    "retrieved": "2026-10-15",
+    "sha256": "fcd37127eb2ee57d8ecd26763b9fb324152ce8f565cae461e0e660322aea9384"
+  },
+  {
+    "code": "TRA",
+    "name": "TRANSAVIA",
+    "aliases": [
+      "TVF"
+    ],
+    "source": "sources/TRA.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/TRA.png",
+    "retrieved": "2026-10-15",
+    "sha256": "b7fbd05f4bb480eb668db1545155e52484f2279b3b486c65c6f2d9a167129bca"
+  },
+  {
+    "code": "SKK",
+    "name": "ASKY",
+    "aliases": [],
+    "source": "sources/SKK.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/SKK.png",
+    "retrieved": "2026-10-15",
+    "sha256": "0392e01289349dc34b180d6db534dfad98b7764ab2aa7acbf8e64ed422085797"
+  },
+  {
+    "code": "CRC",
+    "name": "CAMAIR-CO",
+    "aliases": [],
+    "source": "sources/CRC.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/CRC.png",
+    "retrieved": "2026-10-15",
+    "sha256": "08b50a962ce7bce907efd201f96466a517bef68c93d471e2de34df83e2c78a06"
+  },
+  {
+    "code": "QTR",
+    "name": "QATAR AIRWAYS",
+    "aliases": [],
+    "source": "sources/QTR.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/QTR.png",
+    "retrieved": "2026-10-15",
+    "sha256": "ef3ece578e69d0434276c565bb9aa598e281f6ba1c952bd73fee42ffe1c1715e"
+  },
+  {
+    "code": "THY",
+    "name": "TURKISH AIRLINES",
+    "aliases": [],
+    "source": "sources/THY.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/THY.png",
+    "retrieved": "2026-10-15",
+    "sha256": "5dcdc3d4ce8f74a2e901dedc3ee49680cf0735f5ed28c63847fa695b167173f9"
+  },
+  {
+    "code": "ETD",
+    "name": "ETIHAD",
+    "aliases": [],
+    "source": "sources/ETD.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/radarbox_logos/ETD.png",
+    "retrieved": "2026-10-15",
+    "sha256": "eb203a4dc44774a86c29ae6c9e229397d3138ee675916118d1f009df5e8df3d6"
+  },
+  {
+    "code": "KQA",
+    "name": "KENYA AIRWAYS",
+    "aliases": [],
+    "source": "sources/KQA.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/KQA.png",
+    "retrieved": "2026-10-15",
+    "sha256": "05c73fffc20f9201885d45f77c2fb8ec75a5034ceade460fdda76b392343bccb"
+  },
+  {
+    "code": "RWD",
+    "name": "RWANDAIR",
+    "aliases": [],
+    "source": "sources/RWD.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/RWD.png",
+    "retrieved": "2026-10-15",
+    "sha256": "9210ec810c455101641211dd2325e867406daa72858c5774f763f36376505054"
+  },
+  {
+    "code": "RYR",
+    "name": "RYANAIR",
+    "aliases": [
+      "MAY",
+      "RUK"
+    ],
+    "source": "sources/RYR.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/RYR.png",
+    "retrieved": "2026-10-15",
+    "sha256": "df1aa8ca8698792693b296b0310388b9bac7b74d8ad0b00813f7c0b056c4eb60"
+  },
+  {
+    "code": "EZY",
+    "name": "EASYJET",
+    "aliases": [
+      "EJU",
+      "EZS"
+    ],
+    "source": "sources/EZY.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/EZY.png",
+    "retrieved": "2026-10-15",
+    "sha256": "f2e5265f6f9d9edd411851af12ee99f7335f69f4c6c3dd23aa03ebcb80cee7d2"
+  },
+  {
+    "code": "UPS",
+    "name": "UPS AIRLINES",
+    "aliases": [],
+    "source": "sources/UPS.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/radarbox_logos/UPS.png",
+    "retrieved": "2026-10-15",
+    "sha256": "53918972d0a130de22e8aaeaeadf713dc54785201e7ffcdec8b2f77d2bc62251"
+  },
+  {
+    "code": "BCS",
+    "name": "DHL / EAT",
+    "aliases": [
+      "DHA",
+      "DHK",
+      "DHV"
+    ],
+    "source": "sources/BCS.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/radarbox_logos/BCS.png",
+    "retrieved": "2026-10-15",
+    "sha256": "fd6880d3d37f12cbb9da6549846bb68547300fbb04a237c866a61a639ce7ed79"
+  },
+  {
+    "code": "DLH",
+    "name": "LUFTHANSA",
+    "aliases": [],
+    "source": "sources/DLH.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/DLH.png",
+    "retrieved": "2026-10-15",
+    "sha256": "d2edfc40b080267252598f09f419a7e268a99267fd2b31a20ae931836b716fc4",
+    "dark_variant": "white",
+    "dark_variant_reference": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/radarbox_logos/DLH.png",
+    "dark_variant_note": "White negative emblem for dark surfaces, using the original transparent silhouette; the referenced catalogue variant shows the white emblem on navy."
+  },
+  {
+    "code": "KLM",
+    "name": "KLM",
+    "aliases": [],
+    "source": "sources/KLM.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/KLM.png",
+    "retrieved": "2026-10-15",
+    "sha256": "875101261c0d6a001d664b4f0ff8777eb018e7a10c54554710c2c58b9e9efb33"
+  },
+  {
+    "code": "BAW",
+    "name": "BRITISH AIRWAYS",
+    "aliases": [],
+    "source": "sources/BAW.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/BAW.png",
+    "retrieved": "2026-10-15",
+    "sha256": "55e40c5e67643eda5f661e9ad2e0e8a6c5bc5d0b11953ad038a5b4567a7b7615"
+  },
+  {
+    "code": "IBE",
+    "name": "IBERIA",
+    "aliases": [],
+    "source": "sources/IBE.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/IBE.png",
+    "retrieved": "2026-10-15",
+    "sha256": "0bcc0d6460fdf912872b5ef6064979729b22511953e4c516728e7a06ead84cf2"
+  },
+  {
+    "code": "UAE",
+    "name": "EMIRATES",
+    "aliases": [],
+    "source": "sources/UAE.png",
+    "source_url": "https://raw.githubusercontent.com/Jxck-S/airline-logos/e0b218991caef4832e0db911136173e8eead942a/flightaware_logos/UAE.png",
+    "retrieved": "2026-10-15",
+    "sha256": "b3b9116761f6c17d1aa926fd1fb4dd9d696616ce6a9732412728e2db8049b64b"
+  }
+]

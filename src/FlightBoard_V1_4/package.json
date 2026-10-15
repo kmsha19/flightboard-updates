@@ -1,0 +1,15 @@
+{
+  "name": "zcs-control-build",
+  "version": "4.0.0",
+  "private": true,
+  "description": "Offline build tooling for the embedded ZCS CONTROL interface",
+  "scripts": {
+    "test:web-build": "node tests/ui/test_web_build.cjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
